@@ -8,6 +8,7 @@ import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.upms.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +25,7 @@ public class UserController extends BaseControllerImpl implements BaseController
     @Autowired
     private UserService userService;
 
-    @GetMapping("/list")
+    @PostMapping("/list")
     @AuthorizationIgnore
 //    @PreAuthorize("hasAuthority('user_console_list1')")
 //    @SentinelResource()
