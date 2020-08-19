@@ -1,6 +1,7 @@
 package com.lion.upms.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.lion.core.persistence.Validator;
 import com.lion.core.persistence.entity.BaseEntity;
 import lombok.*;
@@ -27,6 +28,7 @@ import java.util.Date;
 @DynamicUpdate
 @DynamicInsert
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true,value = {"password","username","isDelete","createDateTime","updateDateTime","createUserId","updateUserId"})
 public class User extends BaseEntity {
 
 
@@ -78,12 +80,6 @@ public class User extends BaseEntity {
     @Getter(AccessLevel.NONE)
     @Column(name = "is_nabled", nullable = false,  columnDefinition = " bit(1) default b'1' comment '账号是否可用'")
     private Boolean isEnabled;
-
-    @Column(name = "scopes",nullable = false,  columnDefinition = " varchar(255) comment '用户作用域(限制用户能登陆的客户端-后台，微信端……)'")
-    private String scopes;
-
-    @Column(name = "resource_ids",  columnDefinition = " varchar(1000) comment '用户拥有的资源'")
-    private String resourceIds;
 
     public Boolean isAccountNonExpired() {
         return isAccountNonExpired;

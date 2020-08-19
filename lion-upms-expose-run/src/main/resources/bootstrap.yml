@@ -1,9 +1,6 @@
 server:
   port: 0
 spring:
-  aop:
-    proxy-target-class: true
-    auto: true
   application:
     name: @project.artifactId@
   cloud:
