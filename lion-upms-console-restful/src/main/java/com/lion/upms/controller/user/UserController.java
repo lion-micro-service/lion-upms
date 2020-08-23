@@ -25,7 +25,7 @@ public class UserController extends BaseControllerImpl implements BaseController
     @Autowired
     private UserService userService;
 
-    @PostMapping("/list")
+    @GetMapping("/list")
     @AuthorizationIgnore
 //    @PreAuthorize("hasAuthority('user_console_list1')")
 //    @SentinelResource()
