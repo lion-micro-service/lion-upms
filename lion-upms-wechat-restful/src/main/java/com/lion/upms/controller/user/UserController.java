@@ -32,4 +32,6 @@ public class UserController extends BaseControllerImpl implements BaseController
         return resultData;
     }
 
+
+
 }
