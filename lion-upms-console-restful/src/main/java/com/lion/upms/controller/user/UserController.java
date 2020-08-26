@@ -6,13 +6,13 @@ import com.lion.core.LionPage;
 import com.lion.core.ResultData;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
+import com.lion.core.persistence.Validator;
+import com.lion.upms.entity.user.User;
 import com.lion.upms.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
@@ -43,6 +43,12 @@ public class UserController extends BaseControllerImpl implements BaseController
     @GetMapping("/exist")
     public IResultData checkUsernameIsExist(@NotBlank(message = "登陆账号不能为空!") String username){
         return ResultData.instance().setData("isExist",Objects.nonNull( userService.findUser(username)));
+    }
+
+    @AuthorizationIgnore
+    @PostMapping("/add")
+    public IResultData add( @RequestBody @Validated({Validator.Insert.class}) User user){
+        return ResultData.instance();
     }
 
 }

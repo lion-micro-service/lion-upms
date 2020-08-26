@@ -28,7 +28,7 @@ import java.util.Date;
 @DynamicUpdate
 @DynamicInsert
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true,value = {"password","username","isDelete","createDateTime","updateDateTime","createUserId","updateUserId"})
+@JsonIgnoreProperties(ignoreUnknown = true,value = {"password","username","isDelete","createDateTime","updateDateTime","createUserId","updateUserId"},allowSetters = true)
 public class User extends BaseEntity {
 
 
@@ -42,7 +42,7 @@ public class User extends BaseEntity {
 
     @Column(name = "password", nullable = false, columnDefinition = "varchar(255) comment '密码'")
     @NotBlank(message = "密码不能为空", groups = {Validator.Insert.class, Validator.Update.class})
-    @Pattern(regexp = "[a-zA-Z]\\w{0,32}$", message = "请输入正确的密码", groups = {Validator.Insert.class, Validator.Update.class})
+    @Pattern(regexp = "[a-zA-Z]\\w{0,32}$", message = "请输入正确的密码(32的MD5密文)", groups = {Validator.Insert.class, Validator.Update.class})
     private String password;
 
     @Column(name = "name", columnDefinition = " varchar(30) comment '姓名' ")
