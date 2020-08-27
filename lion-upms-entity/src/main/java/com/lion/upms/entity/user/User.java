@@ -36,8 +36,8 @@ public class User extends BaseEntity {
 
     @Column(name = "username", unique = true, nullable = false, updatable = false, columnDefinition = "varchar(30) comment '用户登陆账号'")
     @NotBlank(message = "用户登陆账号不能为空", groups = {Validator.Insert.class})
-    @Length(min = 6, max = 30, message = "账号为{min}-{max}个字符", groups = {Validator.Insert.class})
-    @Pattern(regexp = "[A-Za-z0-9\\-]{5,30}", message = "账号只能是英文/数字", groups = {Validator.Insert.class})
+    @Length(min = 3, max = 30, message = "账号为{min}-{max}个字符", groups = {Validator.Insert.class})
+    @Pattern(regexp = "[A-Za-z0-9\\-]{3,30}", message = "账号只能是3-30个(英文/数字)字符", groups = {Validator.Insert.class})
     private String username;
 
     @Column(name = "password", nullable = false, columnDefinition = "varchar(255) comment '密码'")
@@ -61,7 +61,7 @@ public class User extends BaseEntity {
 
     @Column(name = "birthday", columnDefinition = " date comment '出生日期' ")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Past(message = "出生日期不能大于当前日期", groups = {Validator.Insert.class, Validator.Update.class})
+    @Past(message = "出生日期不能大于/等于当前日期", groups = {Validator.Insert.class, Validator.Update.class})
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 

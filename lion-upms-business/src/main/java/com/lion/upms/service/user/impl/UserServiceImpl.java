@@ -27,7 +27,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Override
 //    @GlobalTransactional(name = "${spring.application.name}")
     public Page<User> test(LionPage lionPage) {
-        return userDao.findAll(lionPage);
+        return this.findNavigator(lionPage);
     }
 
     @Override
