@@ -17,4 +17,11 @@ public interface UserDao extends BaseDao<User> ,UserDaoEx {
      * @return
      */
     User findFirstByUsername(String username);
+
+    /**
+     * 根据email查找用户
+     * @param email
+     * @return
+     */
+    User findFirstByEmail(String email);
 }

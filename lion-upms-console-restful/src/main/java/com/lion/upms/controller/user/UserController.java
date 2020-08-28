@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -49,9 +50,21 @@ public class UserController extends BaseControllerImpl implements BaseController
     }
 
     @AuthorizationIgnore
+    @GetMapping("/info")
+    public IResultData info(@NotNull(message = "id不能为空")Long id){
+        return ResultData.instance().setData("user",userService.findById(id));
+    }
+
+    @AuthorizationIgnore
     @GetMapping("/exist")
     public IResultData checkUsernameIsExist(@NotBlank(message = "登陆账号不能为空!") String username){
         return ResultData.instance().setData("isExist",Objects.nonNull( userService.findUser(username)));
+    }
+
+    @AuthorizationIgnore
+    @GetMapping("/email/exist")
+    public IResultData checkEmailIsExist(@NotBlank(message = "邮箱不能为空！") String email){
+        return ResultData.instance().setData("isExist",Objects.nonNull( userService.findUserByEmail(email)));
     }
 
     @AuthorizationIgnore
@@ -69,10 +82,14 @@ public class UserController extends BaseControllerImpl implements BaseController
 
     @AuthorizationIgnore
     @DeleteMapping("/delete")
-    public IResultData delete(@NotNull(message = "id不能为空") Long id){
-        userService.deleteById(id);
+    public IResultData delete(@NotNull(message = "id不能为空") @RequestParam(value = "id",required = false) List<Long> id){
+        id.forEach(i->{
+            userService.deleteById(i);
+        });
         ResultData resultData = ResultData.instance();
         return resultData;
     }
+
+
 
 }

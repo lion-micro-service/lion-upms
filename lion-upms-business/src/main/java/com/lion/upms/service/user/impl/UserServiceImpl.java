@@ -9,6 +9,7 @@ import com.lion.upms.service.user.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
+import javax.validation.constraints.NotBlank;
 
 //import io.seata.spring.annotation.GlobalTransactional;
 
@@ -33,5 +34,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Override
     public User findUser(String username) {
         return userDao.findFirstByUsername(username);
+    }
+
+    @Override
+    public User findUserByEmail(String email) {
+        return userDao.findFirstByEmail(email);
     }
 }
