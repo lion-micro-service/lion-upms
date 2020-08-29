@@ -1,5 +1,7 @@
 package com.lion.upms.controller.user;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.lion.annotation.AuthorizationIgnore;
 import com.lion.constant.SearchConstant;
 import com.lion.core.IResultData;
@@ -10,7 +12,10 @@ import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.JpqlParameter;
 import com.lion.core.persistence.Validator;
+import com.lion.exception.BusinessException;
 import com.lion.upms.entity.user.User;
+import com.lion.upms.entity.user.dto.UserAddDto;
+import com.lion.upms.entity.user.dto.UserUpdataDto;
 import com.lion.upms.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -63,14 +68,15 @@ public class UserController extends BaseControllerImpl implements BaseController
 
     @AuthorizationIgnore
     @GetMapping("/email/exist")
-    public IResultData checkEmailIsExist(@NotBlank(message = "邮箱不能为空！") String email){
-        return ResultData.instance().setData("isExist",Objects.nonNull( userService.findUserByEmail(email)));
+    public IResultData checkEmailIsExist(@NotBlank(message = "邮箱不能为空！") String email,Long id){
+        return ResultData.instance().setData("isExist",userService.checkEmailIsExist(email, id));
     }
 
     @AuthorizationIgnore
     @PostMapping("/add")
-    public IResultData add( @RequestBody @Validated({Validator.Insert.class}) User user){
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public IResultData add( @RequestBody @Validated({Validator.Insert.class}) UserAddDto userAddDto){
+        User user = new User();
+        BeanUtil.copyProperties(userAddDto,user, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
         userService.save(user);
         ResultData resultData = ResultData.instance();
         if (Objects.isNull(user.getId())){
@@ -90,6 +96,16 @@ public class UserController extends BaseControllerImpl implements BaseController
         return resultData;
     }
 
-
+    @AuthorizationIgnore
+    @PutMapping("/update")
+    public IResultData update(@RequestBody @Validated({Validator.Update.class}) UserUpdataDto userUpdataDto){
+        User user = userService.findById(userUpdataDto.getId());
+        if (Objects.isNull(user)){
+            new BusinessException("该用户不存在");
+        }
+        BeanUtil.copyProperties(userUpdataDto,user, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
+        userService.update(user);
+        return ResultData.instance();
+    }
 
 }

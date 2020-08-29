@@ -38,4 +38,11 @@ public interface UserService extends BaseService<User> {
      */
     User findUserByEmail(@NotBlank(message = "邮箱不能为空")String email);
 
+    /**
+     * 检查邮箱是否已存在
+     * @param email
+     * @param id
+     * @return
+     */
+    boolean checkEmailIsExist(@NotBlank(message = "邮箱不能为空")String email,Long id);
 }

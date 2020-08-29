@@ -28,7 +28,7 @@ import javax.validation.constraints.Size;
  */
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "t_upms_resources",uniqueConstraints ={@UniqueConstraint(columnNames = "code")},indexes = {@Index(columnList = "name")})
+@Table(name = "t_upms_resources",uniqueConstraints ={@UniqueConstraint(columnNames = "code")},indexes = {@Index(columnList = "name"),@Index(columnList = "parent_id")})
 @DynamicUpdate
 @DynamicInsert
 @Data

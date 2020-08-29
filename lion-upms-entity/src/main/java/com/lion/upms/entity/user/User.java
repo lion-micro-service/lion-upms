@@ -1,6 +1,7 @@
 package com.lion.upms.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.lion.core.persistence.Validator;
 import com.lion.core.persistence.entity.BaseEntity;
@@ -23,8 +24,8 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "t_upms_user"
-        ,uniqueConstraints = {@UniqueConstraint(columnNames = {"username"}),@UniqueConstraint(columnNames = {"email"})}
-        ,indexes = {@Index(columnList = "name")})
+        ,uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})}
+        ,indexes = {@Index(columnList = "name"),@Index(columnList = "email")})
 @DynamicUpdate
 @DynamicInsert
 @Data
@@ -41,8 +42,8 @@ public class User extends BaseEntity {
     private String username;
 
     @Column(name = "password", nullable = false, columnDefinition = "varchar(255) comment '密码'")
-    @NotBlank(message = "密码不能为空", groups = {Validator.Insert.class, Validator.Update.class})
-    @Pattern(regexp = "[a-zA-Z0-9]{32}", message = "请输入正确的密码(32的MD5密文)", groups = {Validator.Insert.class, Validator.Update.class})
+    @NotBlank(message = "密码不能为空", groups = {Validator.Insert.class})
+    @Pattern(regexp = "[a-zA-Z0-9]{32}", message = "请输入正确的密码(32的MD5密文)", groups = {Validator.Insert.class})
     private String password;
 
     @Column(name = "name", columnDefinition = " varchar(30) comment '姓名' ")
