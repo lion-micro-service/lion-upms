@@ -19,6 +19,7 @@ import com.lion.upms.entity.user.dto.UserUpdataDto;
 import com.lion.upms.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotBlank;
@@ -49,7 +50,9 @@ public class UserController extends BaseControllerImpl implements BaseController
 //    @SentinelResource()
     public IResultData list(LionPage lionPage,String name) {
         JpqlParameter jpqlParameter = new JpqlParameter();
-        jpqlParameter.setSearchParameter(SearchConstant.LIKE+"_name",name);
+        if (StringUtils.hasText(name)){
+            jpqlParameter.setSearchParameter(SearchConstant.LIKE+"_name",name);
+        }
         lionPage.setJpqlParameter(jpqlParameter);
         return (IResultData) userService.test(lionPage);
     }
@@ -99,10 +102,7 @@ public class UserController extends BaseControllerImpl implements BaseController
     @AuthorizationIgnore
     @PutMapping("/update")
     public IResultData update(@RequestBody @Validated({Validator.Update.class}) UserUpdataDto userUpdataDto){
-        User user = userService.findById(userUpdataDto.getId());
-        if (Objects.isNull(user)){
-            new BusinessException("该用户不存在");
-        }
+        User user = new User();
         BeanUtil.copyProperties(userUpdataDto,user, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
         userService.update(user);
         return ResultData.instance();
