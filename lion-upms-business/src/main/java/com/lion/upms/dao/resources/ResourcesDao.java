@@ -1,7 +1,13 @@
 package com.lion.upms.dao.resources;
 
+import com.lion.core.common.enums.State;
 import com.lion.core.persistence.curd.BaseDao;
 import com.lion.upms.entity.resources.Resources;
+import com.lion.upms.entity.resources.enums.Scope;
+import com.lion.upms.entity.resources.enums.Type;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author mr.liu
@@ -10,4 +16,21 @@ import com.lion.upms.entity.resources.Resources;
  * @date 2020/8/15下午5:31
  */
 public interface ResourcesDao extends BaseDao<Resources> ,ResourcesDaoEx {
+
+    /**
+     * 查找所有根结点资源
+     * @param parentId
+     * @param state
+     * @param scope
+     * @return
+     */
+    public List<Resources> findByParentIdAndStateAndScope(Long parentId,State state, Scope scope);
+
+    /**
+     * 根据父节点ID查找子资源
+     * @param parentId
+     * @param state
+     * @return
+     */
+    public List<Resources> findByParentIdAndState(Long parentId, State state);
 }
