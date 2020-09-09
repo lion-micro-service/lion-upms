@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @description: 用户接口暴露实现
@@ -29,12 +30,15 @@ public class UserSecurityExposServiceImpl implements UserSecurityExposeService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user =  userService.findUser(username);
+        if (Objects.isNull(user)){
+            return null;
+//            return new LionUserDetails(null,null,null);
+        }
         LionSimpleGrantedAuthority grantedAuthority = new LionSimpleGrantedAuthority();
-        grantedAuthority.setAuthority("user_console_list");
+//        grantedAuthority.setAuthority("user_console_list");
         List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
         list.add(grantedAuthority);
         LionUserDetails userDetails = new LionUserDetails(user.getUsername(),user.getPassword(),list);
-        userDetails.setUserId(user.getId());
         return userDetails;
     }
 }
