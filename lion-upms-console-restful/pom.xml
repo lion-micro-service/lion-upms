@@ -32,6 +32,10 @@
 			<version>${lion-oauth2-resource-server.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.whvcse</groupId>
+			<artifactId>easy-captcha</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

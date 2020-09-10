@@ -5,8 +5,8 @@
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve --mode dev",
-    "build": "vue-cli-service build",
-    "lion-serve": "vue-cli-service lion-serve"
+    "build": "vue-cli-service build --mode test",
+    "lion-serve": "vue-cli-service lion-serve --mode test"
   },
   "dependencies": {
     "@lion/lion-front-core": "^1.0.0",
