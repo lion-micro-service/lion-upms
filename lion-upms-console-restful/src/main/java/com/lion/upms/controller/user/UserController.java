@@ -45,7 +45,6 @@ public class UserController extends BaseControllerImpl implements BaseController
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/list")
-    @AuthorizationIgnore
 //    @PreAuthorize("hasAuthority('user_console_list1')")
 //    @SentinelResource()
     public IResultData list(LionPage lionPage,String name) {
@@ -57,25 +56,21 @@ public class UserController extends BaseControllerImpl implements BaseController
         return (IResultData) userService.test(lionPage);
     }
 
-    @AuthorizationIgnore
     @GetMapping("/info")
     public IResultData info(@NotNull(message = "id不能为空")Long id){
         return ResultData.instance().setData("user",userService.findById(id));
     }
 
-    @AuthorizationIgnore
     @GetMapping("/exist")
     public IResultData checkUsernameIsExist(@NotBlank(message = "登陆账号不能为空!") String username){
         return ResultData.instance().setData("isExist",Objects.nonNull( userService.findUser(username)));
     }
 
-    @AuthorizationIgnore
     @GetMapping("/email/exist")
     public IResultData checkEmailIsExist(@NotBlank(message = "邮箱不能为空！") String email,Long id){
         return ResultData.instance().setData("isExist",userService.checkEmailIsExist(email, id));
     }
 
-    @AuthorizationIgnore
     @PostMapping("/add")
     public IResultData add( @RequestBody @Validated({Validator.Insert.class}) UserAddDto userAddDto){
         User user = new User();
@@ -89,7 +84,6 @@ public class UserController extends BaseControllerImpl implements BaseController
         return resultData;
     }
 
-    @AuthorizationIgnore
     @DeleteMapping("/delete")
     public IResultData delete(@NotNull(message = "id不能为空") @RequestParam(value = "id",required = false) List<Long> id){
         id.forEach(i->{
@@ -99,7 +93,6 @@ public class UserController extends BaseControllerImpl implements BaseController
         return resultData;
     }
 
-    @AuthorizationIgnore
     @PutMapping("/update")
     public IResultData update(@RequestBody @Validated({Validator.Update.class}) UserUpdataDto userUpdataDto){
         User user = new User();

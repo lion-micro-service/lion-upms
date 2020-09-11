@@ -56,7 +56,7 @@ public class Resources extends BaseEntity {
     @Convert(converter = ScopeConverter.class)
     private Scope scope;
 
-    @Column(name = "type",nullable = false,columnDefinition = " int default 0 comment '作用域（0:目录,1:菜单,2:功能）'")
+    @Column(name = "type",nullable = false,columnDefinition = " int default 0 comment '类型（0:目录,1:菜单,2:功能）'")
     @Convert(converter = TypeConverter.class)
     private Type type;
 

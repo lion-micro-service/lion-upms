@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -28,9 +29,12 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
     private ResourcesService  resourcesService;
 
     @GetMapping("/front/menu")
-    @AuthorizationIgnore
     public IResultData frontMenu(){
        return ResultData.instance().setData("menu",resourcesService.listTree(Scope.CONSOLE));
     }
 
+    @GetMapping("/list/tree")
+    public IResultData listTree(@RequestParam(value = "scope",defaultValue = "CONSOLE") Scope scope){
+        return ResultData.instance().setData("list",resourcesService.listTree(scope));
+    }
 }

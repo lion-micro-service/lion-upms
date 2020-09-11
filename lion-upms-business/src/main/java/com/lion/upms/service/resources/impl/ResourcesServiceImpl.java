@@ -37,7 +37,7 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
         List<Resources> list = resourcesDao.findByParentIdAndStateAndScope(0L, State.NORMAL, scope);
         List<ResourcesTreeVo> retuenList = convertVo(list);
         retuenList.forEach(resources -> {
-            resources.setChild(listTree(resources.getId(),0));
+            resources.setChildren(listTree(resources.getId(),0));
         });
         return retuenList;
     }
@@ -57,12 +57,13 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
         }
         List<Resources> childList = listTree(parentId);
         List<ResourcesTreeVo> retuenList = convertVo(childList);
-        retuenList.forEach(resources -> {
-            int finalHierarchy = hierarchy;
-            finalHierarchy++;
-            resources.setChild(listTree(resources.getId(), finalHierarchy));
-        });
-
+        if (Objects.nonNull(retuenList)) {
+            retuenList.forEach(resources -> {
+                int finalHierarchy = hierarchy;
+                finalHierarchy++;
+                resources.setChildren(listTree(resources.getId(), finalHierarchy));
+            });
+        }
         return retuenList;
     }
 
@@ -87,7 +88,7 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
             BeanUtils.copyProperties(resources,resourcesTreeVo);
             retuenList.add(resourcesTreeVo);
         });
-        return retuenList;
+        return retuenList.size()>0?retuenList:null;
     }
 
 }
