@@ -141,6 +141,7 @@
         }
 
         private del(id:any):void{
+            const _this =this;
             if (!id){
                 if (this.selectedRowKeys.length <=0 ){
                     message.error("请选择要删除的数据");
@@ -149,20 +150,36 @@
                     id = this.selectedRowKeys;
                 }
             }
+            this.$confirm({
+                title: '是否要删除该数据?',
+                // content: '',
+                okText: 'Yes',
+                okType: 'danger',
+                cancelText: 'No',
+                onOk() {
+                    _this.delete(id);
+                },
+                onCancel() {
+                },
+            });
+
+        }
+
+        private delete(id:any):void{
             axios.delete("/upms/user/console/delete",{params:{id:id},
                 paramsSerializer: params => {
                     return qs.stringify(params, { indices: false })
-            }})
-            .then((data)=>{
-                if((Object(data)).message){
-                    message.success((Object(data)).message);
-                }
-                this.search();
-            }).catch((fail)=>{
+                }})
+                .then((data)=>{
+                    if((Object(data)).message){
+                        message.success((Object(data)).message);
+                    }
+                    this.search();
+                }).catch((fail)=>{
 
             }).finally(()=>{
 
-            })
+            });
         }
     }
 </script>

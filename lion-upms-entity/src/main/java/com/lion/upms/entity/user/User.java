@@ -25,11 +25,11 @@ import java.util.Date;
 @Entity
 @Table(name = "t_upms_user"
         ,uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})}
-        ,indexes = {@Index(columnList = "name"),@Index(columnList = "email")})
+        ,indexes = {@Index(columnList = "name"),@Index(columnList = "email"),@Index(columnList = "create_date_time") })
 @DynamicUpdate
 @DynamicInsert
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true,value = {"password","username","isDelete","createDateTime","updateDateTime","createUserId","updateUserId"},allowSetters = true)
+@JsonIgnoreProperties(ignoreUnknown = true,value = {"password","username","createDateTime","updateDateTime","createUserId","updateUserId"},allowSetters = true)
 public class User extends BaseEntity {
 
 

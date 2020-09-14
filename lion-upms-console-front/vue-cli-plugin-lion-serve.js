@@ -266,7 +266,7 @@ module.exports = (api, options) => {
                     console.log(`  - Network: ${chalk.cyan(networkUrl)}`)
                     //注册服务到nginx网关
                     setInterval(registerGateway, 1000);
-                    console.log(`  - lion-serve: 微前端注册成功！`)
+                    console.log(`  - lion-serve: 微前端开始注册！`)
                 } else {
                     console.log()
                     console.log(chalk.yellow(`  It seems you are running Vue CLI inside a container.`))

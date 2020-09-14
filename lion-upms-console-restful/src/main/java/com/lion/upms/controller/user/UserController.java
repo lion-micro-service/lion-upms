@@ -18,6 +18,7 @@ import com.lion.upms.entity.user.dto.UserAddDto;
 import com.lion.upms.entity.user.dto.UserUpdataDto;
 import com.lion.upms.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -52,6 +53,8 @@ public class UserController extends BaseControllerImpl implements BaseController
         if (StringUtils.hasText(name)){
             jpqlParameter.setSearchParameter(SearchConstant.LIKE+"_name",name);
         }
+        jpqlParameter.setSearchParameter(SearchConstant.NOT_IN+"_username",new String[]{"admin","superadmin"});
+        jpqlParameter.setSortParameter("createDateTime", Sort.Direction.DESC);
         lionPage.setJpqlParameter(jpqlParameter);
         return (IResultData) userService.test(lionPage);
     }

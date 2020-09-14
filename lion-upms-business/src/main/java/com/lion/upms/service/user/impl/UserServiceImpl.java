@@ -53,21 +53,20 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public <S extends User> S save(S entity) {
-        User user = entity;
-        if (Objects.nonNull(user.getUsername()) && StringUtils.hasText(user.getUsername())){
-            User User = findUser(user.getUsername());
+        if (Objects.nonNull(entity.getUsername()) && StringUtils.hasText(entity.getUsername())){
+            User user = findUser(entity.getUsername());
             if (Objects.nonNull(user)){
                 new BusinessException("该用户已存在");
             }
         }
-        if (Objects.nonNull(user.getEmail()) && StringUtils.hasText(user.getEmail())){
-            boolean isExist = checkEmailIsExist(user.getEmail(),null);
+        if (Objects.nonNull(entity.getEmail()) && StringUtils.hasText(entity.getEmail())){
+            boolean isExist = checkEmailIsExist(entity.getEmail(),null);
             if (isExist){
                 new BusinessException("该邮箱已存在");
             }
         }
-        ValidatorExceptionUtil.isViolation(validator.validate(user, com.lion.core.persistence.Validator.Insert.class));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        ValidatorExceptionUtil.isViolation(validator.validate(entity, com.lion.core.persistence.Validator.Insert.class));
+        entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         return super.save(entity);
     }
 

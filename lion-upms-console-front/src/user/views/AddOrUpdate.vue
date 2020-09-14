@@ -186,31 +186,24 @@
                 if (validate) {
                     this.saveButtonDisabled=true;
                     const id = this.$route.query.id;
+                    let url = "/upms/user/console/add";
                     if(id){
                         this.addModel.id=id;
-                        axios.put("/upms/user/console/update",this.addModel)
-                            .then((data) =>{
-                                if((Object(data)).message){
-                                    message.success((Object(data)).message);
-                                }
-                            }).catch((fail)=>{
-
-                        }).finally(()=>{
-                            this.saveButtonDisabled=false;
-                        })
+                        url = "/upms/user/console/update";
                     }else{
                         this.addModel.password = md5(this.addModel.pass);
-                        axios.post("/upms/user/console/add",this.addModel)
-                            .then((data) =>{
-                                if((Object(data)).message){
-                                    message.success((Object(data)).message);
-                                }
-                            }).catch((fail)=>{
-
-                        }).finally(()=>{
-                            this.saveButtonDisabled=false;
-                        })
+                        url = "/upms/user/console/add";
                     }
+                    axios.post(url,this.addModel)
+                    .then((data) =>{
+                        if (Object(data).status === 200){
+                            message.success(Object(data).message);
+                        }
+                    }).catch((fail)=>{
+
+                    }).finally(()=>{
+                        this.saveButtonDisabled=false;
+                    })
                 }
             });
         };
