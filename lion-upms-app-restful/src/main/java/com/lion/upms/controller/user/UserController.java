@@ -28,7 +28,7 @@ public class UserController extends BaseControllerImpl implements BaseController
 //    @PreAuthorize("hasAuthority('user_console_list1')")
 //    @SentinelResource()
     public IResultData list(LionPage lionPage) {
-        IResultData resultData = (IResultData) userService.test(lionPage);
+        IResultData resultData = (IResultData) userService.navigator(lionPage);
         return resultData;
     }
 

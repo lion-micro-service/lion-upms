@@ -2,24 +2,21 @@ package com.lion.upms.controller.user;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import com.lion.annotation.AuthorizationIgnore;
 import com.lion.constant.SearchConstant;
 import com.lion.core.IResultData;
 import com.lion.core.LionPage;
 import com.lion.core.ResultData;
-import com.lion.core.ResultDataState;
+import com.lion.core.common.enums.ResultDataState;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.JpqlParameter;
 import com.lion.core.persistence.Validator;
-import com.lion.exception.BusinessException;
 import com.lion.upms.entity.user.User;
 import com.lion.upms.entity.user.dto.UserAddDto;
 import com.lion.upms.entity.user.dto.UserUpdataDto;
 import com.lion.upms.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -42,9 +39,6 @@ public class UserController extends BaseControllerImpl implements BaseController
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @GetMapping("/list")
 //    @PreAuthorize("hasAuthority('user_console_list1')")
 //    @SentinelResource()
@@ -56,7 +50,7 @@ public class UserController extends BaseControllerImpl implements BaseController
         jpqlParameter.setSearchParameter(SearchConstant.NOT_IN+"_username",new String[]{"admin","superadmin"});
         jpqlParameter.setSortParameter("createDateTime", Sort.Direction.DESC);
         lionPage.setJpqlParameter(jpqlParameter);
-        return (IResultData) userService.test(lionPage);
+        return (IResultData) userService.navigator(lionPage);
     }
 
     @GetMapping("/info")
@@ -103,5 +97,4 @@ public class UserController extends BaseControllerImpl implements BaseController
         userService.update(user);
         return ResultData.instance();
     }
-
 }

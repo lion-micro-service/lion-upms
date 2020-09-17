@@ -22,7 +22,7 @@ public interface UserService extends BaseService<User> {
      * @param lionPage
      * @return
      */
-    public Page<User> test(LionPage lionPage);
+    public Page<User> navigator(LionPage lionPage);
 
     /**
      * 根据用户名获取用户

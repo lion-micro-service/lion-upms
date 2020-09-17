@@ -1,0 +1,4 @@
+lion:
+  enums:
+    - com.lion.upms.entity.resources.enums.Scope
+    - com.lion.upms.entity.resources.enums.Type
