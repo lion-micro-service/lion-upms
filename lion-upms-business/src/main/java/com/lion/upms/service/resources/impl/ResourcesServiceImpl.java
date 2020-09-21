@@ -36,9 +36,11 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
     public List<ResourcesTreeVo> listTree(Scope scope) {
         List<Resources> list = resourcesDao.findByParentIdAndStateAndScope(0L, State.NORMAL, scope);
         List<ResourcesTreeVo> retuenList = convertVo(list);
-        retuenList.forEach(resources -> {
-            resources.setChildren(listTree(resources.getId(),0));
-        });
+        if (Objects.nonNull(retuenList)) {
+            retuenList.forEach(resources -> {
+                resources.setChildren(listTree(resources.getId(), 0));
+            });
+        }
         return retuenList;
     }
 

@@ -3,10 +3,12 @@ package com.lion.upm.expose.user.impl;
 import com.lion.core.ICurrentUser;
 import com.lion.upms.entity.user.User;
 import com.lion.upms.service.user.UserService;
+import com.lion.utils.BeanToMapUtil;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * @description:
@@ -20,7 +22,9 @@ public class CurrentUserExposImpl implements ICurrentUser<User> {
     private UserService userService;
 
     @Override
-    public User findUser(String username) {
-        return userService.findUser(username);
+    public Map<String, Object> findUserToMap(String username) {
+        return BeanToMapUtil.transBeanToMap(userService.findUser(username)) ;
     }
+
+
 }

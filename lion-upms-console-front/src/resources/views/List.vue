@@ -5,8 +5,8 @@
                 <a-row>
                     <a-col :span="6">
                         <a-form-model-item label="作用域" prop="scope" ref="scope" >
-                            <a-select v-model="searchModel.scope">
-                                <a-select-option value="lucy">Lucy</a-select-option>
+                            <a-select  v-model="searchModel.scope">
+                                <a-select-option :key="value.key" v-for="(value) in scope" :value="value.name">{{value.desc}}</a-select-option>
                             </a-select>
                         </a-form-model-item>
                     </a-col>
@@ -42,10 +42,13 @@
 
         private loading:boolean=false;
 
+        private scope:Array<any> = [];
+
         private searchModel : any ={
+            scope:"CONSOLE",
             pageNumber:1,
             pageSize:999
-        }
+        };
 
         private data:Array<any>=[];
 
@@ -56,6 +59,18 @@
             { title: '类型', dataIndex: 'type.desc', key: 'type' },
             { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 180,}
         ];
+
+        private mounted():void{
+            axios.get("/common/enum/console/to/select",{params:{"enumClass":"com.lion.upms.entity.resources.enums.Scope"}})
+                .then((data)=>{
+                    this.scope=data.data.enum;
+                })
+                .catch(fail => {
+                })
+                .finally(()=>{
+                });
+            this.search();
+        }
 
         private search():void{
             this.loading=true;
@@ -70,12 +85,12 @@
                 });
         }
 
-        @Watch("$route", { immediate: true,deep: true })
-        private onRouteChange(route: any):void {
-            if (route.path === "/resources/list"){
-                this.search();
-            }
-        }
+        // @Watch("$route", { immediate: true,deep: true })
+        // private onRouteChange(route: any):void {
+        //     if (route.path === "/resources/list"){
+        //         this.search();
+        //     }
+        // }
 
 
     }
