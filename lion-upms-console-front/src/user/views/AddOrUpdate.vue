@@ -106,7 +106,6 @@
                 return;
             }
             callback();
-
         }
 
         private validatorEmail(rule :any, value:string, callback:any):void{

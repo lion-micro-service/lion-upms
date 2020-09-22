@@ -45,8 +45,18 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
     }
 
     @Override
-    public Resources find(String code) {
+    public Resources findByCode(String code) {
         return resourcesDao.findFirstByCode(code);
+    }
+
+    @Override
+    public Resources findByName(String name) {
+        return resourcesDao.findFirstByName(name);
+    }
+
+    @Override
+    public Resources findByUrl(String url) {
+        return resourcesDao.findFirstByUrl(url);
     }
 
     /**

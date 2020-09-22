@@ -40,4 +40,18 @@ public interface ResourcesDao extends BaseDao<Resources> ,ResourcesDaoEx {
      * @return
      */
     public Resources findFirstByCode(String code);
+
+    /**
+     * 根据名称查询资源
+     * @param name
+     * @return
+     */
+    public Resources findFirstByName(String name);
+
+    /**
+     * 根据url查询资源
+     * @param url
+     * @return
+     */
+    public Resources findFirstByUrl(String url);
 }

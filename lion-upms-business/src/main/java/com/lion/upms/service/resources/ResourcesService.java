@@ -27,5 +27,19 @@ public interface ResourcesService extends BaseService<Resources> {
      * @param code
      * @return
      */
-    public Resources find(String code);
+    public Resources findByCode(String code);
+
+    /**
+     * 根据名称查询资源
+     * @param name
+     * @return
+     */
+    public Resources findByName(String name);
+
+    /**
+     * 根据url查询资源
+     * @param url
+     * @return
+     */
+    public Resources findByUrl(String url);
 }

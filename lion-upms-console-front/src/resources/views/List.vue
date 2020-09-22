@@ -25,13 +25,13 @@
         <a-card :bordered="false">
             <a-table rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="false">
                 <span slot="action" slot-scope="text, record">
-                    <a-button icon="edit" size="small" @click="edit(record.id)">修改</a-button>
+                    <a-button icon="edit" size="small" @click="addOrUpdate(record.id)">修改</a-button>
                     <a-button type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
                 </span>
             </a-table>
         </a-card>
 
-        <a-modal v-model="addOrUpdateModal" width="800px" title="添加/修改资源" centered @ok="() => (addOrUpdateModal = false)">
+        <a-modal v-model="addOrUpdateModal" width="800px" title="添加/修改资源" centered @ok="addOrUpdate" cancelText="关闭" okText="保存">
             <a-form-model layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
                 <a-row>
                     <a-col :span="12">
@@ -43,7 +43,7 @@
                     </a-col>
                     <a-col :span="12">
                         <a-form-model-item label="类型" prop="type" ref="type" >
-                            <a-select  v-model="addOrUpdateModel.type">
+                            <a-select  v-model="addOrUpdateModel.type" @change="typeChange">
                                 <a-select-option :key="value.key" v-for="(value) in type" :value="value.name">{{value.desc}}</a-select-option>
                             </a-select>
                         </a-form-model-item>
@@ -64,7 +64,7 @@
                 <a-row>
                     <a-col :span="12">
                         <a-form-model-item label="URL" prop="url" ref="url">
-                            <a-input placeholder="请输入URL" v-model="addOrUpdateModel.url" />
+                            <a-input v-bind:disabled="urlDisabled" placeholder="请输入URL" v-model="addOrUpdateModel.url" />
                         </a-form-model-item>
                     </a-col>
                     <a-col :span="12">
@@ -81,11 +81,13 @@
 <script lang="ts">
     import {Component, Emit, Inject, Model, Prop, Provide, Vue, Watch} from 'vue-property-decorator';
     import axios from "@lion/lion-front-core/src/network/axios";
-
+    import { message } from 'ant-design-vue';
     @Component({})
     export default class List extends Vue{
 
         private loading:boolean=false;
+
+        private urlDisabled:boolean=true;
 
         private addOrUpdateModal:boolean=false;
 
@@ -93,10 +95,13 @@
 
         private type:Array<any> = [];
 
+        private isSave:boolean=false;
+
         private addOrUpdateModel:any ={
             scope:"CONSOLE",
             type:"CATALOG",
             sort:0,
+            parentId:0,
         };
 
         private searchModel : any ={
@@ -105,7 +110,87 @@
             pageSize:999
         };
 
-        private rules:any={};
+        private rules:any={
+            code:[{required:true,validator:this.checkCodeIsExist,trigger:'blur'}],
+            name:[{required:true,validator:this.checkNameIsExist,trigger:'blur'}],
+            url:[{validator:this.checkUrlIsExist,trigger:'blur'}],
+        };
+
+        private checkCodeIsExist(rule :any, value:string, callback:any):void{
+            if (!value || value.trim() === ''){
+                callback(new Error('请输入编码'));
+                return;
+            }else if (value && value.trim() !== ''){
+                axios.get("/upms/resources/console/check/code/exist",{params:{"code":this.addOrUpdateModel.code}})
+                .then((data)=> {
+                    if (data.data.isExist) {
+                        callback(new Error('该编码已存在'));
+                    }else {
+                        callback();
+                    }
+                })
+                .catch(fail => {
+                })
+                .finally(()=>{
+                });
+                return;
+            }
+            callback();
+        }
+
+        private checkNameIsExist(rule :any, value:string, callback:any):void{
+            if (!value || value.trim() === ''){
+                callback(new Error('请输入名称'));
+                return;
+            }else if (value && value.trim() !== ''){
+                axios.get("/upms/resources/console/check/name/exist",{params:{"name":this.addOrUpdateModel.name}})
+                    .then((data)=> {
+                        if (data.data.isExist) {
+                            callback(new Error('该名称已存在'));
+                        }else {
+                            callback();
+                        }
+                    })
+                    .catch(fail => {
+                    })
+                    .finally(()=>{
+                    });
+                return;
+            }
+            callback();
+        }
+
+        private checkUrlIsExist(rule :any, value:string, callback:any):void{
+            if (this.addOrUpdateModel.type ==='MENU' && (!value || value.trim() === '')){
+                callback(new Error('请输入url'));
+                return;
+            }else if (this.addOrUpdateModel.type ==='MENU' && value && value.trim() !== ''){
+                axios.get("/upms/resources/console/check/url/exist",{params:{"url":this.addOrUpdateModel.url}})
+                    .then((data)=> {
+                        if (data.data.isExist) {
+                            callback(new Error('该url已存在'));
+                        }else {
+                            callback();
+                        }
+                    })
+                    .catch(fail => {
+                    })
+                    .finally(()=>{
+                    });
+                return;
+            }
+            callback();
+        }
+
+        private typeChange(value:string):void{
+            if (value && value === 'MENU'){
+                this.urlDisabled=false;
+                (this.$refs.form as any).validateField("url");
+            }else {
+                this.urlDisabled=true;
+                this.addOrUpdateModel.url = "";
+            }
+        }
 
         private data:Array<any>=[];
 
@@ -153,7 +238,42 @@
         }
 
         private addOrUpdate(id:number):void{
-
+            if (this.isSave){
+                return;
+            }
+            (this.$refs.addOrUpdateForm as any).validate((validate: boolean) => {
+                if (validate) {
+                    this.isSave=true;
+                    let url = "/upms/resources/console/add";
+                    if(id && id >0){
+                        this.addOrUpdateModel.id=id;
+                        url = "/upms/resources/console/update";
+                    }else{
+                        url = "/upms/resources/console/add";
+                    }
+                    let _this = this;
+                    axios.post(url,this.addOrUpdateModel)
+                    .then((data) =>{
+                        if (Object(data).status === 200){
+                            message.success(Object(data).message);
+                            this.addOrUpdateModel ={
+                                scope:"CONSOLE",
+                                type:"CATALOG",
+                                sort:0,
+                                parentId:0,
+                            };
+                            (this.$refs.addOrUpdateForm as any).resetFields();
+                            setTimeout(function () {
+                                _this.addOrUpdateModal = false;
+                                _this.search();
+                            },3000)
+                        }
+                    }).catch((fail)=>{
+                    }).finally(()=>{
+                        this.isSave=false;
+                    })
+                }
+            });
         }
 
 

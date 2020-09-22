@@ -1,9 +1,11 @@
 package com.lion.upms.entity.resources.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.lion.core.IEnum;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author mr.liu
@@ -45,5 +47,15 @@ public enum Scope implements IEnum {
         map.put("desc", desc);
         map.put("name", getName());
         return map;
+    }
+
+    @JsonCreator
+    public static Scope getScope(String name){
+        for(Scope item : values()){
+            if(Objects.equals(item.getName(),name)){
+                return item;
+            }
+        }
+        return null;
     }
 }
