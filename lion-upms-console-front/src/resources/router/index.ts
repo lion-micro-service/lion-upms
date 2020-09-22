@@ -12,11 +12,6 @@ const routes : Array<RouteConfig> = [{
         name:'资源列表',
         component: () => import('@/resources/views/List.vue'),
         meta: {keepAlive: true }
-    },{
-        path:'/resources/add',
-        name:'资源新增',
-        component: () => import('@/resources/views/AddOrUpdate.vue'),
-        meta: {keepAlive: false }
     }
 ];
 

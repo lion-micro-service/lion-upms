@@ -21,4 +21,11 @@ public interface ResourcesService extends BaseService<Resources> {
      * @return
      */
     public List<ResourcesTreeVo> listTree(Scope scope);
+
+    /**
+     * 根据编码查询资源
+     * @param code
+     * @return
+     */
+    public Resources find(String code);
 }

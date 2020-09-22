@@ -60,6 +60,9 @@ public class Resources extends BaseEntity {
     @Convert(converter = TypeConverter.class)
     private Type type;
 
+    @Column(name = "sort",nullable = false,columnDefinition = " int default 0 comment '排序'")
+    private Integer sort;
+
     @Column(name = "state",nullable = false,columnDefinition = " bit(1) default b'1' comment '状态（0：禁用，1：启用）'")
     @Convert(converter = StateConverter.class)
     private State state;

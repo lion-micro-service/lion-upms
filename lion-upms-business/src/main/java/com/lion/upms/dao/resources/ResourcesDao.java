@@ -24,7 +24,7 @@ public interface ResourcesDao extends BaseDao<Resources> ,ResourcesDaoEx {
      * @param scope
      * @return
      */
-    public List<Resources> findByParentIdAndStateAndScope(Long parentId,State state, Scope scope);
+    public List<Resources> findByParentIdAndStateAndScopeOrderBySort(Long parentId,State state, Scope scope);
 
     /**
      * 根据父节点ID查找子资源
@@ -32,5 +32,12 @@ public interface ResourcesDao extends BaseDao<Resources> ,ResourcesDaoEx {
      * @param state
      * @return
      */
-    public List<Resources> findByParentIdAndState(Long parentId, State state);
+    public List<Resources> findByParentIdAndStateOrderBySort(Long parentId, State state);
+
+    /**
+     * 根据编码查询资源
+     * @param code
+     * @return
+     */
+    public Resources findFirstByCode(String code);
 }

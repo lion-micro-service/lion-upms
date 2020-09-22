@@ -34,7 +34,7 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
 
     @Override
     public List<ResourcesTreeVo> listTree(Scope scope) {
-        List<Resources> list = resourcesDao.findByParentIdAndStateAndScope(0L, State.NORMAL, scope);
+        List<Resources> list = resourcesDao.findByParentIdAndStateAndScopeOrderBySort(0L, State.NORMAL, scope);
         List<ResourcesTreeVo> retuenList = convertVo(list);
         if (Objects.nonNull(retuenList)) {
             retuenList.forEach(resources -> {
@@ -42,6 +42,11 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
             });
         }
         return retuenList;
+    }
+
+    @Override
+    public Resources find(String code) {
+        return resourcesDao.findFirstByCode(code);
     }
 
     /**
@@ -75,7 +80,7 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
      * @return
      */
     private List<Resources> listTree(Long parentId) {
-        return resourcesDao.findByParentIdAndState(parentId, State.NORMAL);
+        return resourcesDao.findByParentIdAndStateOrderBySort(parentId, State.NORMAL);
     }
 
     /**
