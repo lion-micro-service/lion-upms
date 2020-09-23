@@ -4,6 +4,7 @@ import com.lion.core.IResultData;
 import com.lion.core.ResultData;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
+import com.lion.core.persistence.Validator;
 import com.lion.exception.BusinessException;
 import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.resources.enums.Scope;
@@ -84,25 +85,27 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
      * @param resources
      * @return
      */
-    @PostMapping("/persistence")
-    public IResultData persistence(@RequestBody @Validated Resources resources){
+    @PostMapping("/add")
+    public IResultData add(@RequestBody @Validated({Validator.Insert.class}) Resources resources){
         resources.setCode(resources.getCode().trim().toUpperCase());
-        if (resourcesService.checkCodeIsExist(resources.getCode(), resources.getId())){
-            new BusinessException("编码已存在");
-        }
-        if (resourcesService.checkNameIsExist(resources.getName(), resources.getId())){
-            new BusinessException("名称已存在");
-        }
-        if (resourcesService.checkUrlIsExist(resources.getUrl(), resources.getId())){
-            new BusinessException("url已存在");
-        }
-        if (Objects.nonNull(resources.getId()) && resources.getId()>0){
-            this.resourcesService.update(resources);
-        }else {
-            this.resourcesService.save(resources);
-        }
+        resourcesService.checkIsExist(resources);
+        this.resourcesService.save(resources);
         return ResultData.instance();
     }
+
+    /**
+     * 修改资源
+     * @param resources
+     * @return
+     */
+    @PutMapping("/update")
+    public IResultData update(@RequestBody @Validated({Validator.Update.class}) Resources resources){
+        resources.setCode(resources.getCode().trim().toUpperCase());
+        resourcesService.checkIsExist(resources);
+        this.resourcesService.update(resources);
+        return ResultData.instance();
+    }
+
 
     /**
      * 根据id获取详情

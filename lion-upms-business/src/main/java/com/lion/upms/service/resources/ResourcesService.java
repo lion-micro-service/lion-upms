@@ -89,4 +89,10 @@ public interface ResourcesService extends BaseService<Resources> {
      * @return
      */
     public Boolean checkUrlIsExist(String url);
+
+    /**
+     * 检查资源是否存在
+     * @param resources
+     */
+    public void checkIsExist(Resources resources);
 }

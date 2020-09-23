@@ -3,6 +3,7 @@ package com.lion.upms.service.resources.impl;
 import com.lion.core.common.enums.State;
 import com.lion.core.service.BaseService;
 import com.lion.core.service.impl.BaseServiceImpl;
+import com.lion.exception.BusinessException;
 import com.lion.upms.dao.resources.ResourcesDao;
 import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.resources.enums.Scope;
@@ -118,6 +119,19 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
     @Override
     public Boolean checkUrlIsExist(String url) {
         return checkUrlIsExist(url, null);
+    }
+
+    @Override
+    public void checkIsExist(Resources resources) {
+        if (checkCodeIsExist(resources.getCode(), resources.getId())){
+            new BusinessException("编码已存在");
+        }
+        if (checkNameIsExist(resources.getName(), resources.getId())){
+            new BusinessException("名称已存在");
+        }
+        if (checkUrlIsExist(resources.getUrl(), resources.getId())){
+            new BusinessException("url已存在");
+        }
     }
 
     /**

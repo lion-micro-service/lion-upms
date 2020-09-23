@@ -107,8 +107,7 @@
         private addOrUpdateModel:any ={
             scope:'CONSOLE',
             type:"CATALOG",
-            sort:0,
-            parentId:0,
+            sort:0
         };
 
 
@@ -247,26 +246,43 @@
             (this.$refs.addOrUpdateForm as any).validate((validate: boolean) => {
                 if (validate) {
                     this.isSave=true;
-                    let _this = this;
-                    axios.post("/upms/resources/console/persistence",this.addOrUpdateModel)
-                    .then((data) =>{
-                        if (Object(data).status === 200){
-                            message.success(Object(data).message);
-                            this.addOrUpdateModel ={
-                                scope:this.searchModel.scope,
-                            };
-                            (this.$refs.addOrUpdateForm as any).resetFields();
-                            setTimeout(function () {
-                                _this.addOrUpdateModal = false;
-                                _this.search();
-                            },3000)
-                        }
-                    }).catch((fail)=>{
-                    }).finally(()=>{
-                        this.isSave=false;
-                    })
+                    if (this.addOrUpdateModel.id){
+                        axios.put("/upms/resources/console/update",this.addOrUpdateModel)
+                        .then((data) =>{
+                            if (Object(data).status === 200){
+                                message.success(Object(data).message);
+                                this.success();
+                            }
+                        }).catch((fail)=>{
+                        }).finally(()=>{
+                            this.isSave=false;
+                        })
+                    }else {
+                        axios.post("/upms/resources/console/add",this.addOrUpdateModel)
+                        .then((data) =>{
+                            if (Object(data).status === 200){
+                                message.success(Object(data).message);
+                                this.success();
+                            }
+                        }).catch((fail)=>{
+                        }).finally(()=>{
+                            this.isSave=false;
+                        })
+                    }
                 }
             });
+        }
+
+        private success():void{
+            let _this = this;
+            this.addOrUpdateModel ={
+                scope:this.searchModel.scope,
+            };
+            (this.$refs.addOrUpdateForm as any).resetFields();
+            setTimeout(function () {
+                _this.addOrUpdateModal = false;
+                _this.search();
+            },3000);
         }
 
         private searchScopelChange(value:string):void{
