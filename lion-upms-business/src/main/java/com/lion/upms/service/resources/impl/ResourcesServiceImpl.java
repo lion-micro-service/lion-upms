@@ -13,6 +13,7 @@ import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import sun.rmi.log.LogInputStream;
 
 import javax.validation.constraints.NotNull;
@@ -59,6 +60,66 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
         return resourcesDao.findFirstByUrl(url);
     }
 
+    @Override
+    public Boolean checkCodeIsExist(String code, Long id) {
+        if (!StringUtils.hasText(code)){
+            return false;
+        }
+        Resources resources = resourcesDao.findFirstByCode(code);
+        if (Objects.isNull(resources)){
+            return false;
+        }
+        if (Objects.nonNull(id) && resources.getId().equals(id)){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean checkNameIsExist(String name, Long id) {
+        if (!StringUtils.hasText(name)){
+            return false;
+        }
+        Resources resources = resourcesDao.findFirstByName(name);
+        if (Objects.isNull(resources)){
+            return false;
+        }
+        if (Objects.nonNull(id) && resources.getId().equals(id)){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean checkUrlIsExist(String url, Long id) {
+        if (!StringUtils.hasText(url)){
+            return false;
+        }
+        Resources resources = resourcesDao.findFirstByUrl(url);
+        if (Objects.isNull(resources)){
+            return false;
+        }
+        if (Objects.nonNull(id) && resources.getId().equals(id)){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean checkCodeIsExist(String code) {
+        return checkCodeIsExist(code, null);
+    }
+
+    @Override
+    public Boolean checkNameIsExist(String name) {
+        return checkNameIsExist(name, null);
+    }
+
+    @Override
+    public Boolean checkUrlIsExist(String url) {
+        return checkUrlIsExist(url, null);
+    }
+
     /**
      * 获取所有子节点
      * @param parentId
@@ -99,13 +160,13 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
      * @return
      */
     private List<ResourcesTreeVo> convertVo(List<Resources> list){
-        List<ResourcesTreeVo> retuenList = new ArrayList<ResourcesTreeVo>();
+        List<ResourcesTreeVo> returnList = new ArrayList<ResourcesTreeVo>();
         list.forEach(resources -> {
             ResourcesTreeVo  resourcesTreeVo = new ResourcesTreeVo();
             BeanUtils.copyProperties(resources,resourcesTreeVo);
-            retuenList.add(resourcesTreeVo);
+            returnList.add(resourcesTreeVo);
         });
-        return retuenList.size()>0?retuenList:null;
+        return returnList.size()>0?returnList:null;
     }
 
 }

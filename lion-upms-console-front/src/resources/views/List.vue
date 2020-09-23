@@ -5,7 +5,7 @@
                 <a-row>
                     <a-col :span="6">
                         <a-form-model-item label="作用域" prop="scope" ref="scope" >
-                            <a-select  v-model="searchModel.scope">
+                            <a-select  v-model="searchModel.scope" @change="searchScopelChange">
                                 <a-select-option :key="value.key" v-for="(value) in scope" :value="value.name">{{value.desc}}</a-select-option>
                             </a-select>
                         </a-form-model-item>
@@ -15,7 +15,7 @@
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
                             <a-button type="primary" icon="search" @click="search()" >查询</a-button>
-                            <a-button type="primary" icon="file-add" @click="() => (addOrUpdateModal = true)" >添加</a-button>
+                            <a-button type="primary" icon="file-add" @click="add(0,0)" >添加</a-button>
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -25,8 +25,9 @@
         <a-card :bordered="false">
             <a-table rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="false">
                 <span slot="action" slot-scope="text, record">
-                    <a-button icon="edit" size="small" @click="addOrUpdate(record.id)">修改</a-button>
-                    <a-button type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
+                    <a-button icon="edit" size="small" @click="getDetails(record.id)">修改</a-button>
+                    <a-button v-if="record.type.key===0||record.type.key===1" icon="file-add" size="small" @click="add(record.id,record.type.key===0?1:2)">{{ record.type.key===0?'添加菜单':'添加功能' }}</a-button>
+                    <a-button v-if="!record.isDefault" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
                 </span>
             </a-table>
         </a-card>
@@ -36,14 +37,14 @@
                 <a-row>
                     <a-col :span="12">
                         <a-form-model-item label="作用域" prop="scope" ref="scope" >
-                            <a-select  v-model="addOrUpdateModel.scope">
+                            <a-select disabled="disabled"  v-model="addOrUpdateModel.scope">
                                 <a-select-option :key="value.key" v-for="(value) in scope" :value="value.name">{{value.desc}}</a-select-option>
                             </a-select>
                         </a-form-model-item>
                     </a-col>
                     <a-col :span="12">
                         <a-form-model-item label="类型" prop="type" ref="type" >
-                            <a-select  v-model="addOrUpdateModel.type" @change="typeChange">
+                            <a-select disabled="disabled" v-model="addOrUpdateModel.type" @change="typeChange">
                                 <a-select-option :key="value.key" v-for="(value) in type" :value="value.name">{{value.desc}}</a-select-option>
                             </a-select>
                         </a-form-model-item>
@@ -87,7 +88,7 @@
 
         private loading:boolean=false;
 
-        private urlDisabled:boolean=true;
+        private urlDisabled:boolean=false;
 
         private addOrUpdateModal:boolean=false;
 
@@ -97,18 +98,20 @@
 
         private isSave:boolean=false;
 
-        private addOrUpdateModel:any ={
-            scope:"CONSOLE",
-            type:"CATALOG",
-            sort:0,
-            parentId:0,
-        };
-
         private searchModel : any ={
             scope:"CONSOLE",
             pageNumber:1,
             pageSize:999
         };
+
+        private addOrUpdateModel:any ={
+            scope:'CONSOLE',
+            type:"CATALOG",
+            sort:0,
+            parentId:0,
+        };
+
+
 
         private rules:any={
             code:[{required:true,validator:this.checkCodeIsExist,trigger:'blur'}],
@@ -121,7 +124,7 @@
                 callback(new Error('请输入编码'));
                 return;
             }else if (value && value.trim() !== ''){
-                axios.get("/upms/resources/console/check/code/exist",{params:{"code":this.addOrUpdateModel.code}})
+                axios.get("/upms/resources/console/check/code/exist",{params:{"code":this.addOrUpdateModel.code,"id":this.addOrUpdateModel.id}})
                 .then((data)=> {
                     if (data.data.isExist) {
                         callback(new Error('该编码已存在'));
@@ -143,7 +146,7 @@
                 callback(new Error('请输入名称'));
                 return;
             }else if (value && value.trim() !== ''){
-                axios.get("/upms/resources/console/check/name/exist",{params:{"name":this.addOrUpdateModel.name}})
+                axios.get("/upms/resources/console/check/name/exist",{params:{"name":this.addOrUpdateModel.name,"id":this.addOrUpdateModel.id}})
                     .then((data)=> {
                         if (data.data.isExist) {
                             callback(new Error('该名称已存在'));
@@ -165,7 +168,7 @@
                 callback(new Error('请输入url'));
                 return;
             }else if (this.addOrUpdateModel.type ==='MENU' && value && value.trim() !== ''){
-                axios.get("/upms/resources/console/check/url/exist",{params:{"url":this.addOrUpdateModel.url}})
+                axios.get("/upms/resources/console/check/url/exist",{params:{"url":this.addOrUpdateModel.url,"id":this.addOrUpdateModel.id}})
                     .then((data)=> {
                         if (data.data.isExist) {
                             callback(new Error('该url已存在'));
@@ -196,12 +199,12 @@
 
         private columns :Array<any> = [
             { title: '名称', dataIndex: 'name', key: 'name',width: '200px' },
-            { title: '编码', dataIndex: 'code', key: 'code',width: '200px'},
+            { title: '编码', dataIndex: 'code', key: 'code',width: '300px'},
             { title: '作用域', dataIndex: 'scope.desc', key: 'scope' },
             { title: '类型', dataIndex: 'type.desc', key: 'type' },
-            { title: 'url', dataIndex: 'url', key: 'url',width: '200px' },
+            { title: 'url', dataIndex: 'url', key: 'url',width: '150px' },
             { title: '排序', dataIndex: 'sort', key: 'sort' },
-            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 180,}
+            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 300,}
         ];
 
         private async mounted() {
@@ -227,14 +230,14 @@
         private search():void{
             this.loading=true;
             axios.get("/upms/resources/console/list/tree",{params:this.searchModel})
-                .then((data)=>{
-                    this.data=data.data.list;
-                })
-                .catch(fail => {
-                })
-                .finally(()=>{
-                    this.loading=false;
-                });
+            .then((data)=>{
+                this.data=data.data.list;
+            })
+            .catch(fail => {
+            })
+            .finally(()=>{
+                this.loading=false;
+            });
         }
 
         private addOrUpdate(id:number):void{
@@ -244,23 +247,13 @@
             (this.$refs.addOrUpdateForm as any).validate((validate: boolean) => {
                 if (validate) {
                     this.isSave=true;
-                    let url = "/upms/resources/console/add";
-                    if(id && id >0){
-                        this.addOrUpdateModel.id=id;
-                        url = "/upms/resources/console/update";
-                    }else{
-                        url = "/upms/resources/console/add";
-                    }
                     let _this = this;
-                    axios.post(url,this.addOrUpdateModel)
+                    axios.post("/upms/resources/console/persistence",this.addOrUpdateModel)
                     .then((data) =>{
                         if (Object(data).status === 200){
                             message.success(Object(data).message);
                             this.addOrUpdateModel ={
-                                scope:"CONSOLE",
-                                type:"CATALOG",
-                                sort:0,
-                                parentId:0,
+                                scope:this.searchModel.scope,
                             };
                             (this.$refs.addOrUpdateForm as any).resetFields();
                             setTimeout(function () {
@@ -273,6 +266,51 @@
                         this.isSave=false;
                     })
                 }
+            });
+        }
+
+        private searchScopelChange(value:string):void{
+            this.addOrUpdateModel.scope=value;
+        }
+
+        private add(parentId:number,type:number){
+            if (type === 0){
+                this.urlDisabled=true;
+                this.addOrUpdateModel.type="CATALOG";
+            }else if (type === 1){
+                this.urlDisabled=false;
+                this.addOrUpdateModel.type="MENU";
+            }else if (type === 2){
+                this.urlDisabled=true;
+                this.addOrUpdateModel.type="FUNCTION";
+            }
+            this.addOrUpdateModel.parentId = parentId;
+            this.addOrUpdateModal=true;
+        }
+
+        private getDetails(id:string):void{
+            axios.get("/upms/resources/console/details",{params:{"id":id}})
+            .then((data)=>{
+                if (Object(data).status === 200 && data.data.resources){
+                    if (data.data.resources.type.key !== 1){
+                        this.urlDisabled=true;
+                    }else {
+                        this.urlDisabled=false;
+                    }
+                    this.addOrUpdateModel.id=data.data.resources.id;
+                    this.addOrUpdateModel.version=data.data.resources.version;
+                    this.addOrUpdateModel.name=data.data.resources.name;
+                    this.addOrUpdateModel.url=data.data.resources.url;
+                    this.addOrUpdateModel.sort=data.data.resources.sort;
+                    this.addOrUpdateModel.code=data.data.resources.code;
+                    this.addOrUpdateModel.scope=data.data.resources.scope.name;
+                    this.addOrUpdateModel.type=data.data.resources.type.name;
+                    this.addOrUpdateModal=true;
+                }
+            })
+            .catch(fail => {
+            })
+            .finally(()=>{
             });
         }
 

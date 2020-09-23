@@ -63,9 +63,12 @@ public class Resources extends BaseEntity {
     @Column(name = "sort",nullable = false,columnDefinition = " int default 0 comment '排序'")
     private Integer sort;
 
-    @Column(name = "state",nullable = false,columnDefinition = " bit(1) default b'1' comment '状态（0：禁用，1：启用）'")
+    @Column(name = "state",nullable = false,columnDefinition = " int default 1 comment '状态（0：禁用，1：启用）'")
     @Convert(converter = StateConverter.class)
     private State state;
+
+    @Column(name = "is_default" ,nullable = false,columnDefinition = " bit(1) default b'0' comment '是否默认资源（0：否，1：是）默认资源不能删除'")
+    private Boolean isDefault;
 
     @Column(name = "url",columnDefinition = " varchar(250) comment 'url' ")
     private String url;

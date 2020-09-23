@@ -5,6 +5,7 @@ import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.resources.enums.Scope;
 import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 
+import javax.persistence.Id;
 import java.util.List;
 
 /**
@@ -42,4 +43,50 @@ public interface ResourcesService extends BaseService<Resources> {
      * @return
      */
     public Resources findByUrl(String url);
+
+    /**
+     * 检查code是否存在
+     * @param code
+     * @param id
+     * @return
+     */
+    public Boolean checkCodeIsExist(String code, Long id);
+
+    /**
+     * 检查名称是否存在
+     * @param name
+     * @param id
+     * @return
+     */
+    public Boolean checkNameIsExist(String name, Long id);
+
+    /**
+     * 检查url是否存在
+     * @param url
+     * @param id
+     * @return
+     */
+    public Boolean checkUrlIsExist(String url, Long id);
+
+
+    /**
+     * 检查code是否存在
+     * @param code
+     * @return
+     */
+    public Boolean checkCodeIsExist(String code);
+
+    /**
+     * 检查名称是否存在
+     * @param name
+     * @return
+     */
+    public Boolean checkNameIsExist(String name);
+
+    /**
+     * 检查url是否存在
+     * @param url
+     * @return
+     */
+    public Boolean checkUrlIsExist(String url);
 }
