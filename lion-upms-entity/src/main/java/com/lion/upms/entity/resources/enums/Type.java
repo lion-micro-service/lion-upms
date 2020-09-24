@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * @author mr.liu
  * @title: Type
- * @description: TODO
+ * @description: Type
  * @date 2020/8/14上午11:42
  */
 public enum Type implements IEnum {

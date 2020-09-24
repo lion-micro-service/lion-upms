@@ -68,21 +68,15 @@
             pageNumber:1,
             pageSize:10
         }
-
         private selectedRowKeys:Array<number> = [];
-
         private data:Array<any> = [];
         private loading:boolean=false;
-        //private x : number = 1500;
-        //private y : number = 300;
-
         private columns :Array<any> = [
             { title: '姓名', dataIndex: 'name', key: 'name' },
             { title: '邮箱', dataIndex: 'email', key: 'email'},
             { title: '年龄', dataIndex: 'age', key: 'age' },
             { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 180,}
         ];
-
         private paginationProps:any={
             showSizeChanger: false,
             showQuickJumper: true,

@@ -111,8 +111,6 @@
             sort:0
         };
 
-
-
         private rules:any={
             code:[{required:true,validator:this.checkCodeIsExist,trigger:'blur'}],
             name:[{required:true,validator:this.checkNameIsExist,trigger:'blur'}],
@@ -211,7 +209,7 @@
 
         private columns :Array<any> = [
             { title: '名称', dataIndex: 'name', key: 'name',width: '200px' },
-            { title: '编码', dataIndex: 'code', key: 'code',width: '300px'},
+            { title: '编码', dataIndex: 'code', key: 'code',width: '500px'},
             { title: '作用域', dataIndex: 'scope.desc', key: 'scope' },
             { title: '类型', dataIndex: 'type.desc', key: 'type' },
             { title: 'url', dataIndex: 'url', key: 'url',width: '150px' },
@@ -287,15 +285,12 @@
         }
 
         private success():void{
-            let _this = this;
             this.addOrUpdateModel ={
                 scope:this.searchModel.scope,
             };
             (this.$refs.addOrUpdateForm as any).resetFields();
-            setTimeout(function () {
-                _this.addOrUpdateModal = false;
-                _this.search();
-            },3000);
+            this.addOrUpdateModal = false;
+            this.search();
         }
 
         private searchScopelChange(value:string):void{
