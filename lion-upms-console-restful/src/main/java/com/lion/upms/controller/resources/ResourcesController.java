@@ -53,6 +53,7 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
     /**
      * 判断编码是否存在
      * @param code
+     * @param id
      * @return
      */
     @GetMapping("/check/code/exist")
@@ -63,6 +64,8 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
     /**
      * 判断名称是否存在
      * @param name
+     * @param id
+     * @param parentId
      * @return
      */
     @GetMapping("/check/name/exist")
@@ -73,6 +76,7 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
     /**
      * 判断名称是否存在
      * @param url
+     * @param id
      * @return
      */
     @GetMapping("/check/url/exist")
@@ -106,7 +110,6 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
         return ResultData.instance();
     }
 
-
     /**
      * 根据id获取详情
      * @param id
@@ -117,4 +120,6 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
         Resources resources = this.resourcesService.findById(id);
         return ResultData.instance().setData("resources",resources);
     }
+
+
 }
