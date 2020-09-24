@@ -4,6 +4,7 @@ import com.lion.core.service.BaseService;
 import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.resources.enums.Scope;
 import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ import java.util.List;
  * @description: 资源service
  * @date 2020/8/15下午5:24
  */
+@Validated
 public interface ResourcesService extends BaseService<Resources> {
 
     /**
@@ -60,7 +62,7 @@ public interface ResourcesService extends BaseService<Resources> {
      * @param parentId
      * @return
      */
-    public Boolean checkNameIsExist(String name, Long id,@NotNull Long parentId);
+    public Boolean checkNameIsExist(String name, Long id,@NotNull(message = "父节点id不能为空") Long parentId);
 
     /**
      * 检查url是否存在
@@ -98,4 +100,11 @@ public interface ResourcesService extends BaseService<Resources> {
      * @param resources
      */
     public void checkIsExist(Resources resources);
+
+    /**
+     * 根据id删除资源
+     * @param id
+     * @return
+     */
+    public Boolean delete(Long id);
 }

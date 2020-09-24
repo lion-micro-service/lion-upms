@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -121,5 +122,16 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
         return ResultData.instance().setData("resources",resources);
     }
 
+    /**
+     * 删除资源
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/delete")
+    public IResultData delete(@NotNull(message = "id不能为空") Long id){
+        resourcesService.delete(id);
+        ResultData resultData = ResultData.instance();
+        return resultData;
+    }
 
 }

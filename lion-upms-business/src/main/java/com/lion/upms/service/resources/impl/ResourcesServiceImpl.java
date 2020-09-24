@@ -134,6 +134,39 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
         }
     }
 
+    @Override
+    public Boolean delete(Long id) {
+        Resources resources = this.findById(id);
+        if (Objects.nonNull(resources) && resources.getIsDefault()){
+            new BusinessException("该资源不能删除（默认资源）");
+        }
+        if (Objects.isNull(resources)){
+            return false;
+        }
+        ResourcesTreeVo resourcesTreeVo = new ResourcesTreeVo();
+        BeanUtils.copyProperties(resources, resourcesTreeVo);
+        resourcesTreeVo.setChildren(listTree(resources.getId(), 0));
+        List<ResourcesTreeVo> list = new ArrayList<ResourcesTreeVo>();
+        list.add(resourcesTreeVo);
+        delete(list);
+        return true;
+    }
+
+    /**
+     * 删除资源
+     * @param list
+     */
+    private void delete(List<ResourcesTreeVo> list){
+        list.forEach(r->{
+            this.deleteById(r.getId());
+            if (Objects.nonNull(r.getChildren()) && r.getChildren().size()>0){
+                delete(r.getChildren());
+            }
+            //todo 删除角色所关联的资源
+        });
+    }
+
+
     /**
      * 获取所有子节点
      * @param parentId

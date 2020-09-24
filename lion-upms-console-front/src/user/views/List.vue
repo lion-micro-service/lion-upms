@@ -167,18 +167,16 @@
 
         private delete(id:any):void{
             axios.delete("/upms/user/console/delete",{params:{id:id},
-                paramsSerializer: params => {
-                    return qs.stringify(params, { indices: false })
-                }})
-                .then((data)=>{
-                    if((Object(data)).message){
-                        message.success((Object(data)).message);
-                    }
+            paramsSerializer: params => {
+                return qs.stringify(params, { indices: false })
+            }})
+            .then((data)=>{
+                if((Object(data)).status === 200 && (Object(data)).message){
+                    message.success((Object(data)).message);
                     this.search();
-                }).catch((fail)=>{
-
+                }
+            }).catch((fail)=>{
             }).finally(()=>{
-
             });
         }
     }

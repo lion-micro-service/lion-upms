@@ -83,6 +83,7 @@
     import {Component, Emit, Inject, Model, Prop, Provide, Vue, Watch} from 'vue-property-decorator';
     import axios from "@lion/lion-front-core/src/network/axios";
     import { message } from 'ant-design-vue';
+    import qs from "qs";
     @Component({})
     export default class List extends Vue{
 
@@ -340,6 +341,38 @@
             .catch(fail => {
             })
             .finally(()=>{
+            });
+        }
+
+        private del(id:any):void{
+            const _this =this;
+            if (!id){
+                message.error("请选择要删除的数据");
+            }
+            this.$confirm({
+                title: '是否要删除该数据?(错误的操作会带来灾难性的后果！)',
+                // content: '',
+                okText: 'Yes',
+                okType: 'danger',
+                cancelText: 'No',
+                onOk() {
+                    _this.delete(id);
+                },
+                onCancel() {
+                },
+            });
+
+        }
+
+        private delete(id:any):void{
+            axios.delete("/upms/resources/console/delete",{params:{id:id}})
+            .then((data)=>{
+                if((Object(data)).status === 200 && (Object(data)).message){
+                    message.success((Object(data)).message);
+                    this.search();
+                }
+            }).catch((fail)=>{
+            }).finally(()=>{
             });
         }
 
