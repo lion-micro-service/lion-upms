@@ -42,11 +42,20 @@ public interface ResourcesDao extends BaseDao<Resources> ,ResourcesDaoEx {
     public Resources findFirstByCode(String code);
 
     /**
+     * 根据名称和父节点ID查询资源
+     * @param name
+     * @param parentId
+     * @return
+     */
+    public Resources findFirstByNameAndParentId(String name,Long parentId);
+
+    /**
      * 根据名称查询资源
      * @param name
      * @return
      */
     public Resources findFirstByName(String name);
+
 
     /**
      * 根据url查询资源

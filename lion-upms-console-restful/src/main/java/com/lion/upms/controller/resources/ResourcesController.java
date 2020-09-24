@@ -66,8 +66,8 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
      * @return
      */
     @GetMapping("/check/name/exist")
-    public IResultData checkNameIsExist(@NotBlank(message = "名称不能为空") String name, Long id){
-        return ResultData.instance().setData("isExist", resourcesService.checkNameIsExist(name, id));
+    public IResultData checkNameIsExist(@NotBlank(message = "名称不能为空") String name, Long id, @NotNull(message = "父节点id不能为空")Long parentId){
+        return ResultData.instance().setData("isExist", resourcesService.checkNameIsExist(name, id,parentId));
     }
 
     /**

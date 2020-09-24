@@ -93,6 +93,10 @@
             }else if (value && value.trim() !== ''){
                 axios.get("/upms/user/console/exist",{params:{"username":this.addModel.username}})
                     .then((data)=> {
+                        if (Object(data).status !== 200){
+                            callback(new Error('异常错误！请检查'));
+                            return;
+                        }
                         if (data.data.isExist) {
                             callback(new Error('该账号已存在'));
                         }else {
@@ -113,6 +117,10 @@
             if (value && value.trim() !== ''){
                 axios.get("/upms/user/console/email/exist",{params:{email:value,id:id}})
                 .then((data)=>{
+                    if (Object(data).status !== 200){
+                        callback(new Error('异常错误！请检查'));
+                        return;
+                    }
                     if (data.data.isExist){
                         callback(new Error('该邮箱已存在'));
                     }else {
@@ -185,24 +193,29 @@
                 if (validate) {
                     this.saveButtonDisabled=true;
                     const id = this.$route.query.id;
-                    let url = "/upms/user/console/add";
                     if(id){
                         this.addModel.id=id;
-                        url = "/upms/user/console/update";
+                        axios.put("/upms/user/console/update",this.addModel)
+                        .then((data) =>{
+                            if (Object(data).status === 200){
+                                message.success(Object(data).message);
+                            }
+                        }).catch((fail)=>{
+                        }).finally(()=>{
+                            this.saveButtonDisabled=false;
+                        })
                     }else{
                         this.addModel.password = md5(this.addModel.pass);
-                        url = "/upms/user/console/add";
+                        axios.post("/upms/user/console/add",this.addModel)
+                        .then((data) =>{
+                            if (Object(data).status === 200){
+                                message.success(Object(data).message);
+                            }
+                        }).catch((fail)=>{
+                        }).finally(()=>{
+                            this.saveButtonDisabled=false;
+                        })
                     }
-                    axios.post(url,this.addModel)
-                    .then((data) =>{
-                        if (Object(data).status === 200){
-                            message.success(Object(data).message);
-                        }
-                    }).catch((fail)=>{
-
-                    }).finally(()=>{
-                        this.saveButtonDisabled=false;
-                    })
                 }
             });
         };

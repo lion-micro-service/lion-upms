@@ -6,6 +6,7 @@ import com.lion.upms.entity.resources.enums.Scope;
 import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -56,9 +57,10 @@ public interface ResourcesService extends BaseService<Resources> {
      * 检查名称是否存在
      * @param name
      * @param id
+     * @param parentId
      * @return
      */
-    public Boolean checkNameIsExist(String name, Long id);
+    public Boolean checkNameIsExist(String name, Long id,@NotNull Long parentId);
 
     /**
      * 检查url是否存在
@@ -79,9 +81,10 @@ public interface ResourcesService extends BaseService<Resources> {
     /**
      * 检查名称是否存在
      * @param name
+     * @param parentId
      * @return
      */
-    public Boolean checkNameIsExist(String name);
+    public Boolean checkNameIsExist(String name, Long parentId);
 
     /**
      * 检查url是否存在

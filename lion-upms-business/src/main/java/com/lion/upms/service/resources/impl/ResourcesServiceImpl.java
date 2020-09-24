@@ -77,11 +77,11 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
     }
 
     @Override
-    public Boolean checkNameIsExist(String name, Long id) {
+    public Boolean checkNameIsExist(String name, Long id, Long parentId) {
         if (!StringUtils.hasText(name)){
             return false;
         }
-        Resources resources = resourcesDao.findFirstByName(name);
+        Resources resources = resourcesDao.findFirstByNameAndParentId(name,parentId);
         if (Objects.isNull(resources)){
             return false;
         }
@@ -112,8 +112,8 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
     }
 
     @Override
-    public Boolean checkNameIsExist(String name) {
-        return checkNameIsExist(name, null);
+    public Boolean checkNameIsExist(String name, Long parentId) {
+        return checkNameIsExist(name, null, parentId);
     }
 
     @Override
@@ -126,8 +126,8 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
         if (checkCodeIsExist(resources.getCode(), resources.getId())){
             new BusinessException("编码已存在");
         }
-        if (checkNameIsExist(resources.getName(), resources.getId())){
-            new BusinessException("名称已存在");
+        if (checkNameIsExist(resources.getName(), resources.getId(),resources.getParentId())){
+            new BusinessException("名称在同节点已存在");
         }
         if (checkUrlIsExist(resources.getUrl(), resources.getId())){
             new BusinessException("url已存在");

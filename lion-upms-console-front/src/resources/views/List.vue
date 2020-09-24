@@ -125,6 +125,10 @@
             }else if (value && value.trim() !== ''){
                 axios.get("/upms/resources/console/check/code/exist",{params:{"code":this.addOrUpdateModel.code,"id":this.addOrUpdateModel.id}})
                 .then((data)=> {
+                    if (Object(data).status !== 200){
+                        callback(new Error('异常错误！请检查'));
+                        return;
+                    }
                     if (data.data.isExist) {
                         callback(new Error('该编码已存在'));
                     }else {
@@ -145,10 +149,14 @@
                 callback(new Error('请输入名称'));
                 return;
             }else if (value && value.trim() !== ''){
-                axios.get("/upms/resources/console/check/name/exist",{params:{"name":this.addOrUpdateModel.name,"id":this.addOrUpdateModel.id}})
+                axios.get("/upms/resources/console/check/name/exist",{params:{"name":this.addOrUpdateModel.name,"id":this.addOrUpdateModel.id,"parentId":this.addOrUpdateModel.parentId}})
                     .then((data)=> {
+                        if (Object(data).status !== 200){
+                            callback(new Error('异常错误！请检查'));
+                            return;
+                        }
                         if (data.data.isExist) {
-                            callback(new Error('该名称已存在'));
+                            callback(new Error('名称在同节点已存在'));
                         }else {
                             callback();
                         }
@@ -169,6 +177,10 @@
             }else if (this.addOrUpdateModel.type ==='MENU' && value && value.trim() !== ''){
                 axios.get("/upms/resources/console/check/url/exist",{params:{"url":this.addOrUpdateModel.url,"id":this.addOrUpdateModel.id}})
                     .then((data)=> {
+                        if (Object(data).status !== 200){
+                            callback(new Error('异常错误！请检查'));
+                            return;
+                        }
                         if (data.data.isExist) {
                             callback(new Error('该url已存在'));
                         }else {
@@ -314,6 +326,7 @@
                         this.urlDisabled=false;
                     }
                     this.addOrUpdateModel.id=data.data.resources.id;
+                    this.addOrUpdateModel.parentId=data.data.resources.parentId;
                     this.addOrUpdateModel.version=data.data.resources.version;
                     this.addOrUpdateModel.name=data.data.resources.name;
                     this.addOrUpdateModel.url=data.data.resources.url;
