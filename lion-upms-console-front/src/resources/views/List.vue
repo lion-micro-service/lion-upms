@@ -343,9 +343,10 @@
             const _this =this;
             if (!id){
                 message.error("请选择要删除的数据");
+                return;
             }
             this.$confirm({
-                title: '是否要删除该数据?(错误的操作会带来灾难性的后果！)',
+                title: '是否要删除该数据?(错误的操作会带来灾难性的后果)',
                 // content: '',
                 okText: 'Yes',
                 okType: 'danger',

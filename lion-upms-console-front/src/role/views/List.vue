@@ -34,12 +34,15 @@
             <a-table :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
                 <span slot="action" slot-scope="text, record">
                     <a-button icon="edit" size="small" @click="edit(record.id)">修改</a-button>
-                    <a-button type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
+                    <a-button icon="security-scan" size="small" @click="edit(record.id)">权限</a-button>
+                    <a-button v-if="!record.isDefault" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
                 </span>
             </a-table>
         </a-card>
 
         <add-or-update ref="addOrUpdate"></add-or-update>
+
+        <authority ref="authority"></authority>
     </div>
 </template>
 
@@ -47,8 +50,10 @@
     import {Component, Emit, Inject, Model, Prop, Provide, Vue, Watch} from 'vue-property-decorator';
     import axios from "@lion/lion-front-core/src/network/axios";
     import addOrUpdate from "@/role/components/addOrUpdate.vue";
+    import authority from "@/role/components/authority.vue";
     import { message } from 'ant-design-vue';
-    @Component({components:{addOrUpdate}})
+    import qs from "qs";
+    @Component({components:{addOrUpdate,authority}})
     export default class List extends Vue{
         private searchModel : any ={
             pageNumber:1,
@@ -60,7 +65,8 @@
         private columns :Array<any> = [
             { title: '编码', dataIndex: 'code', key: 'code' },
             { title: '名称', dataIndex: 'name', key: 'name'},
-            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 180,}
+            { title: '状态', dataIndex: 'state.desc', key: 'state'},
+            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 250,}
         ];
         private onSelectChange(selectedRowKeys:Array<number>):void{
             this.selectedRowKeys = selectedRowKeys;
@@ -105,6 +111,51 @@
 
         private add():void{
             (this.$refs.addOrUpdate as any).addOrUpdateModal=true;
+        }
+
+        private edit(id:string):void{
+            const child = (this.$refs.addOrUpdate as any);
+            child.getDetails(id);
+        }
+
+        private del(id:any):void{
+            const _this =this;
+            if (!id){
+                if (this.selectedRowKeys.length <=0 ){
+                    message.error("请选择要删除的数据");
+                    return;
+                }else{
+                    id = this.selectedRowKeys;
+                }
+            }
+            this.$confirm({
+                title: '是否要删除该数据?(错误的操作会带来灾难性的后果)',
+                // content: '',
+                okText: 'Yes',
+                okType: 'danger',
+                cancelText: 'No',
+                onOk() {
+                    _this.delete(id);
+                },
+                onCancel() {
+                },
+            });
+
+        }
+
+        private delete(id:any):void{
+            axios.delete("/upms/role/console/delete",{params:{id:id},
+                paramsSerializer: params => {
+                    return qs.stringify(params, { indices: false })
+                }})
+            .then((data)=>{
+                if((Object(data)).status === 200 && (Object(data)).message){
+                    message.success((Object(data)).message);
+                    this.search();
+                }
+            }).catch((fail)=>{
+            }).finally(()=>{
+            });
         }
     }
 </script>

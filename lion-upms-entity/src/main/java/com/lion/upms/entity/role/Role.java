@@ -42,6 +42,9 @@ public class Role extends BaseEntity {
     @Pattern(regexp = "^[\\u4E00-\\u9FA5\\w+]+$",message = "角色名称不能包含特殊字符",groups = {Validator.Update.class, Validator.Insert.class})
     private String name;
 
+    @Column(name = "is_default" ,nullable = false,columnDefinition = " bit(1) default b'0' comment '是否默认角色（0：否，1：是）默认角色不能删除'")
+    private Boolean isDefault;
+
     @Column(name = "remark",columnDefinition = " varchar(500) comment '备注' ")
     private String remark;
 
