@@ -1,5 +1,6 @@
 package com.lion.upms.service.resources.impl;
 
+import com.lion.core.LionPage;
 import com.lion.core.common.enums.State;
 import com.lion.core.service.impl.BaseServiceImpl;
 import com.lion.exception.BusinessException;
@@ -10,12 +11,14 @@ import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 import com.lion.upms.service.resources.ResourcesService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author mr.liu
@@ -145,6 +148,34 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
         list.add(resourcesTreeVo);
         delete(list);
         return true;
+    }
+
+    @Override
+    public List<Resources> getAllParentResources(Long id) {
+        List<Resources> list = new ArrayList<Resources>();
+        List<Resources> resourceslist = resourcesDao.findParentResourcesById(id, new LionPage(0,1, Sort.unsorted()));
+        list.addAll(resourceslist);
+        if (Objects.nonNull(resourceslist) && resourceslist.size()>0) {
+            resourceslist.forEach(resources -> {
+                getParentResources(resources.getId(), list);
+            });
+        }
+        return list;
+    }
+
+    /**
+     *  获取父节点
+     * @param id
+     * @param list
+     */
+    private void getParentResources(Long id,List<Resources> list){
+        List<Resources> resourceslist = resourcesDao.findParentResourcesById(id, new LionPage(0,1, Sort.unsorted()));
+        if (Objects.nonNull(resourceslist) && resourceslist.size()>0){
+            list.addAll(resourceslist);
+            resourceslist.forEach(resources -> {
+                getParentResources(resources.getParentId(),list);
+            });
+        }
     }
 
     /**

@@ -39,7 +39,7 @@
             <a-table :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
                 <span slot="action" slot-scope="text, record">
                     <a-button icon="edit" size="small" @click="edit(record.id)">修改</a-button>
-                    <a-button icon="security-scan" size="small" @click="edit(record.id)">权限</a-button>
+                    <a-button icon="security-scan" size="small" @click="roleResources(record.id)">权限</a-button>
                     <a-button v-if="!record.isDefault" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
                 </span>
             </a-table>
@@ -185,6 +185,18 @@
             }).catch((fail)=>{
             }).finally(()=>{
             });
+        }
+
+        private roleResources(id:string):void{
+            if (!id){
+                message.error("请选择角色进行配置权限（资源）");
+                return
+            }
+            const child = (this.$refs.roleResources as any);
+            child.scope=this.searchModel.scope;
+            child.modal=true;
+            child.roleId=id;
+            child.roleResources();
         }
     }
 </script>

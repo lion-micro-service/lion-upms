@@ -1,11 +1,14 @@
 package com.lion.upms.service.role;
 
 import com.lion.core.service.BaseService;
+import com.lion.upms.entity.common.enums.Scope;
 import com.lion.upms.entity.role.Role;
+import com.lion.upms.entity.role.vo.RoleResourcesTreeVo;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author mr.liu
@@ -61,4 +64,11 @@ public interface RoleService extends BaseService<Role> {
      * @param code
      */
     public boolean checkCodeIsExist(String code);
+
+    /**
+     * 根据作用于获取资源（角色配置权限专用）
+     * @param scope
+     * @return
+     */
+    public List<RoleResourcesTreeVo> roleResources(Scope scope);
 }

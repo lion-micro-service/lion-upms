@@ -3,8 +3,12 @@ package com.lion.upms.service.role.impl;
 import com.lion.core.service.impl.BaseServiceImpl;
 import com.lion.exception.BusinessException;
 import com.lion.upms.dao.role.RoleDao;
+import com.lion.upms.entity.common.enums.Scope;
+import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 import com.lion.upms.entity.role.Role;
+import com.lion.upms.entity.role.vo.RoleResourcesTreeVo;
 import com.lion.upms.entity.user.User;
+import com.lion.upms.service.resources.ResourcesService;
 import com.lion.upms.service.role.RoleService;
 import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -25,6 +32,9 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
 
     @Autowired
     private RoleDao roleDao;
+
+    @Autowired
+    private ResourcesService resourcesService;
 
     @Override
     public Role findByName(String name) {
@@ -84,8 +94,46 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
     }
 
     @Override
+    public List<RoleResourcesTreeVo> roleResources(Scope scope) {
+        List<ResourcesTreeVo> resourcesTreeList = resourcesService.listTree(scope);
+        List<RoleResourcesTreeVo> roleResourcesTreeList = new ArrayList<RoleResourcesTreeVo>();
+        resourcesTreeList.forEach(r->{
+            roleResourcesTreeList.add(convertVo(r));
+        });
+        return roleResourcesTreeList;
+    }
+
+    @Override
     public <S extends Role> S save(S entity) {
         this.checkIsExist(entity);
         return super.save(entity);
+    }
+
+    /**
+     * 设置子节点
+     * @param list
+     * @return
+     */
+    private List<RoleResourcesTreeVo> roleResourcesTreeVoChilder(List<ResourcesTreeVo> list){
+        List<RoleResourcesTreeVo> roleResourcesTreeList = new ArrayList<RoleResourcesTreeVo>();
+        list.forEach(r->{
+            roleResourcesTreeList.add(convertVo(r));
+        });
+        return roleResourcesTreeList.size()>0?roleResourcesTreeList:null;
+    }
+
+    /**
+     * bean VO 转换
+     * @param resourcesTreeVo
+     * @return
+     */
+    private RoleResourcesTreeVo convertVo(ResourcesTreeVo resourcesTreeVo){
+        RoleResourcesTreeVo roleResourcesTreeVo = new RoleResourcesTreeVo();
+        roleResourcesTreeVo.setTitle(resourcesTreeVo.getName());
+        roleResourcesTreeVo.setKey(resourcesTreeVo.getId());
+        if (Objects.nonNull(resourcesTreeVo.getChildren()) && resourcesTreeVo.getChildren().size()>0) {
+            roleResourcesTreeVo.setChildren(roleResourcesTreeVoChilder(resourcesTreeVo.getChildren()));
+        }
+        return roleResourcesTreeVo;
     }
 }

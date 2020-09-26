@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
  */
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "t_upms_role_resources",uniqueConstraints ={@UniqueConstraint(columnNames = "role_id")},indexes = {@Index(columnList = "resources_id")})
+@Table(name = "t_upms_role_resources",indexes = {@Index(columnList = "resources_id"),@Index(columnList = "role_id")})
 @DynamicUpdate
 @DynamicInsert
 @Data
@@ -33,4 +33,7 @@ public class RoleResources extends BaseEntity {
     @Column(name = "resources_id",columnDefinition = " BIGINT(20) comment '资源ID' ", nullable = false)
     @NotNull(message = "资源ID不能为空", groups = {Validator.Insert.class,Validator.Update.class})
     private Long resourcesId;
+
+    @Column(name = "is_checked",columnDefinition = " bit(1) default b'1' comment '是否选中（针对前端显示用）' ", nullable = false)
+    private Boolean isChecked;
 }

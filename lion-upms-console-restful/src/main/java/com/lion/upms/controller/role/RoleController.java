@@ -9,7 +9,10 @@ import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.JpqlParameter;
 import com.lion.core.persistence.Validator;
 import com.lion.upms.entity.common.enums.Scope;
+import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 import com.lion.upms.entity.role.Role;
+import com.lion.upms.entity.role.RoleResources;
+import com.lion.upms.entity.role.dto.AddRoleResourcesdDto;
 import com.lion.upms.service.resources.ResourcesService;
 import com.lion.upms.service.role.RoleDepartmentService;
 import com.lion.upms.service.role.RoleResourcesService;
@@ -24,6 +27,7 @@ import springfox.documentation.service.ApiListing;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -147,9 +151,42 @@ public class RoleController extends BaseControllerImpl implements BaseController
         return resultData;
     }
 
+    /**
+     * 获取资源树形结构（角色配置专用）
+     * @param scope
+     * @return
+     */
+    @GetMapping("/resources/tree")
+    public IResultData roleResourcesTree(@RequestParam(name = "scope",defaultValue = "CONSOLE") Scope scope){
+        return ResultData.instance().setData("resources",roleService.roleResources(scope));
+    }
 
-//    public IResultData roleResourcesTree(){
-//        resourcesService.listTree()
-//    }
+    /**
+     * 保存角色权限（资源）
+     * @param addRoleResourcesdDto
+     * @return
+     */
+    @PostMapping("/add/resources")
+    public IResultData addResources(@RequestBody @Validated AddRoleResourcesdDto addRoleResourcesdDto){
+        this.roleResourcesService.saveRoleResources(addRoleResourcesdDto);
+        return ResultData.instance();
+    }
+
+    /**
+     * 获取角色权限（资源）
+     * @param roleId
+     * @return
+     */
+    @GetMapping("/resources")
+    public IResultData resources(@NotNull(message = "角色id不能为空") Long roleId){
+        List<RoleResources> list = this.roleResourcesService.getAllRoleResources(roleId);
+        List<Long> returnList = new ArrayList<Long>();
+        list.forEach(roleResources->{
+            if (roleResources.getIsChecked()) {
+                returnList.add(roleResources.getResourcesId());
+            }
+        });
+        return ResultData.instance().setData("checkedKeys",returnList);
+    }
 
 }

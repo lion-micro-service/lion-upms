@@ -4,6 +4,7 @@ import com.lion.core.service.BaseService;
 import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.common.enums.Scope;
 import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
+import com.lion.upms.entity.role.RoleResources;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
@@ -106,4 +107,11 @@ public interface ResourcesService extends BaseService<Resources> {
      * @return
      */
     public Boolean delete(Long id);
+
+    /**
+     * 根据id获取所有的父节点
+     * @param id
+     * @return
+     */
+    public List<Resources> getAllParentResources(Long id);
 }

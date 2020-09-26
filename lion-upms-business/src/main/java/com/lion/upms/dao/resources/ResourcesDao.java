@@ -4,6 +4,9 @@ import com.lion.core.common.enums.State;
 import com.lion.core.persistence.curd.BaseDao;
 import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.common.enums.Scope;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -61,4 +64,12 @@ public interface ResourcesDao extends BaseDao<Resources> ,ResourcesDaoEx {
      * @return
      */
     public Resources findFirstByUrl(String url);
+
+    /**
+     * 根据id查询父节点
+     * @param id
+     * @return
+     */
+    @Query("select r from Resources r where r.id = (select r1.parentId from Resources r1 where r1.id =:id)")
+    public List<Resources> findParentResourcesById(@Param("id") Long id, Pageable pageable);
 }
