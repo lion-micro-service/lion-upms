@@ -1,23 +1,18 @@
 package com.lion.upms.service.resources.impl;
 
 import com.lion.core.common.enums.State;
-import com.lion.core.service.BaseService;
 import com.lion.core.service.impl.BaseServiceImpl;
 import com.lion.exception.BusinessException;
 import com.lion.upms.dao.resources.ResourcesDao;
 import com.lion.upms.entity.resources.Resources;
-import com.lion.upms.entity.resources.enums.Scope;
-import com.lion.upms.entity.resources.enums.Type;
+import com.lion.upms.entity.common.enums.Scope;
 import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 import com.lion.upms.service.resources.ResourcesService;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import sun.rmi.log.LogInputStream;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

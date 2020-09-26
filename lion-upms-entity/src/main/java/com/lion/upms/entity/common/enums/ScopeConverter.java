@@ -1,4 +1,4 @@
-package com.lion.upms.entity.resources.enums;
+package com.lion.upms.entity.common.enums;
 
 import com.lion.core.common.enums.EnumConverter;
 

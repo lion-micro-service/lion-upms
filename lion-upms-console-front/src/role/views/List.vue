@@ -4,11 +4,16 @@
             <a-form-model layout="inline" ref="from" :model="searchModel" >
                 <a-row>
                     <a-col :span="6">
-                        <a-form-model-item label="名称" prop="name" ref="name" >
-                            <a-input placeholder="请输入名称" v-model="searchModel.name"/>
+                        <a-form-model-item label="作用域" prop="scope" ref="scope" >
+                            <a-select  v-model="searchModel.scope" @change="searchScopelChange">
+                                <a-select-option :key="value.key" v-for="(value) in scope" :value="value.name">{{value.desc}}</a-select-option>
+                            </a-select>
                         </a-form-model-item>
                     </a-col>
                     <a-col :span="6">
+                        <a-form-model-item label="名称" prop="name" ref="name" >
+                            <a-input placeholder="请输入名称" v-model="searchModel.name"/>
+                        </a-form-model-item>
                     </a-col>
                     <a-col :span="6">
                         <a-form-model-item label="编码" prop="code" ref="code" >
@@ -42,7 +47,7 @@
 
         <add-or-update ref="addOrUpdate"></add-or-update>
 
-        <authority ref="authority"></authority>
+        <role-resources ref="roleResources"></role-resources>
     </div>
 </template>
 
@@ -50,21 +55,23 @@
     import {Component, Emit, Inject, Model, Prop, Provide, Vue, Watch} from 'vue-property-decorator';
     import axios from "@lion/lion-front-core/src/network/axios";
     import addOrUpdate from "@/role/components/addOrUpdate.vue";
-    import authority from "@/role/components/authority.vue";
+    import roleResources from "@/role/components/roleResources.vue";
     import { message } from 'ant-design-vue';
     import qs from "qs";
-    @Component({components:{addOrUpdate,authority}})
+    @Component({components:{addOrUpdate,roleResources}})
     export default class List extends Vue{
         private searchModel : any ={
             pageNumber:1,
-            pageSize:10
+            pageSize:10,
+            scope:"CONSOLE"
         }
         private selectedRowKeys:Array<number> = [];
         private data:Array<any> = [];
         private loading:boolean=false;
+        private scope:Array<any>=[];
         private columns :Array<any> = [
-            { title: '编码', dataIndex: 'code', key: 'code' },
             { title: '名称', dataIndex: 'name', key: 'name'},
+            { title: '编码', dataIndex: 'code', key: 'code' },
             { title: '状态', dataIndex: 'state.desc', key: 'state'},
             { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 250,}
         ];
@@ -102,15 +109,37 @@
                 this.loading=false;
             });
         }
-        @Watch("$route", { immediate: true,deep: true })
-        private onRouteChange(route: any):void {
-            if (route.path === "/role/list"){
+        // @Watch("$route", { immediate: true,deep: true })
+        // private onRouteChange(route: any):void {
+        //     if (route.path === "/role/list"){
+        //         this.search();
+        //     }
+        // }
+
+        private mounted() {
+            axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.common.enums.Scope"}})
+            .then((data) => {
+                this.scope = data.data.enum;
+                (this.$refs.addOrUpdate as any).scope=data.data.enum;
+                (this.$refs.addOrUpdate as any).addOrUpdateModel.scope="CONSOLE";
                 this.search();
-            }
+            })
+            .catch(fail => {
+            })
+            .finally(() => {
+            });
+        }
+
+        private searchScopelChange(value:string):void{
+            (this.$refs.addOrUpdate as any).addOrUpdateModel.scope=value;
         }
 
         private add():void{
-            (this.$refs.addOrUpdate as any).addOrUpdateModal=true;
+            const child = (this.$refs.addOrUpdate as any);
+            child.addOrUpdateModal=true;
+            child.addOrUpdateModel={};
+            child.addOrUpdateModel.scope=this.searchModel.scope;
+            child.addOrUpdateModal=true;
         }
 
         private edit(id:string):void{
@@ -162,12 +191,12 @@
 
 <style lang="css" scoped>
     .ant-form-item >>> .ant-form-item-label{
-        width: 50px;
+        width: 80px;
     }
     .ant-form-item{
         width: 100%;
     }
     .ant-row >>> .ant-form-item-control-wrapper{
-        width: calc(100% - 50px);
+        width: calc(100% - 80px);
     }
 </style>

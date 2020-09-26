@@ -3,6 +3,10 @@ package com.lion.upms.dao.user;
 import com.lion.core.persistence.curd.BaseDao;
 import com.lion.upms.entity.user.User;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+
 /**
  * @author mr.liu
  * @title: UserDao
@@ -24,4 +28,12 @@ public interface UserDao extends BaseDao<User> ,UserDaoEx {
      * @return
      */
     User findFirstByEmail(String email);
+
+    /**
+     * 根据id删除(不能删除admin和superadmin)
+     * @param id
+     * @param usernames
+     * @return
+     */
+    int deleteByIdAndUsernameNotIn(Serializable id, Collection<String> usernames);
 }

@@ -7,7 +7,7 @@
     import axios from "@lion/lion-front-core/src/network/axios";
     import { message } from 'ant-design-vue';
     @Component({})
-    export default class authority extends Vue{
+    export default class roleResources extends Vue{
 
     }
 </script>

@@ -3,10 +3,8 @@ package com.lion.upms.dao.resources;
 import com.lion.core.common.enums.State;
 import com.lion.core.persistence.curd.BaseDao;
 import com.lion.upms.entity.resources.Resources;
-import com.lion.upms.entity.resources.enums.Scope;
-import com.lion.upms.entity.resources.enums.Type;
+import com.lion.upms.entity.common.enums.Scope;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

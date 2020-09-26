@@ -5,9 +5,8 @@ import com.lion.core.ResultData;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.Validator;
-import com.lion.exception.BusinessException;
 import com.lion.upms.entity.resources.Resources;
-import com.lion.upms.entity.resources.enums.Scope;
+import com.lion.upms.entity.common.enums.Scope;
 import com.lion.upms.service.resources.ResourcesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @author mr.liu

@@ -4,8 +4,8 @@ import com.lion.core.common.enums.State;
 import com.lion.core.common.enums.StateConverter;
 import com.lion.core.persistence.Validator;
 import com.lion.core.persistence.entity.BaseEntity;
-import com.lion.upms.entity.resources.enums.Scope;
-import com.lion.upms.entity.resources.enums.ScopeConverter;
+import com.lion.upms.entity.common.enums.Scope;
+import com.lion.upms.entity.common.enums.ScopeConverter;
 import com.lion.upms.entity.resources.enums.Type;
 import com.lion.upms.entity.resources.enums.TypeConverter;
 import lombok.Data;
@@ -18,7 +18,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 /**
  * @author mr.liu

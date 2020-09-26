@@ -8,7 +8,9 @@ import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.JpqlParameter;
 import com.lion.core.persistence.Validator;
+import com.lion.upms.entity.common.enums.Scope;
 import com.lion.upms.entity.role.Role;
+import com.lion.upms.service.resources.ResourcesService;
 import com.lion.upms.service.role.RoleDepartmentService;
 import com.lion.upms.service.role.RoleResourcesService;
 import com.lion.upms.service.role.RoleService;
@@ -48,6 +50,9 @@ public class RoleController extends BaseControllerImpl implements BaseController
     @Autowired
     private RoleDepartmentService roleDepartmentService;
 
+    @Autowired
+    private ResourcesService resourcesService;
+
 
     /**
      * 列表
@@ -57,7 +62,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
      * @return
      */
     @GetMapping("/list")
-    public IResultData list(String name, String code, LionPage lionPage){
+    public IResultData list(String name, String code,@RequestParam(name = "scope",defaultValue = "CONSOLE") Scope scope, LionPage lionPage){
         JpqlParameter jpqlParameter = new JpqlParameter();
         if (StringUtils.hasText(name)){
             jpqlParameter.setSearchParameter(SearchConstant.LIKE+"_name",name);
@@ -65,6 +70,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
         if (StringUtils.hasText(code)){
             jpqlParameter.setSearchParameter(SearchConstant.LIKE+"_code",code);
         }
+        jpqlParameter.setSearchParameter(SearchConstant.EQUAL+"_scope",scope);
         jpqlParameter.setSortParameter("createDateTime", Sort.Direction.DESC);
         lionPage.setJpqlParameter(jpqlParameter);
         return roleService.findNavigator(lionPage);
@@ -140,5 +146,10 @@ public class RoleController extends BaseControllerImpl implements BaseController
         ResultData resultData = ResultData.instance();
         return resultData;
     }
+
+
+//    public IResultData roleResourcesTree(){
+//        resourcesService.listTree()
+//    }
 
 }

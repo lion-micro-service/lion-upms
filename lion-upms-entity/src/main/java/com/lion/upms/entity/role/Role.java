@@ -4,6 +4,8 @@ import com.lion.core.common.enums.State;
 import com.lion.core.common.enums.StateConverter;
 import com.lion.core.persistence.Validator;
 import com.lion.core.persistence.entity.BaseEntity;
+import com.lion.upms.entity.common.enums.Scope;
+import com.lion.upms.entity.common.enums.ScopeConverter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
@@ -41,6 +43,10 @@ public class Role extends BaseEntity {
     @Size(message = "角色名称为{min}-{max}个字符",max = 30,min = 3,groups = {Validator.Update.class, Validator.Insert.class})
     @Pattern(regexp = "^[\\u4E00-\\u9FA5\\w+]+$",message = "角色名称不能包含特殊字符",groups = {Validator.Update.class, Validator.Insert.class})
     private String name;
+
+    @Column(name = "scope",nullable = false,columnDefinition = " int default 1 comment '作用域（0:app,1:后台,2:前端,3:微信）'")
+    @Convert(converter = ScopeConverter.class)
+    private Scope scope;
 
     @Column(name = "is_default" ,nullable = false,columnDefinition = " bit(1) default b'0' comment '是否默认角色（0：否，1：是）默认角色不能删除'")
     private Boolean isDefault;

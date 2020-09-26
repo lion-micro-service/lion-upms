@@ -38,6 +38,9 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
 
     @Override
     public void checkIsExist(Role role) {
+        if (Objects.isNull(role.getName())){
+            return;
+        }
         if (checkNameIsExist(role.getName(), role.getId())){
             new BusinessException("名称已存在");
         }
@@ -80,5 +83,9 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
         return checkCodeIsExist(code,null);
     }
 
-
+    @Override
+    public <S extends Role> S save(S entity) {
+        this.checkIsExist(entity);
+        return super.save(entity);
+    }
 }

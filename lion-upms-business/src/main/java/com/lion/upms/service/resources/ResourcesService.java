@@ -2,11 +2,10 @@ package com.lion.upms.service.resources;
 
 import com.lion.core.service.BaseService;
 import com.lion.upms.entity.resources.Resources;
-import com.lion.upms.entity.resources.enums.Scope;
+import com.lion.upms.entity.common.enums.Scope;
 import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 

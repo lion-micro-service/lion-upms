@@ -23,6 +23,8 @@ import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 
@@ -92,5 +94,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 return true;
             }
         }
+    }
+
+    @Override
+    public void deleteById(Serializable id) {
+        this.userDao.deleteByIdAndUsernameNotIn(id, Arrays.asList(new String[]{"admin", "superadmin"}));
     }
 }

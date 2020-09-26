@@ -32,7 +32,7 @@
             </a-table>
         </a-card>
 
-        <a-modal v-model="addOrUpdateModal" width="800px" title="添加/修改资源" centered @ok="addOrUpdate" cancelText="关闭" okText="保存">
+        <a-modal v-model="addOrUpdateModal" width="800px" title="添加/修改资源" :maskClosable="maskClosable"  centered @ok="addOrUpdate" cancelText="关闭" okText="保存">
             <a-form-model layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
                 <a-row>
                     <a-col :span="12">
@@ -88,7 +88,7 @@
     export default class List extends Vue{
 
         private loading:boolean=false;
-
+        private maskClosable:boolean=false;
         private urlDisabled:boolean=false;
 
         private addOrUpdateModal:boolean=false;
@@ -214,26 +214,27 @@
             { title: '类型', dataIndex: 'type.desc', key: 'type' },
             { title: 'url', dataIndex: 'url', key: 'url',width: '150px' },
             { title: '排序', dataIndex: 'sort', key: 'sort' },
+            { title: '状态', dataIndex: 'state.desc', key: 'state' },
             { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 300,}
         ];
 
         private async mounted() {
-            await axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.resources.enums.Scope"}})
-                .then((data) => {
-                    this.scope = data.data.enum;
-                })
-                .catch(fail => {
-                })
-                .finally(() => {
-                });
+            await axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.common.enums.Scope"}})
+            .then((data) => {
+                this.scope = data.data.enum;
+            })
+            .catch(fail => {
+            })
+            .finally(() => {
+            });
             await axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.resources.enums.Type"}})
-                .then((data) => {
-                    this.type = data.data.enum;
-                })
-                .catch(fail => {
-                })
-                .finally(() => {
-                });
+            .then((data) => {
+                this.type = data.data.enum;
+            })
+            .catch(fail => {
+            })
+            .finally(() => {
+            });
             this.search();
         }
 
@@ -298,6 +299,9 @@
         }
 
         private add(parentId:number,type:number){
+            this.addOrUpdateModel ={
+                scope:this.searchModel.scope,
+            };
             if (type === 0){
                 this.urlDisabled=true;
                 this.addOrUpdateModel.type="CATALOG";
@@ -321,15 +325,15 @@
                     }else {
                         this.urlDisabled=false;
                     }
-                    this.addOrUpdateModel.id=data.data.resources.id;
-                    this.addOrUpdateModel.parentId=data.data.resources.parentId;
-                    this.addOrUpdateModel.version=data.data.resources.version;
-                    this.addOrUpdateModel.name=data.data.resources.name;
-                    this.addOrUpdateModel.url=data.data.resources.url;
-                    this.addOrUpdateModel.sort=data.data.resources.sort;
-                    this.addOrUpdateModel.code=data.data.resources.code;
-                    this.addOrUpdateModel.scope=data.data.resources.scope.name;
-                    this.addOrUpdateModel.type=data.data.resources.type.name;
+                    const resources = data.data.resources;
+                    const _type = resources.type.name;
+                    const _scope = resources.scope.name;
+                    delete resources.state; //必须删除(该值为object),否则会有诡异问题
+                    delete resources.type; //必须删除(该值为object),否则会有诡异问题
+                    delete resources.scope; //必须删除(该值为object),否则会有诡异问题
+                    this.addOrUpdateModel=resources;
+                    this.addOrUpdateModel.type=_type;
+                    this.addOrUpdateModel.scope= _scope;
                     this.addOrUpdateModal=true;
                 }
             })
@@ -386,12 +390,12 @@
 
 <style lang="css" scoped>
     .ant-form-item >>> .ant-form-item-label{
-        width: 50px;
+        width: 80px;
     }
     .ant-form-item{
         width: 100%;
     }
     .ant-row >>> .ant-form-item-control-wrapper{
-        width: calc(100% - 50px);
+        width: calc(100% - 80px);
     }
 </style>
