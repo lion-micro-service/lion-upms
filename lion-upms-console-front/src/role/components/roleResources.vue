@@ -1,6 +1,6 @@
 <template>
-    <a-modal style="max-height: 500px;min-height: 500px;" v-model="modal" width="400px"  title="添加/修改角色" centered @ok="save" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
-        <a-tree style="max-height: 450px;min-height: 450px;overflow:auto;overflow-x:auto;white-space:nowrap;white-space:nowrap;" v-model="checkedKeys" checkable :tree-data="treeData" @check="onCheck"/>
+    <a-modal style="max-height: 500px;" v-model="modal" width="400px"  title="角色权限（资源）" centered @ok="save" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
+        <a-tree style="max-height: 450px;overflow:auto;overflow-x:auto;white-space:nowrap;white-space:nowrap;" v-model="checkedKeys" checkable :tree-data="treeData" @check="onCheck"/>
     </a-modal>
 </template>
 

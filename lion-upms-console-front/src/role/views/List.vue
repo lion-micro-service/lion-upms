@@ -40,6 +40,9 @@
                 <span slot="action" slot-scope="text, record">
                     <a-button icon="edit" size="small" @click="edit(record.id)">修改</a-button>
                     <a-button icon="security-scan" size="small" @click="roleResources(record.id)">权限</a-button>
+                    <a-button icon="user" size="small" @click="roleUser(record.id)">用户</a-button>
+                    <a-button icon="radius-setting" size="small" @click="roleDepartment(record.id)">部门</a-button>
+                    <a-button icon="pic-center" size="small" @click="rolePosition(record.id)">职位</a-button>
                     <a-button v-if="!record.isDefault" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
                 </span>
             </a-table>
@@ -48,6 +51,12 @@
         <add-or-update ref="addOrUpdate"></add-or-update>
 
         <role-resources ref="roleResources"></role-resources>
+
+        <role-department ref="roleDepartment"></role-department>
+
+        <role-user ref="roleUser"></role-user>
+
+        <role-position ref="rolePosition"></role-position>
     </div>
 </template>
 
@@ -58,7 +67,10 @@
     import roleResources from "@/role/components/roleResources.vue";
     import { message } from 'ant-design-vue';
     import qs from "qs";
-    @Component({components:{addOrUpdate,roleResources}})
+    import RoleDepartment from "@/role/components/roleDepartment.vue";
+    import RoleUser from "@/role/components/roleUser.vue";
+    import RolePosition from "@/role/components/rolePosition.vue";
+    @Component({components:{RolePosition, RoleUser, RoleDepartment, addOrUpdate,roleResources}})
     export default class List extends Vue{
         private searchModel : any ={
             pageNumber:1,
@@ -73,7 +85,7 @@
             { title: '名称', dataIndex: 'name', key: 'name'},
             { title: '编码', dataIndex: 'code', key: 'code' },
             { title: '状态', dataIndex: 'state.desc', key: 'state'},
-            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 250,}
+            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 500,}
         ];
         private onSelectChange(selectedRowKeys:Array<number>):void{
             this.selectedRowKeys = selectedRowKeys;
@@ -197,6 +209,40 @@
             child.modal=true;
             child.roleId=id;
             child.roleResources();
+        }
+
+        private roleUser(id:string):void{
+            if (!id){
+                message.error("请选择角色进行用户关联");
+                return
+            }
+            const child = this.$refs.roleUser as any;
+            child.modal=true;
+            child.roleId=id;
+            setTimeout(function () {
+                child.search();
+            },500)
+
+        }
+
+        private roleDepartment(id:string):void{
+            if (!id){
+                message.error("请选择角色进行部门关联");
+                return
+            }
+            const child = (this.$refs.roleDepartment as any);
+            child.modal=true;
+            child.roleId=id;
+        }
+
+        private rolePosition(id:string):void{
+            if (!id){
+                message.error("请选择角色进行职位关联");
+                return
+            }
+            const child = (this.$refs.rolePosition as any);
+            child.modal=true;
+            child.roleId=id;
         }
     }
 </script>

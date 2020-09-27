@@ -1,55 +1,24 @@
 <template>
     <div>
         <a-card class="card" :bordered="false">
-            <a-form-model layout="inline" ref="from" :model="searchModel" >
-                <a-row>
-                    <a-col :span="6">
-                        <a-form-model-item label="登陆账号" prop="username" ref="username" >
-                            <a-input placeholder="请输入登陆账号" v-model="searchModel.username"/>
-                        </a-form-model-item>
-                    </a-col>
-                    <a-col :span="6">
-                        <a-form-model-item label="姓名" prop="name" ref="name" >
-                            <a-input placeholder="请输入姓名" v-model="searchModel.name"/>
-                        </a-form-model-item>
-                    </a-col>
-                    <a-col :span="6">
-                        <a-form-model-item label="年龄" prop="age" ref="age" >
-                            <a-input-number placeholder="请输入年龄" v-model="searchModel.age"/>
-                        </a-form-model-item>
-                    </a-col>
-                    <a-col :span="6">
-                        <a-form-model-item label="邮箱" prop="email" ref="email" >
-                            <a-input placeholder="请输入邮箱" v-model="searchModel.email"/>
-                        </a-form-model-item>
-                    </a-col>
-                </a-row>
-                <a-row>
-                    <a-col :span="6">
-                        <a-form-model-item label="生日" prop="birthday" ref="birthday" >
-                            <a-date-picker placeholder="请输入生日" v-model="searchModel.birthday" />
-                        </a-form-model-item>
-                    </a-col>
-                </a-row>
+            <search-from ref="searchFrom">
                 <a-row >
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
                             <a-button type="primary" icon="search" @click="search()">查询</a-button>
                             <a-button type="primary" icon="file-add" @click="add()">添加</a-button>
-                            <a-button type="danger" icon="delete" @click="del()">删除</a-button>
+                            <a-button type="danger" icon="delete" @click="del(null)">删除</a-button>
                         </a-form-item>
                     </a-col>
                 </a-row>
-            </a-form-model>
+            </search-from>
         </a-card>
 
         <a-card :bordered="false">
-            <a-table :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
-                <span slot="action" slot-scope="text, record">
-                    <a-button icon="edit" size="small" @click="edit(record.id)">修改</a-button>
-                    <a-button type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
-                </span>
-            </a-table>
+            <list ref="list">
+                <a-button icon="edit" size="small" @click="edit(record.id)">修改</a-button>
+                <a-button type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
+            </list>
         </a-card>
     </div>
 </template>
@@ -59,60 +28,48 @@
     import axios from "@lion/lion-front-core/src/network/axios";
     import { message } from 'ant-design-vue';
     import qs from 'qs';
-    @Component({})
+    import searchFrom from "@/components/user/searchFrom.vue";
+    import list from "@/components/user/list.vue";
+    @Component({components:{searchFrom,list}})
     export default class List extends Vue{
-        private create():void {
+        private isMounted:boolean=false;
+        private mounted():void {
+            this.search();
+            this.isMounted=true;
         }
 
         private searchModel : any ={
             pageNumber:1,
             pageSize:10
         }
-        private selectedRowKeys:Array<number> = [];
-        private data:Array<any> = [];
-        private loading:boolean=false;
-        private columns :Array<any> = [
-            { title: '姓名', dataIndex: 'name', key: 'name' },
-            { title: '邮箱', dataIndex: 'email', key: 'email'},
-            { title: '年龄', dataIndex: 'age', key: 'age' },
-            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 180,}
-        ];
-        private paginationProps:any={
-            showSizeChanger: false,
-            showQuickJumper: true,
-            hideOnSinglePage:false,
-            pageSizeOptions:['10', '20', '30', '40','50','60','70','80','90','100'],
-            total:0,
-            current:1,
-            pageSize:10,
-            showSizeChange: (pageNumber:number, pageSize: number)=>this.paginationSearch(pageNumber,pageSize),
-            onChange: (pageNumber:number, pageSize: number)=>this.paginationSearch(pageNumber,pageSize),
-        };
 
-        // private mounted() :void{
-        //     this.search();
-        // }
-
-        private paginationSearch(pageNumber:number, pageSize: number):void{
+        private setPageInfo(pageNumber:number,pageSize:number):void{
             this.searchModel.pageNumber=pageNumber;
             this.searchModel.pageSize=pageSize;
-            this.search();
         }
 
         private search():void{
-            this.loading=true;
-            axios.get("/upms/user/console/list",{params:this.searchModel})
-                .then((data)=>{
-                        this.data=data.data.list;
-                        this.paginationProps.total=Number((Object(data)).totalElements);
-                        this.paginationProps.current=(Object(data)).pageNumber;
-                        this.paginationProps.pageSize=(Object(data)).pageSize;
-                })
-                .catch(fail => {
-                })
-                .finally(()=>{
-                        this.loading=false;
+            const list = (this.$refs.list as any);
+            const searchFrom = (this.$refs.searchFrom as any);
+            list.loading=true;
+            const _this = this;
+            if (searchFrom.searchModel){
+                Object.keys(searchFrom.searchModel).forEach(function(key){
+                    _this.searchModel[key]=searchFrom.searchModel[key];
                 });
+            }
+            axios.get("/upms/user/console/list",{params:this.searchModel})
+            .then((data)=>{
+                list.data=data.data.list;
+                list.paginationProps.total=Number((Object(data)).totalElements);
+                list.paginationProps.current=(Object(data)).pageNumber;
+                list.paginationProps.pageSize=(Object(data)).pageSize;
+            })
+            .catch(fail => {
+            })
+            .finally(()=>{
+                list.loading=false;
+            });
         }
 
         private add():void{
@@ -125,23 +82,20 @@
 
         @Watch("$route", { immediate: true,deep: true })
         private onRouteChange(route: any):void {
-            if (route.path === "/user/list"){
+            if (this.isMounted && route.path === "/user/list"){
                 this.search();
             }
         }
 
-        private onSelectChange(selectedRowKeys:Array<number>):void{
-            this.selectedRowKeys = selectedRowKeys;
-        }
-
         private del(id:any):void{
             const _this =this;
+            const list = (this.$refs.list as any);
             if (!id){
-                if (this.selectedRowKeys.length <=0 ){
+                if (list.selectedRowKeys.length <=0 ){
                     message.error("请选择要删除的数据");
                     return;
                 }else{
-                    id = this.selectedRowKeys;
+                    id = list.selectedRowKeys;
                 }
             }
             this.$confirm({
