@@ -5,9 +5,9 @@
                 <a-row >
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
-                            <a-button type="primary" icon="search" @click="search()">查询</a-button>
+                            <a-button type="primary" icon="search"  @click="()=>{this.searchModel.pageNumber =1;search()}">查询</a-button>
                             <a-button type="primary" icon="file-add" @click="add()">添加</a-button>
-                            <a-button type="danger" icon="delete" @click="del(null)">删除</a-button>
+                            <a-button type="danger" icon="delete"  @click="del(null)">删除</a-button>
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -15,9 +15,8 @@
         </a-card>
 
         <a-card :bordered="false">
-            <list ref="list">
-                <a-button icon="edit" size="small" @click="edit(record.id)">修改</a-button>
-                <a-button type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
+            <list @edit="edit" @del="del" @search="search" @set-page-info="setPageInfo" ref="list">
+
             </list>
         </a-card>
     </div>
@@ -34,6 +33,8 @@
     export default class List extends Vue{
         private isMounted:boolean=false;
         private mounted():void {
+            const list = (this.$refs.list as any);
+            list.columns[list.columns.length]={ title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 180,};
             this.search();
             this.isMounted=true;
         }
@@ -50,6 +51,7 @@
 
         private search():void{
             const list = (this.$refs.list as any);
+            list.selectedRowKeys=[];
             const searchFrom = (this.$refs.searchFrom as any);
             list.loading=true;
             const _this = this;

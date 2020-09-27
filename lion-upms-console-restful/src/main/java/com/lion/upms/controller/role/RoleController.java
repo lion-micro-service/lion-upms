@@ -12,7 +12,9 @@ import com.lion.upms.entity.common.enums.Scope;
 import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 import com.lion.upms.entity.role.Role;
 import com.lion.upms.entity.role.RoleResources;
+import com.lion.upms.entity.role.RoleUser;
 import com.lion.upms.entity.role.dto.AddRoleResourcesdDto;
+import com.lion.upms.entity.role.dto.AddRoleUserDto;
 import com.lion.upms.service.resources.ResourcesService;
 import com.lion.upms.service.role.RoleDepartmentService;
 import com.lion.upms.service.role.RoleResourcesService;
@@ -187,6 +189,33 @@ public class RoleController extends BaseControllerImpl implements BaseController
             }
         });
         return ResultData.instance().setData("checkedKeys",returnList);
+    }
+
+    /**
+     * 保存角色关联的用户
+     * @param addRoleUserDto
+     * @return
+     */
+    @PostMapping("/save/user")
+    public IResultData saveRoleUser(@RequestBody @Validated AddRoleUserDto addRoleUserDto){
+        roleUserService.saveRoleUser(addRoleUserDto);
+        return ResultData.instance();
+    }
+
+    /**
+     * 根据角色id和用户id查询角色所关联的用户
+     * @param roleId
+     * @param userId
+     * @return
+     */
+    @GetMapping("/user")
+    public IResultData roleUser(@NotNull(message = "角色id不能为空") Long roleId,@RequestParam(name = "userId",required = false,defaultValue = "0") List<Long> userId){
+        List<RoleUser> list = roleUserService.findRoleUser(roleId, userId);
+        List<Long> returnList = new ArrayList<Long>();
+        list.forEach(roleUser -> {
+            returnList.add(roleUser.getUserId());
+        });
+        return ResultData.instance().setData("oldUserId", returnList);
     }
 
 }

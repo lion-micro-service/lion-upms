@@ -208,7 +208,9 @@
             child.scope=this.searchModel.scope;
             child.modal=true;
             child.roleId=id;
-            child.roleResources();
+            setTimeout(function () {
+                child.roleResources();
+            },500);
         }
 
         private roleUser(id:string):void{
@@ -219,6 +221,7 @@
             const child = this.$refs.roleUser as any;
             child.modal=true;
             child.roleId=id;
+            child.searchModel.pageNumber=1;
             setTimeout(function () {
                 child.search();
             },500)

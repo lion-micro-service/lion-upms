@@ -54,21 +54,21 @@
                 return;
             }else if (value && value.trim() !== ''){
                 axios.get("/upms/role/console/check/code/exist",{params:{"code":this.addOrUpdateModel.code,"id":this.addOrUpdateModel.id}})
-                    .then((data)=> {
-                        if (Object(data).status !== 200){
-                            callback(new Error('异常错误！请检查'));
-                            return;
-                        }
-                        if (data.data.isExist) {
-                            callback(new Error('编码已存在'));
-                        }else {
-                            callback();
-                        }
-                    })
-                    .catch(fail => {
-                    })
-                    .finally(()=>{
-                    });
+                .then((data)=> {
+                    if (Object(data).status !== 200){
+                        callback(new Error('异常错误！请检查'));
+                        return;
+                    }
+                    if (data.data.isExist) {
+                        callback(new Error('编码已存在'));
+                    }else {
+                        callback();
+                    }
+                })
+                .catch(fail => {
+                })
+                .finally(()=>{
+                });
                 return;
             }
             callback();
@@ -80,21 +80,21 @@
                 return;
             }else if (value && value.trim() !== ''){
                 axios.get("/upms/role/console/check/name/exist",{params:{"name":this.addOrUpdateModel.name,"id":this.addOrUpdateModel.id}})
-                    .then((data)=> {
-                        if (Object(data).status !== 200){
-                            callback(new Error('异常错误！请检查'));
-                            return;
-                        }
-                        if (data.data.isExist) {
-                            callback(new Error('名称已存在'));
-                        }else {
-                            callback();
-                        }
-                    })
-                    .catch(fail => {
-                    })
-                    .finally(()=>{
-                    });
+                .then((data)=> {
+                    if (Object(data).status !== 200){
+                        callback(new Error('异常错误！请检查'));
+                        return;
+                    }
+                    if (data.data.isExist) {
+                        callback(new Error('名称已存在'));
+                    }else {
+                        callback();
+                    }
+                })
+                .catch(fail => {
+                })
+                .finally(()=>{
+                });
                 return;
             }
             callback();

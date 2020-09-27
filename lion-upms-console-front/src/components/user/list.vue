@@ -1,7 +1,8 @@
 <template>
     <a-table :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
         <span slot="action" slot-scope="text, record">
-            <slot></slot>
+            <a-button icon="edit" size="small" @click="edit(record.id)">修改</a-button>
+            <a-button type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
         </span>
     </a-table>
 </template>
@@ -18,7 +19,7 @@
             { title: '姓名', dataIndex: 'name', key: 'name' },
             { title: '邮箱', dataIndex: 'email', key: 'email'},
             { title: '年龄', dataIndex: 'age', key: 'age' },
-            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 180,}
+            // { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 180,}
         ];
         private paginationProps:any={
             showSizeChanger: false,
@@ -37,9 +38,21 @@
         }
 
         private paginationSearch(pageNumber:number, pageSize: number):void{
-            (this.$parent.$parent as any).setPageInfo(pageNumber,pageSize);
-            (this.$parent.$parent as any).search();
+            this.setPageInfo(pageNumber,pageSize);
+            this.search();
         }
+
+        @Emit()
+        private edit(is:string):void{}
+
+        @Emit()
+        private del(is:string):void{}
+
+        @Emit()
+        private search():void{}
+
+        @Emit("set-page-info")
+        private setPageInfo(pageNumber:number, pageSize: number):void{}
     }
 </script>
 
