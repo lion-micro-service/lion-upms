@@ -1,5 +1,5 @@
 <template>
-    <a-table :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
+    <a-table :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange ,getCheckboxProps:getCheckboxProps}" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
         <span slot="action" slot-scope="text, record">
             <a-button icon="edit" size="small" @click="edit(record.id)">修改</a-button>
             <a-button type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
@@ -14,7 +14,7 @@
         private selectedRowKeys:Array<number> = [];
         private data:Array<any> = [];
         private loading:boolean=false;
-
+        private notCheckUserId:Array<string>=[];
         private columns :Array<any> = [
             { title: '姓名', dataIndex: 'name', key: 'name' },
             { title: '邮箱', dataIndex: 'email', key: 'email'},
@@ -40,6 +40,14 @@
         private paginationSearch(pageNumber:number, pageSize: number):void{
             this.setPageInfo(pageNumber,pageSize);
             this.search();
+        }
+
+        public getCheckboxProps(record:any):any{
+            return {
+                props: {
+                    disabled: this.notCheckUserId.includes(record.id),
+                },
+            };
         }
 
         @Emit()

@@ -55,6 +55,7 @@
             const searchFrom = (this.$refs.searchFrom as any);
             list.loading=true;
             const _this = this;
+            this.searchModel={pageNumber:this.searchModel.pageNumber,pageSize:this.searchModel.pageSize};
             if (searchFrom.searchModel){
                 Object.keys(searchFrom.searchModel).forEach(function(key){
                     _this.searchModel[key]=searchFrom.searchModel[key];

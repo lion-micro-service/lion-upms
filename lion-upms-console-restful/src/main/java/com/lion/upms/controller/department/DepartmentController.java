@@ -6,16 +6,17 @@ import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.Validator;
 import com.lion.upms.entity.department.Department;
-import com.lion.upms.entity.department.dto.DepartmentUserDto;
+import com.lion.upms.entity.department.DepartmentUser;
+import com.lion.upms.entity.department.dto.AddDepartmentUserDto;
 import com.lion.upms.service.department.DepartmentService;
 import com.lion.upms.service.department.DepartmentUserService;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -103,12 +104,12 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
 
     /**
      * 保存部门关联的用户
-     * @param departmentUserDto
+     * @param addDepartmentUserDto
      * @return
      */
     @PostMapping("/save/user")
-    public IResultData saveUser(@RequestBody @Validated DepartmentUserDto departmentUserDto){
-
+    public IResultData saveUser(@RequestBody @Validated AddDepartmentUserDto addDepartmentUserDto){
+        departmentUserService.saveUser(addDepartmentUserDto);
         return ResultData.instance();
     }
 
@@ -118,8 +119,22 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
      * @param userId
      * @return 已关联数据和不能关联数据（在其它部门已关联）
      */
+    @GetMapping("/user")
     public IResultData user(@NotNull(message = "部门id不能为空") Long id, @RequestParam(name = "userId",defaultValue = "0",required = false) List<Long> userId){
-        return ResultData.instance();
+        List<DepartmentUser> oldDepartmentUser = departmentUserService.findDepartmentUser(id,userId);
+        List<DepartmentUser> notCheckDepartmentUser = departmentUserService.findNotInDepartmentUser(id,userId);
+        ResultData resultData = ResultData.instance();
+        List<Long> oldUserId = new ArrayList<Long>();
+        List<Long> notCheckUserId = new ArrayList<Long>();
+        oldDepartmentUser.forEach(departmentUser -> {
+            oldUserId.add(departmentUser.getUserId());
+        });
+        notCheckDepartmentUser.forEach(departmentUser -> {
+            notCheckUserId.add(departmentUser.getUserId());
+        });
+        resultData.setData("oldUserId",oldUserId);
+        resultData.setData("notCheckUserId",notCheckUserId);
+        return resultData;
     }
 
 

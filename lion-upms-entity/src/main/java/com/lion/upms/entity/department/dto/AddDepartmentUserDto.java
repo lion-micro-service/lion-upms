@@ -12,7 +12,7 @@ import java.util.List;
  * @create: 2020-09-28 16:44
  **/
 @Data
-public class DepartmentUserDto {
+public class AddDepartmentUserDto {
 
     /**
      * 部门ID

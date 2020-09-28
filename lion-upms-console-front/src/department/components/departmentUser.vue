@@ -29,6 +29,7 @@
         private maskClosable:boolean=false;
         private departmentId?:string;
         private oldUserId:Array<string>=[];
+
         private userId:Array<string>=[];
         private save():void{
             const list = (this.$refs.list as any);
@@ -60,41 +61,54 @@
             const searchFrom = (this.$refs.searchFrom as any);
             list.loading=true;
             const _this = this;
+            this.searchModel={pageNumber:this.searchModel.pageNumber,pageSize:this.searchModel.pageSize};
             if (searchFrom.searchModel){
                 Object.keys(searchFrom.searchModel).forEach(function(key){
                     _this.searchModel[key]=searchFrom.searchModel[key];
                 });
             }
+            let _data:any={};
+            let total:number=0;
+            let current:number=0;
+            let pageSize:number=0;
             await axios.get("/upms/user/console/list",{params:this.searchModel})
-                .then((data)=> {
-                    list.data = data.data.list;
-                    list.paginationProps.total = Number((Object(data)).totalElements);
-                    list.paginationProps.current = (Object(data)).pageNumber;
-                    list.paginationProps.pageSize = (Object(data)).pageSize;
-                    this.userId=[];
-                    for(let j:number = 0,len=data.data.list.length; j < len; j++) {
-                        this.userId[j]=(data.data.list[j].id);
-                    }
-                })
-                .catch(fail => {
-                })
-                .finally(()=>{
-                    list.loading=false;
-                });
+            .then((data)=> {
+                _data = data.data.list;
+                total = Number((Object(data)).totalElements);
+                current = (Object(data)).pageNumber;
+                pageSize = (Object(data)).pageSize;
+                this.userId=[];
+                for(let j:number = 0,len=data.data.list.length; j < len; j++) {
+                    this.userId[j]=(data.data.list[j].id);
+                }
+            })
+            .catch(fail => {
+            })
+            .finally(()=>{
+                list.loading=false;
+            });
 
-            await axios.get("/upms/department/console/user",{params:{departmentId: this.departmentId,userId: this.userId},
-                paramsSerializer: params => {
-                    return qs.stringify(params, { indices: false })
-                }})
-                .then((data)=>{
-                    this.oldUserId= data.data.oldUserId
-                    list.selectedRowKeys=this.oldUserId;
-                })
-                .catch(fail => {
-                })
-                .finally(()=>{
-                });
+            await axios.get("/upms/department/console/user",{params:{id: this.departmentId,userId: this.userId},
+            paramsSerializer: params => {
+                return qs.stringify(params, { indices: false })
+            }})
+            .then((data)=>{
+                this.oldUserId= data.data.oldUserId
+                list.notCheckUserId=data.data.notCheckUserId;
+
+                list.data = _data;
+                list.selectedRowKeys=this.oldUserId;
+                list.paginationProps.total = total;
+                list.paginationProps.current = current;
+                list.paginationProps.pageSize = pageSize;
+            })
+            .catch(fail => {
+            })
+            .finally(()=>{
+            });
         }
+
+
     }
 </script>
 
