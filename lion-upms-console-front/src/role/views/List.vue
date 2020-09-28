@@ -83,7 +83,7 @@
             { title: '名称', dataIndex: 'name', key: 'name'},
             { title: '编码', dataIndex: 'code', key: 'code' },
             { title: '状态', dataIndex: 'state.desc', key: 'state'},
-            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 320,}
+            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 350,}
         ];
         private onSelectChange(selectedRowKeys:Array<number>):void{
             this.selectedRowKeys = selectedRowKeys;
