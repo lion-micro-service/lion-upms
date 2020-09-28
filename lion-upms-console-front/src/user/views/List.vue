@@ -6,7 +6,7 @@
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
                             <a-button type="primary" icon="search"  @click="()=>{this.searchModel.pageNumber =1;search()}">查询</a-button>
-                            <a-button type="primary" icon="file-add" @click="add()">添加</a-button>
+                            <a-button type="primary" icon="file-add" @click="add()">新增</a-button>
                             <a-button type="danger" icon="delete"  @click="del(null)">删除</a-button>
                         </a-form-item>
                     </a-col>

@@ -41,8 +41,6 @@
                     <a-button icon="edit" size="small" @click="edit(record.id)">修改</a-button>
                     <a-button icon="security-scan" size="small" @click="roleResources(record.id)">权限</a-button>
                     <a-button icon="user" size="small" @click="roleUser(record.id)">用户</a-button>
-                    <a-button icon="radius-setting" size="small" @click="roleDepartment(record.id)">部门</a-button>
-                    <a-button icon="pic-center" size="small" @click="rolePosition(record.id)">职位</a-button>
                     <a-button v-if="!record.isDefault" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
                 </span>
             </a-table>
@@ -85,7 +83,7 @@
             { title: '名称', dataIndex: 'name', key: 'name'},
             { title: '编码', dataIndex: 'code', key: 'code' },
             { title: '状态', dataIndex: 'state.desc', key: 'state'},
-            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 500,}
+            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 320,}
         ];
         private onSelectChange(selectedRowKeys:Array<number>):void{
             this.selectedRowKeys = selectedRowKeys;
@@ -226,26 +224,6 @@
                 child.search();
             },500)
 
-        }
-
-        private roleDepartment(id:string):void{
-            if (!id){
-                message.error("请选择角色进行部门关联");
-                return
-            }
-            const child = (this.$refs.roleDepartment as any);
-            child.modal=true;
-            child.roleId=id;
-        }
-
-        private rolePosition(id:string):void{
-            if (!id){
-                message.error("请选择角色进行职位关联");
-                return
-            }
-            const child = (this.$refs.rolePosition as any);
-            child.modal=true;
-            child.roleId=id;
         }
     }
 </script>

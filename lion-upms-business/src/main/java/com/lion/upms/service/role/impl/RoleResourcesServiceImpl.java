@@ -7,10 +7,13 @@ import com.lion.upms.entity.role.RoleResources;
 import com.lion.upms.entity.role.dto.AddRoleResourcesdDto;
 import com.lion.upms.service.resources.ResourcesService;
 import com.lion.upms.service.role.RoleResourcesService;
+import com.lion.utils.ValidatorExceptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.persistence.Id;
+import javax.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +32,9 @@ public class RoleResourcesServiceImpl extends BaseServiceImpl<RoleResources> imp
 
     @Autowired
     private ResourcesService resourcesService;
+
+    @Resource
+    private Validator validator;
 
     @Override
     public void saveRoleResources(AddRoleResourcesdDto addRoleResourcesdDto) {
@@ -66,6 +72,7 @@ public class RoleResourcesServiceImpl extends BaseServiceImpl<RoleResources> imp
         RoleResources roleResources = new RoleResources();
         roleResources.setResourcesId(resourcesId);
         roleResources.setRoleId(roleId);
+        ValidatorExceptionUtil.isViolation(validator.validate(roleResources, com.lion.core.persistence.Validator.Insert.class));
         return roleResources;
     }
 }

@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
+import javax.validation.Validator;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -107,6 +109,12 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
     public <S extends Role> S save(S entity) {
         this.checkIsExist(entity);
         return super.save(entity);
+    }
+
+    @Override
+    public void update(Role entity) {
+        this.checkIsExist(entity);
+        super.update(entity);
     }
 
     /**

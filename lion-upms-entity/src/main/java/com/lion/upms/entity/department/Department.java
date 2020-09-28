@@ -21,7 +21,7 @@ import javax.validation.constraints.Pattern;
  */
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "t_upms_department",uniqueConstraints ={@UniqueConstraint(columnNames = "name")},indexes = {@Index(columnList = "parent_id")})
+@Table(name = "t_upms_department",indexes = {@Index(columnList = "parent_id"),@Index(columnList = "name")})
 @DynamicUpdate
 @DynamicInsert
 @Data
@@ -29,7 +29,7 @@ public class Department extends BaseEntity {
 
     private static final long serialVersionUID = -7780210746115490265L;
 
-    @Column(name = "parent_id",nullable = false,columnDefinition = " BIGINT(20) default 0 comment '父节点ID' ")
+    @Column(name = "parent_id",nullable = false,columnDefinition = " BIGINT(18) default 0 comment '父节点ID' ")
     @NotNull(message = "父节点ID不能为空",groups = {Validator.Update.class, Validator.Insert.class})
     private Long parentId;
 

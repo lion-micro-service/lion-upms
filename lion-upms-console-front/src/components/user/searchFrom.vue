@@ -35,8 +35,11 @@
 
 <script lang="ts">
     import {Component, Emit, Inject, Model, Prop, Provide, Vue, Watch} from 'vue-property-decorator';
+    import moment from 'moment';
+    import 'moment/locale/zh-cn';
     @Component({})
     export default class searchFrom extends Vue{
+        private moment:any = moment;
         private searchModel:any={};
     }
 </script>

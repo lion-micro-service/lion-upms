@@ -130,5 +130,4 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
         ResultData resultData = ResultData.instance();
         return resultData;
     }
-
 }

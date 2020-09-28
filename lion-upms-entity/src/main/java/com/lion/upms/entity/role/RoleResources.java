@@ -26,11 +26,11 @@ public class RoleResources extends BaseEntity {
 
     private static final long serialVersionUID = -772859768017737144L;
 
-    @Column(name = "role_id",columnDefinition = " BIGINT(20) comment '角色ID' ", nullable = false)
+    @Column(name = "role_id",columnDefinition = " BIGINT(18) comment '角色ID' ", nullable = false)
     @NotNull(message = "角色ID不能为空", groups = {Validator.Insert.class,Validator.Update.class})
     private Long roleId;
 
-    @Column(name = "resources_id",columnDefinition = " BIGINT(20) comment '资源ID' ", nullable = false)
+    @Column(name = "resources_id",columnDefinition = " BIGINT(18) comment '资源ID' ", nullable = false)
     @NotNull(message = "资源ID不能为空", groups = {Validator.Insert.class,Validator.Update.class})
     private Long resourcesId;
 

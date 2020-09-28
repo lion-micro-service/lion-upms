@@ -35,7 +35,7 @@ public class Resources extends BaseEntity {
 
     private static final long serialVersionUID = 4121945476090393825L;
 
-    @Column(name = "parent_id",nullable = false,columnDefinition = " BIGINT(20) default 0 comment '父节点ID' ")
+    @Column(name = "parent_id",nullable = false,columnDefinition = " BIGINT(18) default 0 comment '父节点ID' ")
     @NotNull(message = "父节点ID不能为空",groups = {Validator.Insert.class})
     private Long parentId;
 

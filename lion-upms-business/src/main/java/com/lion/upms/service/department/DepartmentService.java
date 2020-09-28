@@ -2,6 +2,10 @@ package com.lion.upms.service.department;
 
 import com.lion.core.service.BaseService;
 import com.lion.upms.entity.department.Department;
+import com.lion.upms.entity.department.vo.DepartmentTreeVo;
+import javassist.runtime.Inner;
+
+import java.util.List;
 
 /**
  * @author mr.liu
@@ -10,4 +14,34 @@ import com.lion.upms.entity.department.Department;
  * @date 2020/8/15下午5:36
  */
 public interface DepartmentService extends BaseService<Department> {
+
+    /**
+     * 获取部门树形结构
+     * @return
+     */
+    public List<DepartmentTreeVo> listTree();
+
+    /**
+     * 根据父节点ID和名称查询同节点部门
+     * @param parentId
+     * @param name
+     * @return
+     */
+    public Department findDepartment(Long parentId,String name);
+
+    /**
+     * 根据父节点ID检查同节点的名称是否存在
+     * @param parentId
+     * @param name
+     * @param id
+     * @return
+     */
+    public Boolean checkNameIsExist(Long parentId,String name,Long id);
+
+    /**
+     * 删除部门
+     * @param id
+     * @return
+     */
+    public void delete(Long id);
 }
