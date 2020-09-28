@@ -213,6 +213,7 @@
             const child = (this.$refs.departmentUser as any);
             child.modal=true;
             child.departmentId=id;
+            child.searchModel.pageNumber=1;
             setTimeout(function () {
                 child.search();
             },500);
