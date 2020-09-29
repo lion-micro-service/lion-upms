@@ -35,7 +35,7 @@
             </a-col>
             <a-col :span="6">
                 <a-form-model-item label="角色" prop="roleId" ref="roleId" >
-                    <a-select  v-model="searchModel.roleId" >
+                    <a-select allowClear v-model="searchModel.roleId" >
                         <a-select-option :key="value.id" v-for="(value) in role" :value="value.id">{{value.name}}</a-select-option>
                     </a-select>
                 </a-form-model-item>

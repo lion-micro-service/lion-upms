@@ -245,8 +245,10 @@
             }
             const child = (this.$refs.roleResources as any);
             child.scope=this.searchModel.scope;
-            child.modal=true;
+            child.checkedKeys=[];
+            child.treeData=[];
             child.roleId=id;
+            child.modal=true;
             setTimeout(function () {
                 child.roleResources();
             },500);
@@ -264,7 +266,9 @@
             const child = this.$refs.roleUser as any;
             child.modal=true;
             child.roleId=id;
-            child.searchModel.pageNumber=1;
+            child.searchModel= {
+                pageNumber:1
+            }
             setTimeout(function () {
                 child.search();
             },500)

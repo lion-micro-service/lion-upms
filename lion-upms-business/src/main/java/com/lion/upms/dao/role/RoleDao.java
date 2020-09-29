@@ -2,6 +2,9 @@ package com.lion.upms.dao.role;
 
 import com.lion.core.persistence.curd.BaseDao;
 import com.lion.upms.entity.role.Role;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 /**
  * @author mr.liu
@@ -25,5 +28,11 @@ public interface RoleDao extends BaseDao<Role> ,RoleDaoEx {
      */
     public Role findFirstByCode(String code);
 
-
+    /**
+     * 根据用户id查询角色
+     * @param userId
+     * @return
+     */
+    @Query(" select u from Role u join RoleUser ru on u.id = ru.roleId where ru.userId in (:userId)")
+    public List<Role> findByUserId(Long userId);
 }

@@ -1,6 +1,7 @@
 package com.lion.upms.dao.user.impl;
 
 import com.lion.core.persistence.curd.BaseDao;
+import com.lion.upms.dao.role.RoleDao;
 import com.lion.upms.dao.user.UserDaoEx;
 import com.lion.upms.entity.role.Role;
 import com.lion.upms.entity.user.User;
@@ -26,6 +27,9 @@ public class UserDaoImpl implements UserDaoEx {
 
     @Autowired
     private BaseDao<User> baseDao;
+
+    @Autowired
+    private RoleDao roleDao;
 
     @Override
     public Page<UserListVo> list(Pageable pageable, UserSearchDto userSearchDto) {
@@ -64,9 +68,12 @@ public class UserDaoImpl implements UserDaoEx {
             sb.append(" and r.id = :roleId ");
             searchParameter.put("roleId", userSearchDto.getRoleId());
         }
+        sb.append(" order by u.createDateTime");
         Page page = baseDao.findNavigator(pageable, sb.toString(), searchParameter);
         List<UserListVo> list = page.getContent();
-
+        list.forEach(userListVo -> {
+            userListVo.setRole(roleDao.findByUserId(userListVo.getUser().getId()));
+        });
         return (Page<UserListVo>) page;
     }
 

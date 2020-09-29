@@ -33,11 +33,4 @@ public interface RoleUserDao extends BaseDao<RoleUser> ,RoleUserDaoEx {
      */
     public List<RoleUser> findByRoleIdAndUserIdIn(Long roleId, List<Long> userId);
 
-    /**
-     * 根据用户id查询角色
-     * @param userId
-     * @return
-     */
-    @Query("  ")
-    public List<Role> findByUserId(Long userId);
 }

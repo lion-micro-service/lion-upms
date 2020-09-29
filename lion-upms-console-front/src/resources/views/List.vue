@@ -33,7 +33,7 @@
             </a-table>
         </a-card>
 
-        <a-modal v-model="addOrUpdateModal" width="800px" title="添加/修改资源" :maskClosable="maskClosable"  centered @ok="addOrUpdate" cancelText="关闭" okText="保存">
+        <a-modal destroyOnClose v-model="addOrUpdateModal" width="800px" title="添加/修改资源" :maskClosable="maskClosable"  centered @ok="addOrUpdate" cancelText="关闭" okText="保存">
             <a-form-model layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
                 <a-row>
                     <a-col :span="12">

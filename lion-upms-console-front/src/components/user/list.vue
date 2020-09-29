@@ -1,5 +1,8 @@
 <template>
     <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange ,getCheckboxProps:getCheckboxProps}"  :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
+        <span slot="role" slot-scope="text, record">
+            <samp v-for="(role,index) in record.role">{{role.name}}<samp v-if="index<record.role.length-1">/</samp></samp>
+        </span>
         <span slot="action" slot-scope="text, record">
             <a-button style="margin-left: 5px;" icon="edit" size="small" @click="edit(record.user.id)">修改</a-button>
             <a-button style="margin-left: 5px;" type="danger" icon="delete" size="small" @click='del(record.user.id)'>删除</a-button>
@@ -27,7 +30,7 @@
             { title: '年龄', dataIndex: 'user.age', key: 'age' },
             { title: '生日', dataIndex: 'user.birthday', key: 'birthday' },
             { title: '部门', dataIndex: 'department.name', key: 'department' },
-            { title: '角色', dataIndex: 'role.name', key: 'role' },
+            { title: '角色', key: 'role', scopedSlots: { customRender: 'role' }},
             // { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 180,}
         ];
         //分页参数设置

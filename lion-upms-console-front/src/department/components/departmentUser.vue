@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model="modal" width="1000px"  title="部门用户" centered @ok="save" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
+    <a-modal destroyOnClose v-model="modal" width="1000px"  title="部门用户" centered @ok="save" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
         <search-from ref="searchFrom">
             <a-row >
                 <a-col :span="24" style="text-align:right;">
