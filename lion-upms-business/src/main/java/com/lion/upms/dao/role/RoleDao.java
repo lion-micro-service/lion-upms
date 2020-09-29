@@ -24,4 +24,6 @@ public interface RoleDao extends BaseDao<Role> ,RoleDaoEx {
      * @return
      */
     public Role findFirstByCode(String code);
+
+
 }

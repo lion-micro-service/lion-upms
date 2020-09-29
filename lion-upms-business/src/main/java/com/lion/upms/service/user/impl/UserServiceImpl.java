@@ -7,6 +7,8 @@ import com.lion.core.service.impl.BaseServiceImpl;
 import com.lion.exception.BusinessException;
 import com.lion.upms.dao.user.UserDao;
 import com.lion.upms.entity.user.User;
+import com.lion.upms.entity.user.dto.UserSearchDto;
+import com.lion.upms.entity.user.vo.UserListVo;
 import com.lion.upms.service.user.UserService;
 import com.lion.utils.ValidatorExceptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +51,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
 //    @GlobalTransactional(name = "${spring.application.name}")
-    public Page<User> navigator(LionPage lionPage) {
-        return this.findNavigator(lionPage);
+    public Page<UserListVo> list(LionPage lionPage, UserSearchDto userSearchDto) {
+        return userDao.list(lionPage, userSearchDto);
     }
 
     @Override

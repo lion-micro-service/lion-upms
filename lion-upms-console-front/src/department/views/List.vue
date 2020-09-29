@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-card class="card" :bordered="false">
+        <a-card class="card" style="border-bottom-width: 5px;" >
             <a-form-model layout="inline" ref="from" >
                 <a-row >
                     <a-col :span="24" style="text-align:right;">
@@ -13,12 +13,12 @@
         </a-card>
 
         <a-card class="card" :bordered="false">
-            <a-table rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="false">
+            <a-table bordered rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="false">
                 <span slot="action" slot-scope="text, record">
-                    <a-button icon="edit" size="small" @click="getDetails(record.id)">修改</a-button>
-                    <a-button icon="file-add" size="small" @click="add(record.id)">新增子部门</a-button>
-                    <a-button icon="user" size="small" @click="departmentUser(record.id)">用户</a-button>
-                    <a-button type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
+                    <a-button style="margin-left: 5px;" icon="edit" size="small" @click="getDetails(record.id)">修改</a-button>
+                    <a-button style="margin-left: 5px;" icon="file-add" size="small" @click="add(record.id)">新增子部门</a-button>
+                    <a-button style="margin-left: 5px;" icon="user" size="small" @click="departmentUser(record.id)">用户</a-button>
+                    <a-button style="margin-left: 5px;" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
                 </span>
             </a-table>
         </a-card>
@@ -56,18 +56,23 @@
         components: {DepartmentUser}
     })
     export default class List extends Vue{
+        //列表数据
         private data:Array<any>=[];
+        //列表是否加载中（转圈圈图标）
         private loading:boolean=false;
+        //是否显示modal（新增窗口）
         private modal:boolean=false;
+        //是否点击阴影层关闭modal（新增窗口）
         private maskClosable:boolean=false;
+        //新增/修改数据模型
         private addOrUpdateModel:any={
             parentId:0,
         };
-
+        //校验规则
         private rules:any={
             name:[{required:true,validator:this.checkNameIsExist,trigger:'blur'}],
         };
-
+        //检查名称是否存在
         private checkNameIsExist(rule :any, value:string, callback:any):void{
             if (!value || value.trim() === ''){
                 callback(new Error('请输入名称'));
@@ -93,17 +98,23 @@
             }
             callback();
         }
-
+        //表格列定义
         private columns :Array<any> = [
             { title: '名称', dataIndex: 'name', key: 'name' },
             { title: '备注', dataIndex: 'remark', key: 'remark',width: '300px'},
             { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 380,}
         ];
 
+        /**
+         * 页面挂载后触发的事件
+         */
         private mounted():void {
             this.search();
         }
 
+         /**
+          * 查询
+          */
         private search():void{
             this.loading=true;
             axios.get("/upms/department/console/list/tree",{params:{}})
@@ -117,12 +128,19 @@
             });
         }
 
+        /**
+         * 显示新增窗口
+         * @param parentId
+         */
         private add(parentId:string):void{
             this.addOrUpdateModel={};
             this.addOrUpdateModel.parentId=parentId;
             this.modal=true;
         }
 
+        /**
+         * 提交新增/修改数据
+         */
         private addOrUpdate():void{
             if (this.addOrUpdateModel.id){
                 axios.put("/upms/department/console/update",this.addOrUpdateModel)
@@ -154,6 +172,10 @@
 
         }
 
+        /**
+         * 删除警示
+         * @param id
+         */
         private del(id:any):void{
             const _this =this;
             if (!id){
@@ -175,6 +197,10 @@
 
         }
 
+        /**
+         * 删除
+         * @param id
+         */
         private delete(id:any):void{
             axios.delete("/upms/department/console/delete",{params:{id:id},
                 paramsSerializer: params => {
@@ -190,6 +216,9 @@
             });
         }
 
+        /**
+         * 新增/修改/删除成功事件
+         */
         private success():void{
             this.addOrUpdateModel ={parentId:0};
             (this.$refs.addOrUpdateForm as any).resetFields();
@@ -197,6 +226,10 @@
             this.search();
         }
 
+        /**
+         * 修改获取详情
+         * @param id
+         */
         private getDetails(id:string):void{
             axios.get("/upms/department/console/details",{params:{id:id}})
             .then((data)=>{
@@ -209,6 +242,10 @@
             });
         }
 
+        /**
+         * 显示部门关联用户窗口
+         * @param id
+         */
         private departmentUser(id:string):void{
             const child = (this.$refs.departmentUser as any);
             child.modal=true;

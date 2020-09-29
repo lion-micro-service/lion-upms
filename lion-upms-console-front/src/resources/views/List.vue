@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-card class="card" :bordered="false">
+        <a-card class="card" style="border-bottom-width: 5px;">
             <a-form-model layout="inline" ref="from" :model="searchModel" >
                 <a-row>
                     <a-col :span="6">
@@ -10,12 +10,13 @@
                             </a-select>
                         </a-form-model-item>
                     </a-col>
+
                 </a-row>
                 <a-row >
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
-                            <a-button type="primary" icon="search" @click="search()" >查询</a-button>
-                            <a-button type="primary" icon="file-add" @click="add(0,0)" >添加</a-button>
+                            <a-button style="margin-left: 5px;" type="primary" icon="search" @click="search()" >查询</a-button>
+                            <a-button style="margin-left: 5px;" type="primary" icon="file-add" @click="add(0,0)" >添加</a-button>
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -23,11 +24,11 @@
         </a-card>
 
         <a-card :bordered="false">
-            <a-table rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="false">
+            <a-table bordered rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="false">
                 <span slot="action" slot-scope="text, record">
-                    <a-button icon="edit" size="small" @click="getDetails(record.id)">修改</a-button>
-                    <a-button v-if="record.type.key===0||record.type.key===1" icon="file-add" size="small" @click="add(record.id,record.type.key===0?1:2)">{{ record.type.key===0?'添加菜单':'添加功能' }}</a-button>
-                    <a-button v-if="!record.isDefault" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
+                    <a-button style="margin-left: 5px;" icon="edit" size="small" @click="getDetails(record.id)">修改</a-button>
+                    <a-button style="margin-left: 5px;" v-if="record.type.key===0||record.type.key===1" icon="file-add" size="small" @click="add(record.id,record.type.key===0?1:2)">{{ record.type.key===0?'添加菜单':'添加功能' }}</a-button>
+                    <a-button style="margin-left: 5px;" v-if="!record.isDefault" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
                 </span>
             </a-table>
         </a-card>
@@ -85,37 +86,58 @@
     import { message } from 'ant-design-vue';
     @Component({})
     export default class List extends Vue{
-
+        //列表数据源
+        private data:Array<any>=[];
+        //是否列表加载中
         private loading:boolean=false;
+        //是否点击阴影层关闭modal（新增/修改窗口）
         private maskClosable:boolean=false;
+        //url输入是否禁用
         private urlDisabled:boolean=false;
-
+        //新增/修改数据模型
         private addOrUpdateModal:boolean=false;
-
+        //作用域下拉框数据源
         private scope:Array<any> = [];
-
+        //类型下拉框数据源
         private type:Array<any> = [];
-
+        //是否提交数据中（防重提交）
         private isSave:boolean=false;
-
+        //查询数据模型
         private searchModel : any ={
             scope:"CONSOLE",
             pageNumber:1,
             pageSize:999
         };
-
+        //新增/修改数据模型
         private addOrUpdateModel:any ={
             scope:'CONSOLE',
             type:"CATALOG",
             sort:0
         };
-
+        //表格列定义
+        private columns :Array<any> = [
+            { title: '名称', dataIndex: 'name', key: 'name',width: '200px' },
+            { title: '编码', dataIndex: 'code', key: 'code',width: '500px'},
+            { title: '作用域', dataIndex: 'scope.desc', key: 'scope' },
+            { title: '类型', dataIndex: 'type.desc', key: 'type' },
+            { title: 'url', dataIndex: 'url', key: 'url',width: '150px' },
+            { title: '排序', dataIndex: 'sort', key: 'sort' },
+            { title: '状态', dataIndex: 'state.desc', key: 'state' },
+            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 300,}
+        ];
+        //校验规则
         private rules:any={
             code:[{required:true,validator:this.checkCodeIsExist,trigger:'blur'}],
             name:[{required:true,validator:this.checkNameIsExist,trigger:'blur'}],
             url:[{validator:this.checkUrlIsExist,trigger:'blur'}],
         };
 
+        /**
+         * 检查编码是否存在
+         * @param rule
+         * @param value
+         * @param callback
+         */
         private checkCodeIsExist(rule :any, value:string, callback:any):void{
             if (!value || value.trim() === ''){
                 callback(new Error('请输入编码'));
@@ -142,6 +164,12 @@
             callback();
         }
 
+        /**
+         * 检查名称是否存在
+         * @param rule
+         * @param value
+         * @param callback
+         */
         private checkNameIsExist(rule :any, value:string, callback:any):void{
             if (!value || value.trim() === ''){
                 callback(new Error('请输入名称'));
@@ -168,6 +196,12 @@
             callback();
         }
 
+        /**
+         * 检查url是否存在
+         * @param rule
+         * @param value
+         * @param callback
+         */
         private checkUrlIsExist(rule :any, value:string, callback:any):void{
             if (this.addOrUpdateModel.type ==='MENU' && (!value || value.trim() === '')){
                 callback(new Error('请输入url'));
@@ -194,6 +228,10 @@
             callback();
         }
 
+        /**
+         * 类型下拉框改变事件
+         * @param value
+         */
         private typeChange(value:string):void{
             if (value && value === 'MENU'){
                 this.urlDisabled=false;
@@ -204,19 +242,9 @@
             }
         }
 
-        private data:Array<any>=[];
-
-        private columns :Array<any> = [
-            { title: '名称', dataIndex: 'name', key: 'name',width: '200px' },
-            { title: '编码', dataIndex: 'code', key: 'code',width: '500px'},
-            { title: '作用域', dataIndex: 'scope.desc', key: 'scope' },
-            { title: '类型', dataIndex: 'type.desc', key: 'type' },
-            { title: 'url', dataIndex: 'url', key: 'url',width: '150px' },
-            { title: '排序', dataIndex: 'sort', key: 'sort' },
-            { title: '状态', dataIndex: 'state.desc', key: 'state' },
-            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 300,}
-        ];
-
+        /**
+         * 组件挂载后触发事件
+         */
         private async mounted() {
             await axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.common.enums.Scope"}})
             .then((data) => {
@@ -237,6 +265,9 @@
             this.search();
         }
 
+        /**
+         * 查询
+         */
         private search():void{
             this.loading=true;
             axios.get("/upms/resources/console/list/tree",{params:this.searchModel})
@@ -250,6 +281,10 @@
             });
         }
 
+        /**
+         * 提交新增/修改数据
+         * @param id
+         */
         private addOrUpdate(id:number):void{
             if (this.isSave){
                 return;
@@ -284,6 +319,9 @@
             });
         }
 
+        /**
+         * 新增/修改/删除成功后触发事件
+         */
         private success():void{
             this.addOrUpdateModel ={
                 scope:this.searchModel.scope,
@@ -293,14 +331,25 @@
             this.search();
         }
 
+        /**
+         * 作用于下拉框改变事件（可以不写）
+         * @param value
+         */
         private searchScopelChange(value:string):void{
             this.addOrUpdateModel.scope=value;
         }
 
+        /**
+         * 显示新增窗口
+         * @param parentId
+         * @param type
+         */
         private add(parentId:number,type:number){
+            //重置新增数据模型（避免历史数据干扰）
             this.addOrUpdateModel ={
                 scope:this.searchModel.scope,
             };
+            //判断添加资源类型（对相应的组件/输入框做调整）
             if (type === 0){
                 this.urlDisabled=true;
                 this.addOrUpdateModel.type="CATALOG";

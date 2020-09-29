@@ -74,7 +74,7 @@
                 list.paginationProps.pageSize = (Object(data)).pageSize;
                 this.userId=[];
                 for(let j:number = 0,len=data.data.list.length; j < len; j++) {
-                    this.userId[j]=(data.data.list[j].id);
+                    this.userId[j]=(data.data.list[j].user.id);
                 }
             })
             .catch(fail => {

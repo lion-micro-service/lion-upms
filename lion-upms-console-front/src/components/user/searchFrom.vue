@@ -28,6 +28,18 @@
                     <a-date-picker placeholder="请输入生日" v-model="searchModel.birthday" />
                 </a-form-model-item>
             </a-col>
+            <a-col :span="6">
+                <a-form-model-item label="部门" prop="departmentId" ref="departmentId" >
+                    <a-tree-select v-model="searchModel.departmentId" :tree-data="department" tree-checkable :show-checked-strategy="SHOW_PARENT" search-placeholder="请选择部门"/>
+                </a-form-model-item>
+            </a-col>
+            <a-col :span="6">
+                <a-form-model-item label="角色" prop="roleId" ref="roleId" >
+                    <a-select  v-model="searchModel.roleId" >
+                        <a-select-option :key="value.id" v-for="(value) in role" :value="value.id">{{value.name}}</a-select-option>
+                    </a-select>
+                </a-form-model-item>
+            </a-col>
         </a-row>
         <slot></slot>
     </a-form-model>
@@ -37,10 +49,68 @@
     import {Component, Emit, Inject, Model, Prop, Provide, Vue, Watch} from 'vue-property-decorator';
     import moment from 'moment';
     import 'moment/locale/zh-cn';
+    import axios from "@lion/lion-front-core/src/network/axios";
+    import { TreeSelect } from 'ant-design-vue';
     @Component({})
     export default class searchFrom extends Vue{
+        //antdv组件汉化
         private moment:any = moment;
+        //部门tree下拉框数据
+        private department:Array<any>=[];
+        //角色下拉框数据
+        private role:Array<any>=[];
+        //查询的参数模型
         private searchModel:any={};
+        private SHOW_PARENT:any = Object(TreeSelect).SHOW_PARENT;
+        //组件挂载后调用（初始化数据）
+        private mounted():void{
+            //获取部门数据
+            axios.get("/upms/department/console/list/tree",{params:{}})
+            .then((data)=>{
+                this.department=[];
+                let list:Array<any> = data.data.list
+                for(let j = 0; j < list.length; j++) {
+                    this.department[j] = {
+                        title:list[j].name,
+                        value:list[j].id,
+                        key:list[j].id,
+                        children: this.convertChildren(list[j].children)
+                    };
+                }
+            })
+            .catch(fail => {
+            })
+            .finally(()=>{
+            });
+            axios.get("/upms/role/console/list",{params:{pageSize:9999}})
+            .then((data)=>{
+                this.role=data.data.list;
+            })
+            .catch(fail => {
+            })
+            .finally(()=>{
+            });
+        }
+
+        /**
+         * 部门tree下拉框数据转换
+         * @param list
+         */
+        private convertChildren(list:Array<any>):Array<any>{
+            if (list && list.length>0) {
+                let treeData: Array<any> = [];
+                for (let j = 0; j < list.length; j++) {
+                    treeData[j] = {
+                        title: list[j].name,
+                        value: list[j].id,
+                        key: list[j].id,
+                        children: this.convertChildren(list[j].children)
+                    };
+                }
+                return treeData;
+            }
+            return [];
+        }
     }
 </script>
 

@@ -1,8 +1,8 @@
 <template>
-    <a-table :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange ,getCheckboxProps:getCheckboxProps}" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
+    <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange ,getCheckboxProps:getCheckboxProps}"  :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
         <span slot="action" slot-scope="text, record">
-            <a-button icon="edit" size="small" @click="edit(record.id)">修改</a-button>
-            <a-button type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
+            <a-button style="margin-left: 5px;" icon="edit" size="small" @click="edit(record.user.id)">修改</a-button>
+            <a-button style="margin-left: 5px;" type="danger" icon="delete" size="small" @click='del(record.user.id)'>删除</a-button>
         </span>
     </a-table>
 </template>
@@ -11,16 +11,26 @@
     import {Component, Emit, Inject, Model, Prop, Provide, Vue, Watch} from 'vue-property-decorator';
     @Component({})
     export default class list extends Vue{
+        private rowKey:any="user.id";
+        //复选框选中的值
         private selectedRowKeys:Array<number> = [];
+        //列表数据
         private data:Array<any> = [];
+        //是否加载中（转圈圈图标）
         private loading:boolean=false;
+        //不能选择的复选框
         private notCheckUserId:Array<string>=[];
+        //表格列
         private columns :Array<any> = [
-            { title: '姓名', dataIndex: 'name', key: 'name' },
-            { title: '邮箱', dataIndex: 'email', key: 'email'},
-            { title: '年龄', dataIndex: 'age', key: 'age' },
+            { title: '姓名', dataIndex: 'user.name', key: 'name' },
+            { title: '邮箱', dataIndex: 'user.email', key: 'email'},
+            { title: '年龄', dataIndex: 'user.age', key: 'age' },
+            { title: '生日', dataIndex: 'user.birthday', key: 'birthday' },
+            { title: '部门', dataIndex: 'department.name', key: 'department' },
+            { title: '角色', dataIndex: 'role.name', key: 'role' },
             // { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 180,}
         ];
+        //分页参数设置
         private paginationProps:any={
             showSizeChanger: false,
             showQuickJumper: true,
@@ -33,32 +43,61 @@
             onChange: (pageNumber:number, pageSize: number)=>this.paginationSearch(pageNumber,pageSize),
         };
 
+        /**
+         * 复选框改变事件
+         * @param selectedRowKeys
+         */
         private onSelectChange(selectedRowKeys:Array<number>):void{
             this.selectedRowKeys = selectedRowKeys;
         }
 
+        /**
+         * 分页触发上下页/第几页事件
+         * @param pageNumber
+         * @param pageSize
+         */
         private paginationSearch(pageNumber:number, pageSize: number):void{
             this.setPageInfo(pageNumber,pageSize);
             this.search();
         }
 
+        /**
+         * 设置复选框是否可选
+         * @param record
+         */
         public getCheckboxProps(record:any):any{
             return {
                 props: {
-                    disabled: this.notCheckUserId.includes(record.id),
+                    disabled: this.notCheckUserId.includes(record.user.id),
                 },
             };
         }
 
+        /**
+         * 事件传递调用父组件编辑方法
+         * @param is
+         */
         @Emit()
         private edit(is:string):void{}
 
+        /**
+         * 事件传递调用父组件删除方法
+         * @param is
+         */
         @Emit()
         private del(is:string):void{}
 
+        /**
+         * 事件传递调用父组件查询方法
+         */
         @Emit()
         private search():void{}
 
+        /**
+         * 事件传递调用父组件设置分页信息
+         * @param pageNumber
+         * @param pageSize
+         */
         @Emit("set-page-info")
         private setPageInfo(pageNumber:number, pageSize: number):void{}
     }

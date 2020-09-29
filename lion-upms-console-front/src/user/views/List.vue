@@ -1,13 +1,13 @@
 <template>
     <div>
-        <a-card class="card" :bordered="false">
+        <a-card class="card" style="border-bottom-width: 5px;" >
             <search-from ref="searchFrom">
                 <a-row >
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
-                            <a-button type="primary" icon="search"  @click="()=>{this.searchModel.pageNumber =1;search()}">查询</a-button>
-                            <a-button type="primary" icon="file-add" @click="add()">新增</a-button>
-                            <a-button type="danger" icon="delete"  @click="del(null)">删除</a-button>
+                            <a-button style="margin-left: 5px;" type="primary" icon="search"  @click="()=>{this.searchModel.pageNumber =1;search()}">查询</a-button>
+                            <a-button style="margin-left: 5px;" type="primary" icon="file-add" @click="add()">新增</a-button>
+                            <a-button style="margin-left: 5px;" type="danger" icon="delete"  @click="del(null)">删除</a-button>
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -31,7 +31,17 @@
     import list from "@/components/user/list.vue";
     @Component({components:{searchFrom,list}})
     export default class List extends Vue{
+        //组件是否已经挂载
         private isMounted:boolean=false;
+        //查询数据模型
+        private searchModel : any ={
+            pageNumber:1,
+            pageSize:10
+        }
+
+        /**
+         * 组件挂载后触发事件
+         */
         private mounted():void {
             const list = (this.$refs.list as any);
             list.columns[list.columns.length]={ title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 180,};
@@ -39,16 +49,19 @@
             this.isMounted=true;
         }
 
-        private searchModel : any ={
-            pageNumber:1,
-            pageSize:10
-        }
-
+        /**
+         * 设置分页信息
+         * @param pageNumber
+         * @param pageSize
+         */
         private setPageInfo(pageNumber:number,pageSize:number):void{
             this.searchModel.pageNumber=pageNumber;
             this.searchModel.pageSize=pageSize;
         }
 
+        /**
+         * 查询
+         */
         private search():void{
             const list = (this.$refs.list as any);
             list.selectedRowKeys=[];
@@ -61,7 +74,10 @@
                     _this.searchModel[key]=searchFrom.searchModel[key];
                 });
             }
-            axios.get("/upms/user/console/list",{params:this.searchModel})
+            axios.get("/upms/user/console/list",{params:this.searchModel,
+                paramsSerializer: params => {
+                    return qs.stringify(params, { indices: false })
+                }})
             .then((data)=>{
                 list.data=data.data.list;
                 list.paginationProps.total=Number((Object(data)).totalElements);
@@ -75,14 +91,25 @@
             });
         }
 
+        /**
+         * 跳转到新增页面
+         */
         private add():void{
             this.$router.push("/user/add");
         }
 
+        /**
+         * 跳转到编辑页面
+         * @param id
+         */
         private edit(id:string):void{
             this.$router.push({ path: '/user/add', query: { id: id }});
         }
 
+        /**
+         * 路由监控，返回到本路由的时候触发查询事件，（当从新增/修改页面返回时触发查询事件。获取最新数据）
+         * @param route
+         */
         @Watch("$route", { immediate: true,deep: true })
         private onRouteChange(route: any):void {
             if (this.isMounted && route.path === "/user/list"){
@@ -90,6 +117,10 @@
             }
         }
 
+        /**
+         * 弹出删除警示
+         * @param id
+         */
         private del(id:any):void{
             const _this =this;
             const list = (this.$refs.list as any);
@@ -116,6 +147,10 @@
 
         }
 
+        /**
+         * 删除
+         * @param id
+         */
         private delete(id:any):void{
             axios.delete("/upms/user/console/delete",{params:{id:id},
             paramsSerializer: params => {

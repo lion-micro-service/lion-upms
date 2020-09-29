@@ -1,7 +1,9 @@
 package com.lion.upms.dao.role;
 
 import com.lion.core.persistence.curd.BaseDao;
+import com.lion.upms.entity.role.Role;
 import com.lion.upms.entity.role.RoleUser;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,4 +32,12 @@ public interface RoleUserDao extends BaseDao<RoleUser> ,RoleUserDaoEx {
      * @return
      */
     public List<RoleUser> findByRoleIdAndUserIdIn(Long roleId, List<Long> userId);
+
+    /**
+     * 根据用户id查询角色
+     * @param userId
+     * @return
+     */
+    @Query("  ")
+    public List<Role> findByUserId(Long userId);
 }

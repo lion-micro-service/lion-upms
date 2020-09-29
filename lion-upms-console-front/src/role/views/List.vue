@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-card class="card" :bordered="false">
+        <a-card class="card" style="border-bottom-width: 5px;">
             <a-form-model layout="inline" ref="from" :model="searchModel" >
                 <a-row>
                     <a-col :span="6">
@@ -26,9 +26,9 @@
                 <a-row >
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
-                            <a-button type="primary" icon="search" @click="search()">查询</a-button>
-                            <a-button type="primary" icon="file-add" @click="add()">添加</a-button>
-                            <a-button type="danger" icon="delete" @click="del()">删除</a-button>
+                            <a-button style="margin-left: 5px;" type="primary" icon="search" @click="search()">查询</a-button>
+                            <a-button style="margin-left: 5px;" type="primary" icon="file-add" @click="add()">添加</a-button>
+                            <a-button style="margin-left: 5px;" type="danger" icon="delete" @click="del()">删除</a-button>
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -36,12 +36,12 @@
         </a-card>
 
         <a-card :bordered="false">
-            <a-table :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
+            <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
                 <span slot="action" slot-scope="text, record">
-                    <a-button icon="edit" size="small" @click="edit(record.id)">修改</a-button>
-                    <a-button icon="security-scan" size="small" @click="roleResources(record.id)">权限</a-button>
-                    <a-button icon="user" size="small" @click="roleUser(record.id)">用户</a-button>
-                    <a-button v-if="!record.isDefault" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
+                    <a-button style="margin-left: 5px;" icon="edit" size="small" @click="edit(record.id)">修改</a-button>
+                    <a-button style="margin-left: 5px;" icon="security-scan" size="small" @click="roleResources(record.id)">权限</a-button>
+                    <a-button style="margin-left: 5px;" icon="user" size="small" @click="roleUser(record.id)">用户</a-button>
+                    <a-button style="margin-left: 5px;" v-if="!record.isDefault" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
                 </span>
             </a-table>
         </a-card>
@@ -70,24 +70,28 @@
     import RolePosition from "@/role/components/rolePosition.vue";
     @Component({components:{RolePosition, RoleUser, RoleDepartment, addOrUpdate,roleResources}})
     export default class List extends Vue{
+        //查询数据模型
         private searchModel : any ={
             pageNumber:1,
             pageSize:10,
             scope:"CONSOLE"
         }
+        //列表复选框选中的值
         private selectedRowKeys:Array<number> = [];
+        //列表数据源
         private data:Array<any> = [];
+        //列表是否加载中（转圈圈）
         private loading:boolean=false;
+        //作用域下拉框数据源
         private scope:Array<any>=[];
+        //列表表头定义
         private columns :Array<any> = [
             { title: '名称', dataIndex: 'name', key: 'name'},
             { title: '编码', dataIndex: 'code', key: 'code' },
             { title: '状态', dataIndex: 'state.desc', key: 'state'},
             { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 350,}
         ];
-        private onSelectChange(selectedRowKeys:Array<number>):void{
-            this.selectedRowKeys = selectedRowKeys;
-        }
+        //列表分页参数定义
         private paginationProps:any={
             showSizeChanger: false,
             showQuickJumper: true,
@@ -99,11 +103,29 @@
             showSizeChange: (pageNumber:number, pageSize: number)=>this.paginationSearch(pageNumber,pageSize),
             onChange: (pageNumber:number, pageSize: number)=>this.paginationSearch(pageNumber,pageSize),
         };
+
+        /**
+         * 列表复选框改变事件
+         * @param selectedRowKeys
+         */
+        private onSelectChange(selectedRowKeys:Array<number>):void{
+            this.selectedRowKeys = selectedRowKeys;
+        }
+
+        /**
+         * 分页上/下页，跳转到第几页触发事件
+         * @param pageNumber
+         * @param pageSize
+         */
         private paginationSearch(pageNumber:number, pageSize: number):void{
             this.searchModel.pageNumber=pageNumber;
             this.searchModel.pageSize=pageSize;
             this.search();
         }
+
+        /**
+         * 查询
+         */
         private search():void{
             this.loading=true;
             axios.get("/upms/role/console/list",{params:this.searchModel})
@@ -119,13 +141,10 @@
                 this.loading=false;
             });
         }
-        // @Watch("$route", { immediate: true,deep: true })
-        // private onRouteChange(route: any):void {
-        //     if (route.path === "/role/list"){
-        //         this.search();
-        //     }
-        // }
 
+        /**
+         * 组件挂载后触发事件
+         */
         private mounted() {
             axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.common.enums.Scope"}})
             .then((data) => {
@@ -140,23 +159,37 @@
             });
         }
 
+        /**
+         * 作用域下拉框改变触发事件（用于改变新增/修改窗口scope值）
+         * @param value
+         */
         private searchScopelChange(value:string):void{
             (this.$refs.addOrUpdate as any).addOrUpdateModel.scope=value;
         }
 
+        /**
+         * 弹出新增窗口
+         */
         private add():void{
             const child = (this.$refs.addOrUpdate as any);
-            child.addOrUpdateModal=true;
             child.addOrUpdateModel={};
             child.addOrUpdateModel.scope=this.searchModel.scope;
             child.addOrUpdateModal=true;
         }
 
+        /**
+         * 弹出修改窗口
+         * @param id
+         */
         private edit(id:string):void{
             const child = (this.$refs.addOrUpdate as any);
             child.getDetails(id);
         }
 
+        /**
+         * 弹出删除警示
+         * @param id
+         */
         private del(id:any):void{
             const _this =this;
             if (!id){
@@ -182,6 +215,10 @@
 
         }
 
+        /**
+         * 删除
+         * @param id
+         */
         private delete(id:any):void{
             axios.delete("/upms/role/console/delete",{params:{id:id},
                 paramsSerializer: params => {
@@ -197,6 +234,10 @@
             });
         }
 
+        /**
+         * 弹出角色权限配置窗口（资源）
+         * @param id
+         */
         private roleResources(id:string):void{
             if (!id){
                 message.error("请选择角色进行配置权限（资源）");
@@ -211,6 +252,10 @@
             },500);
         }
 
+        /**
+         * 弹出角色用户关联设置窗口
+         * @param id
+         */
         private roleUser(id:string):void{
             if (!id){
                 message.error("请选择角色进行用户关联");

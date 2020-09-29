@@ -79,7 +79,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
         jpqlParameter.setSearchParameter(SearchConstant.EQUAL+"_scope",scope);
         jpqlParameter.setSortParameter("createDateTime", Sort.Direction.DESC);
         lionPage.setJpqlParameter(jpqlParameter);
-        return roleService.findNavigator(lionPage);
+        return (IResultData) roleService.findNavigator(lionPage);
     }
 
     /**

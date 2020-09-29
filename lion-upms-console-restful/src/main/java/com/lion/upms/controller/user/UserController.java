@@ -13,6 +13,7 @@ import com.lion.core.persistence.JpqlParameter;
 import com.lion.core.persistence.Validator;
 import com.lion.upms.entity.user.User;
 import com.lion.upms.entity.user.dto.UserAddDto;
+import com.lion.upms.entity.user.dto.UserSearchDto;
 import com.lion.upms.entity.user.dto.UserUpdataDto;
 import com.lion.upms.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,21 +43,21 @@ public class UserController extends BaseControllerImpl implements BaseController
     /**
      * 列表
      * @param lionPage
-     * @param name
+     * @param userSearchDto
      * @return
      */
     @GetMapping("/list")
 //    @PreAuthorize("hasAuthority('user_console_list1')")
 //    @SentinelResource()
-    public IResultData list(LionPage lionPage,String name) {
+    public IResultData list(LionPage lionPage, UserSearchDto userSearchDto) {
         JpqlParameter jpqlParameter = new JpqlParameter();
-        if (StringUtils.hasText(name)){
-            jpqlParameter.setSearchParameter(SearchConstant.LIKE+"_name",name);
+        if (StringUtils.hasText(userSearchDto.getName())){
+            jpqlParameter.setSearchParameter(SearchConstant.LIKE+"_name",userSearchDto.getName());
         }
         jpqlParameter.setSearchParameter(SearchConstant.NOT_IN+"_username",new String[]{"admin","superadmin"});
         jpqlParameter.setSortParameter("createDateTime", Sort.Direction.DESC);
         lionPage.setJpqlParameter(jpqlParameter);
-        return (IResultData) userService.navigator(lionPage);
+        return (IResultData) userService.list(lionPage, userSearchDto);
     }
 
     /**

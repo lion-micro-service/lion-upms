@@ -47,9 +47,9 @@
                 <a-row >
                     <a-col :span="24" style="text-align:center;">
                         <a-form-item >
-                            <a-button v-bind:disabled="saveButtonDisabled" type="primary" icon="save" @click="save()">保存</a-button>
-                            <a-button v-bind:disabled="resetDisabled" type="dashed" icon="undo" @click="reset()">重置</a-button>
-                            <a-button icon="rollback" @click="back()">返回</a-button>
+                            <a-button style="margin-left: 5px;" v-bind:disabled="saveButtonDisabled" type="primary" icon="save" @click="save()">保存</a-button>
+                            <a-button style="margin-left: 5px;" v-bind:disabled="resetDisabled" type="dashed" icon="undo" @click="reset()">重置</a-button>
+                            <a-button style="margin-left: 5px;" icon="rollback" @click="back()">返回</a-button>
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -67,22 +67,34 @@
     let md5 = require('md5');
     @Component({})
     export default class AddOrUpdate extends Vue{
+        //组件汉化
         private moment:any = moment;
+        //保存按钮是否禁用（防多次点击）
         private saveButtonDisabled:boolean = false;
+        //用户名输入框是否禁用
         private usernameDisabled:boolean = false;
+        //密码输入框是否禁用
         private passDisabled:boolean = false;
+        //确认密码输入框是否禁用
         private confirmPassDisabled:boolean = false;
+        //重置按钮是否禁用
         private resetDisabled:boolean = false;
-
+        //添加数据模型
         private addModel : any={};
-
+        //校验规则
         private rules:any={
             username:[{required:true,validator:this.checkUsernameIsExist,trigger:'blur'}],
             pass:[{required:true,validator:this.validatorPass, trigger:'blur'}],
             confirmPass:[{required:true,validator:this.validatorConfimPass, trigger:'blur'}],
-            email:[{validator:this.validatorEmail, trigger:'blur'}]
+            email:[{validator:this.checkEmailIsExist, trigger:'blur'}]
         };
 
+        /**
+         * 检查登陆用户张号是否存在
+         * @param rule
+         * @param value
+         * @param callback
+         */
         private checkUsernameIsExist(rule :any, value:string, callback:any):void{
             const id = this.$route.query.id;
             if(id){
@@ -114,7 +126,13 @@
             callback();
         }
 
-        private validatorEmail(rule :any, value:string, callback:any):void{
+        /**
+         * 检查邮箱是否存在
+         * @param rule
+         * @param value
+         * @param callback
+         */
+        private checkEmailIsExist(rule :any, value:string, callback:any):void{
             const id = this.$route.query.id;
             if (value && value.trim() !== ''){
                 axios.get("/upms/user/console/email/exist",{params:{email:value,id:id}})
@@ -138,6 +156,12 @@
             }
         }
 
+        /**
+         * 校验密码
+         * @param rule
+         * @param value
+         * @param callback
+         */
         private validatorPass(rule :any, value:string, callback:any):void{
             const id = this.$route.query.id;
             if(id){
@@ -154,6 +178,12 @@
             }
         }
 
+        /**
+         * 校验确认密码
+         * @param rule
+         * @param value
+         * @param callback
+         */
         private validatorConfimPass(rule :any, value:string, callback:any):void{
             const id = this.$route.query.id;
             if(id){
@@ -168,6 +198,9 @@
             callback();
         }
 
+        /**
+         * 组件挂载后触发的事件
+         */
         private mounted():void{
             const id = this.$route.query.id;
             if (id){
@@ -179,6 +212,10 @@
             }
         }
 
+        /**
+         * 获取要编辑的详情
+         * @param id
+         */
         private getUserInfo(id:string):void{
             axios.get("/upms/user/console/info",{params:{id:id}})
                 .then((data)=>{
@@ -190,6 +227,9 @@
             });
         }
 
+        /**
+         * 保存
+         */
         private save():void{
             (this.$refs.form as any).validate((validate: boolean) => {
                 if (validate) {
@@ -222,10 +262,16 @@
             });
         };
 
+        /**
+         * 返回
+         */
         private back():void{
             this.$router.go(-1);
         };
 
+        /**
+         * 重置所有输入框
+         */
         private reset():void{
             (this.$refs.form as any).resetFields();
             this.addModel = {};

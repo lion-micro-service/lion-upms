@@ -4,6 +4,8 @@ import com.lion.core.LionPage;
 import com.lion.core.PageResultData;
 import com.lion.core.service.BaseService;
 import com.lion.upms.entity.user.User;
+import com.lion.upms.entity.user.dto.UserSearchDto;
+import com.lion.upms.entity.user.vo.UserListVo;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 
@@ -18,11 +20,12 @@ import javax.validation.constraints.NotBlank;
 public interface UserService extends BaseService<User> {
 
     /**
-     * test
+     * 分页列表
      * @param lionPage
+     * @param userSearchDto
      * @return
      */
-    public Page<User> navigator(LionPage lionPage);
+    public Page<UserListVo> list(LionPage lionPage, UserSearchDto userSearchDto);
 
     /**
      * 根据用户名获取用户
