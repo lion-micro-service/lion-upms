@@ -49,6 +49,11 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
     }
 
     @Override
+    public List findByUserId(Long userId) {
+        return roleDao.findByUserId(userId);
+    }
+
+    @Override
     public void checkIsExist(Role role) {
         if (Objects.isNull(role.getName())){
             return;

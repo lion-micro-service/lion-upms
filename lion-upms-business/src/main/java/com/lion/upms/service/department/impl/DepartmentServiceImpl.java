@@ -9,6 +9,7 @@ import com.lion.upms.service.department.DepartmentService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.print.PeekGraphics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
         List<Department> list = departmentDao.findByParentId(0L);
         List<DepartmentTreeVo> listTree = convertVo(list);
         listTree.forEach(departmentTreeVo -> {
-            departmentTreeVo.setChildren(convertVo(getChildren(departmentTreeVo.getId())));
+            departmentTreeVo.setChildren(convertVo(findChildren(departmentTreeVo.getId())));
         });
         return listTree;
     }
@@ -58,8 +59,28 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
         Department department = this.findById(id);
         List<Department> list = new ArrayList<Department>();
         list.add(department);
-        getAllChidren(department.getId(),list);
+        findAllChilder(department.getId(),list);
         this.deleteInBatch(list);
+    }
+
+    @Override
+    public List<Department> findAllChilder(Long id) {
+        List<Department> list = new ArrayList<Department>();
+        findAllChilder(id, list);
+        return list;
+    }
+
+    @Override
+    public DepartmentTreeVo findTreeParentDepartment(Long parentId) {
+        Department department = this.findById(parentId);
+        return findTreeParentDepartment(findTreeParentDepartment(department));
+    }
+
+    @Override
+    public List<Department> findAllParentDepartment(Long parentId) {
+        List<Department> list = new ArrayList<Department>();
+        findAllParentDepartment(parentId,list);
+        return list;
     }
 
     @Override
@@ -89,7 +110,7 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
             list.forEach(department -> {
                 DepartmentTreeVo departmentTreeVo = convertVo(department);
                 if (Objects.nonNull(departmentTreeVo)) {
-                    departmentTreeVo.setChildren(convertVo(getChildren(departmentTreeVo.getId())));
+                    departmentTreeVo.setChildren(convertVo(findChildren(departmentTreeVo.getId())));
                     listTree.add(convertVo(departmentTreeVo));
                 }
             });
@@ -116,15 +137,58 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
      * @param parentId
      * @return
      */
-    private List<Department> getChildren(Long parentId){
+    private List<Department> findChildren(Long parentId){
         return departmentDao.findByParentId(parentId);
     }
 
-    private void getAllChidren(Long parentId,List<Department> list){
-        List<Department> chidren = getChildren(parentId);
+    /**
+     *
+     * @param parentId
+     * @param list
+     */
+    private void findAllChilder(Long parentId,List<Department> list){
+        List<Department> chidren = findChildren(parentId);
         list.addAll(chidren);
         chidren.forEach(department -> {
-            getAllChidren(department.getId(), list);
+            findAllChilder(department.getId(), list);
         });
+    }
+
+    /**
+     * 获取所有父节点(链表数据结构)
+     * @param parentId
+     * @param departmentTreeVo
+     * @return
+     */
+    private DepartmentTreeVo findTreeParentDepartment(Long parentId,DepartmentTreeVo departmentTreeVo) {
+        Department department = this.findById(parentId);
+        return findTreeParentDepartment(findTreeParentDepartment(department));
+    }
+
+    /**
+     * 获取所有父节点(链表数据结构)
+     * @param department
+     * @return
+     */
+    private DepartmentTreeVo findTreeParentDepartment(Department department){
+        if (Objects.nonNull(department)){
+            DepartmentTreeVo departmentTreeVo = convertVo(department);
+            departmentTreeVo.setParentDepartment(findTreeParentDepartment(departmentTreeVo.getParentId(),departmentTreeVo));
+            return departmentTreeVo;
+        }
+        return null;
+    }
+
+    /**
+     * 获取所有父节点
+     * @param parentId
+     * @param list
+     */
+    private void findAllParentDepartment(Long parentId,List<Department> list){
+        Department department = this.findById(parentId);
+        if (Objects.nonNull(department)) {
+            list.add(department);
+            findAllParentDepartment(department.getParentId(), list);
+        }
     }
 }

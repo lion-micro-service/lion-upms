@@ -44,4 +44,25 @@ public interface DepartmentService extends BaseService<Department> {
      * @return
      */
     public void delete(Long id);
+
+    /**
+     * 获取所有子节点
+     * @param id
+     * @return
+     */
+    public List<Department> findAllChilder(Long id);
+
+    /**
+     * 获取所有父节点(链表结构)
+     * @param parentId
+     * @return
+     */
+    public DepartmentTreeVo findTreeParentDepartment(Long parentId);
+
+    /**
+     * 获取所有父节点
+     * @param parentId
+     * @return
+     */
+    public List<Department> findAllParentDepartment(Long parentId);
 }

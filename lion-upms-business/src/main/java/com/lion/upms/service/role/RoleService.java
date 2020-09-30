@@ -34,6 +34,13 @@ public interface RoleService extends BaseService<Role> {
     public Role findByCode(String code);
 
     /**
+     * 根据用户id查询用户的角色
+     * @param userId
+     * @return
+     */
+    public List findByUserId(Long userId);
+
+    /**
      * 检查角色是否存在
      * @param role
      */

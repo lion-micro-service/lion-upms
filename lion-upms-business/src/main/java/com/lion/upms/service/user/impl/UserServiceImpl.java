@@ -6,9 +6,12 @@ import com.lion.core.ResultData;
 import com.lion.core.service.impl.BaseServiceImpl;
 import com.lion.exception.BusinessException;
 import com.lion.upms.dao.user.UserDao;
+import com.lion.upms.entity.department.Department;
 import com.lion.upms.entity.user.User;
 import com.lion.upms.entity.user.dto.UserSearchDto;
 import com.lion.upms.entity.user.vo.UserListVo;
+import com.lion.upms.service.department.DepartmentService;
+import com.lion.upms.service.role.RoleService;
 import com.lion.upms.service.user.UserService;
 import com.lion.utils.ValidatorExceptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +23,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 
 import javax.annotation.Resource;
+import javax.persistence.Id;
 import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 //import io.seata.spring.annotation.GlobalTransactional;
 
@@ -49,29 +51,47 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private DepartmentService departmentService;
+
     @Override
-//    @GlobalTransactional(name = "${spring.application.name}")
     public Page<UserListVo> list(LionPage lionPage, UserSearchDto userSearchDto) {
-        return userDao.list(lionPage, userSearchDto);
+        if (Objects.nonNull(userSearchDto.getDepartmentId()) && userSearchDto.getDepartmentId().size()>0){
+            List<Long> listDepartmentId= new ArrayList<Long>();
+            userSearchDto.getDepartmentId().forEach(id->{
+                List<Department> list = departmentService.findAllChilder(id);
+                list.forEach(department->{
+                    listDepartmentId.add(department.getId());
+                });
+            });
+            userSearchDto.getDepartmentId().addAll(listDepartmentId);
+        }
+        Page<UserListVo> page = userDao.list(lionPage, userSearchDto);
+        List<UserListVo> list = page.getContent();
+        list.forEach(userListVo -> {
+            if (Objects.nonNull(userListVo.getDepartment())) {
+                userListVo.getDepartment().setParentDepartment(departmentService.findTreeParentDepartment(userListVo.getDepartment().getParentId()));
+            }
+            userListVo.setRole(roleService.findByUserId(userListVo.getUser().getId()));
+        });
+        return page;
     }
 
     @Override
     public <S extends User> S save(S entity) {
-        if (Objects.nonNull(entity.getUsername()) && StringUtils.hasText(entity.getUsername())){
-            User user = findUser(entity.getUsername());
-            if (Objects.nonNull(user)){
-                new BusinessException("该用户已存在");
-            }
-        }
-        if (Objects.nonNull(entity.getEmail()) && StringUtils.hasText(entity.getEmail())){
-            boolean isExist = checkEmailIsExist(entity.getEmail(),null);
-            if (isExist){
-                new BusinessException("该邮箱已存在");
-            }
-        }
-        ValidatorExceptionUtil.isViolation(validator.validate(entity, com.lion.core.persistence.Validator.Insert.class));
+        checkUserExist(entity);
+//        ValidatorExceptionUtil.isViolation(validator.validate(entity, com.lion.core.persistence.Validator.Insert.class));
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         return super.save(entity);
+    }
+
+    @Override
+    public void update(User entity) {
+        checkUserExist(entity);
+        super.update(entity);
     }
 
     @Override
@@ -101,5 +121,24 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Override
     public void deleteById(Serializable id) {
         this.userDao.deleteByIdAndUsernameNotIn(id, Arrays.asList(new String[]{"admin", "superadmin"}));
+    }
+
+    /**
+     * 检查用户是否存在
+     * @param entity
+     */
+    private void checkUserExist(User entity){
+        if (Objects.nonNull(entity.getUsername()) && StringUtils.hasText(entity.getUsername())){
+            User user = findUser(entity.getUsername());
+            if (Objects.nonNull(user)){
+                new BusinessException("该用户已存在");
+            }
+        }
+        if (Objects.nonNull(entity.getEmail()) && StringUtils.hasText(entity.getEmail())){
+            boolean isExist = checkEmailIsExist(entity.getEmail(),null);
+            if (isExist){
+                new BusinessException("该邮箱已存在");
+            }
+        }
     }
 }

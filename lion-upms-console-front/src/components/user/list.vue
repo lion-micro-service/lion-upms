@@ -1,5 +1,9 @@
 <template>
     <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange ,getCheckboxProps:getCheckboxProps}"  :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
+        <span slot="department" slot-scope="text, record">
+            <samp v-if="record.department">{{record.department.name}}</samp>
+
+        </span>
         <span slot="role" slot-scope="text, record">
             <samp v-for="(role,index) in record.role">{{role.name}}<samp v-if="index<record.role.length-1">/</samp></samp>
         </span>
@@ -29,7 +33,7 @@
             { title: '邮箱', dataIndex: 'user.email', key: 'email'},
             { title: '年龄', dataIndex: 'user.age', key: 'age' },
             { title: '生日', dataIndex: 'user.birthday', key: 'birthday' },
-            { title: '部门', dataIndex: 'department.name', key: 'department' },
+            { title: '部门', key: 'department', scopedSlots: { customRender: 'department' }},
             { title: '角色', key: 'role', scopedSlots: { customRender: 'role' }},
             // { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 180,}
         ];
@@ -74,6 +78,10 @@
                     disabled: this.notCheckUserId.includes(record.user.id),
                 },
             };
+        }
+
+        private get departmentName(){
+            return "dddd";
         }
 
         /**

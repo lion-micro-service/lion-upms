@@ -131,6 +131,7 @@ public class UserController extends BaseControllerImpl implements BaseController
     @PutMapping("/update")
     public IResultData update(@RequestBody @Validated({Validator.Update.class}) UserUpdataDto userUpdataDto){
         User user = new User();
+        BeanUtil.copyProperties(userUpdataDto,user, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
         userService.update(user);
         return ResultData.instance();
     }
