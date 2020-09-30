@@ -1,5 +1,6 @@
 let pages = require('@lion/lion-front-core/src/webpack/vue.config');
-var webpack=require('webpack');
+let webpack=require('webpack');
+let CompressionPlugin = require("compression-webpack-plugin");
 module.exports = {
     filenameHashing: true,
     configureWebpack: {
@@ -24,6 +25,14 @@ module.exports = {
                 }
             }
         }
+    },
+    chainWebpack: (config) => {
+        config.plugin('compressionPlugin').use(new CompressionPlugin({
+            test: /\.(js|css|less)$/, // 匹配文件名
+            threshold: 10240, // 对超过10k的数据压缩
+            minRatio: 0.8,
+            deleteOriginalAssets: true // 删除源文件
+        }))
     }
 
 }

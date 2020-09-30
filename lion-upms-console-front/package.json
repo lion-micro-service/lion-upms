@@ -14,7 +14,8 @@
   },
   "devDependencies": {
     "@lion/lion-front-devDependencies": "^1.0.0",
-    "@vue/cli-plugin-typescript": "^4.5.4"
+    "@vue/cli-plugin-typescript": "^4.5.4",
+    "compression-webpack-plugin": "^6.0.2"
   },
   "publishConfig": {
     "registry": "http://127.0.0.1:8081/repository/hosted-repository-npm/"

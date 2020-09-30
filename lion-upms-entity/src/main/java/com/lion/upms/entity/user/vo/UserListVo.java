@@ -32,7 +32,7 @@ public class UserListVo {
     private List<Role> role;
 
     /**
-     * vue组件使用 临时解决方案。 需要将 table修改 rowKey={record => record.uid} ，因不知道怎么把{record => record.uid}转ts写法，所以加此字段
+     * vue组件使用，临时解决方案。 table组件似乎不支持rowKey={record => record.user.id}写法
      */
     private Long key;
 
