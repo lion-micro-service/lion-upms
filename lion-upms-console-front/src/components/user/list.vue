@@ -1,8 +1,9 @@
 <template>
     <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange ,getCheckboxProps:getCheckboxProps}"  :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
         <span slot="department" slot-scope="text, record">
-            <samp v-if="record.department">{{record.department.name}}</samp>
-
+            <template>
+                <samp v-if="record.department">{{departmentName(record.department)}}</samp>
+            </template>
         </span>
         <span slot="role" slot-scope="text, record">
             <samp v-for="(role,index) in record.role">{{role.name}}<samp v-if="index<record.role.length-1">/</samp></samp>
@@ -80,8 +81,35 @@
             };
         }
 
-        private get departmentName(){
-            return "dddd";
+        /**
+         * 获取上级部门名称
+         */
+        private departmentName(department:any):string{
+            let departmentName:string ="";
+            let parentDepartmentName:Array<string>=[];
+            if (department){
+                if (department.parentDepartment){
+                    parentDepartmentName = this.getParentDepartmentName(department.parentDepartment,parentDepartmentName);
+                }
+                for(let j:number = 0,len=parentDepartmentName.length; j < len; j++) {
+                    departmentName=departmentName+(departmentName!==""?"/":"")+parentDepartmentName[parentDepartmentName.length-(j+1)];
+                }
+                departmentName=departmentName+(departmentName!==""?"/":"")+department.name;
+            }
+            return departmentName;
+        }
+
+        /**
+         * 获取上级部门名称
+         */
+        private getParentDepartmentName(department:any,parentDepartmentName:Array<string>):Array<string>{
+            if (department) {
+                parentDepartmentName[parentDepartmentName.length] = department.name;
+                if (department.parentDepartment){
+                    this.getParentDepartmentName(department.parentDepartment,parentDepartmentName);
+                }
+            }
+            return parentDepartmentName;
         }
 
         /**
