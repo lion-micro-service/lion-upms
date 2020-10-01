@@ -25,11 +25,24 @@
         components: {List, SearchFrom}
     })
     export default class roleUser extends Vue{
+        //是否显示窗口
         private modal:boolean=false;
+        //点击阴影层是否关闭窗口
         private maskClosable:boolean=false;
+        //角色id
         private roleId?:string;
+        //之前选中的用户
         private oldUserId:Array<string>=[];
+        //本页列表所有的用户id
         private userId:Array<string>=[];
+        //查询数据模型
+        private searchModel : any ={
+            pageNumber:1,
+            pageSize:10
+        }
+        /**
+         * 保存
+         */
         private save():void{
             const list = (this.$refs.list as any);
             axios.post("/upms/role/console/save/user", {roleId:this.roleId,oldUserId:this.oldUserId,newUserId:list.selectedRowKeys})
@@ -44,16 +57,19 @@
 
         }
 
-        private searchModel : any ={
-            pageNumber:1,
-            pageSize:10
-        }
-
+        /**
+         * 设置分页信息
+         * @param pageNumber
+         * @param pageSize
+         */
         private setPageInfo(pageNumber:number,pageSize:number):void{
             this.searchModel.pageNumber=pageNumber;
             this.searchModel.pageSize=pageSize;
         }
 
+        /**
+         * 查询
+         */
         private async search(){
             const list = (this.$refs.list as any);
             list.selectedRowKeys=[];

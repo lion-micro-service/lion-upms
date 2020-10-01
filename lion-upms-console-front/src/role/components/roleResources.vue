@@ -10,17 +10,31 @@
     import { message } from 'ant-design-vue';
     @Component({})
     export default class roleResources extends Vue{
+        //是否显示窗口
         private modal:boolean=false;
+        //点击阴影层是否关闭窗口
         private maskClosable:boolean=false;
+        //选中的资源
         private checkedKeys:Array<string>=[];
+        //作用域
         private scope:string="CONSOLE";
+        //角色id
         private roleId?:string;
+        //数据源
         private treeData:Array<any>=[];
 
+        /**
+         * 复选框选中事件
+         * @param checkedKeys
+         * @param info
+         */
         private onCheck(checkedKeys:Array<string>, info:any):void {
             this.checkedKeys = checkedKeys;
         }
 
+        /**
+         * 弹出窗口
+         */
         private async roleResources(){
             await axios.get("/upms/role/console/resources/tree", {params: {"scope": this.scope}})
             .then((data) => {
@@ -40,6 +54,9 @@
             });
         }
 
+        /**
+         * 保存
+         */
         private save():void{
             axios.post("/upms/role/console/add/resources", {roleId:this.roleId,resourcesId:this.checkedKeys})
             .then((data) => {
