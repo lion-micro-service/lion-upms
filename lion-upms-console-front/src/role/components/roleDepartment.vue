@@ -5,9 +5,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Emit, Inject, Model, Prop, Provide, Vue, Watch} from 'vue-property-decorator';
-    import axios from "@lion/lion-front-core/src/network/axios";
-    import { message } from 'ant-design-vue';
+    import {Component, Vue} from 'vue-property-decorator';
     @Component({})
     export default class roleDepartment extends Vue{
         private modal:boolean=false;

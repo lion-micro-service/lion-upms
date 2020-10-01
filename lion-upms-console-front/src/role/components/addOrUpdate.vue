@@ -34,20 +34,31 @@
 </template>
 
 <script lang="ts">
-    import {Component, Emit, Inject, Model, Prop, Provide, Vue, Watch} from 'vue-property-decorator';
+    import {Component,  Vue} from 'vue-property-decorator';
     import axios from "@lion/lion-front-core/src/network/axios";
     import { message } from 'ant-design-vue';
     @Component({})
     export default class addOrUpdate extends Vue{
+        //是否点击阴影层关闭窗口
         private maskClosable:boolean=false;
+        //是否显示窗口
         private addOrUpdateModal:boolean=false;
+        //新增/修改数据模型
         private addOrUpdateModel:any={}
+        //作用域
         private scope:Array<any>=[];
+        //校验规则
         private rules:any={
             code:[{required:true,validator:this.checkCodeIsExist,trigger:'blur'}],
             name:[{required:true,validator:this.checkNameIsExist,trigger:'blur'}],
         };
 
+        /**
+         * 检查编码是否存在
+         * @param rule
+         * @param value
+         * @param callback
+         */
         private checkCodeIsExist(rule :any, value:string, callback:any):void{
             if (!value || value.trim() === ''){
                 callback(new Error('请输入编码'));
@@ -74,6 +85,12 @@
             callback();
         }
 
+        /**
+         * 检查名称是否存在
+         * @param rule
+         * @param value
+         * @param callback
+         */
         private checkNameIsExist(rule :any, value:string, callback:any):void{
             if (!value || value.trim() === ''){
                 callback(new Error('请输入名称'));
@@ -100,6 +117,9 @@
             callback();
         }
 
+        /**
+         * 提交数据
+         */
         private addOrUpdate():void{
             (this.$refs.addOrUpdateForm as any).validate((validate: boolean) => {
                 if (validate) {
@@ -128,6 +148,10 @@
             });
         }
 
+        /**
+         * 获取详情
+         * @param id
+         */
         private getDetails(id:string):void{
             axios.get("/upms/role/console/details",{params:{"id":id}})
             .then((data)=>{
@@ -147,6 +171,9 @@
             });
         }
 
+        /**
+         * 保存/修改成功后事件
+         */
         private success():void{
             this.addOrUpdateModal = false;
             const _scope=this.addOrUpdateModel.scope;

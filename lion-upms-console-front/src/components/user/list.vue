@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Emit, Inject, Model, Prop, Provide, Vue, Watch} from 'vue-property-decorator';
+    import {Component, Emit, Vue} from 'vue-property-decorator';
     @Component({})
     export default class list extends Vue{
         private rowKey:any="user.id";

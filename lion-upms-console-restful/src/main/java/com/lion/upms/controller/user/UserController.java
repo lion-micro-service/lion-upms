@@ -75,7 +75,7 @@ public class UserController extends BaseControllerImpl implements BaseController
      * @param username
      * @return
      */
-    @GetMapping("/exist")
+    @GetMapping("/check/username/exist")
     public IResultData checkUsernameIsExist(@NotBlank(message = "登陆账号不能为空!") String username){
         return ResultData.instance().setData("isExist",Objects.nonNull( userService.findUser(username)));
     }
@@ -86,7 +86,7 @@ public class UserController extends BaseControllerImpl implements BaseController
      * @param id
      * @return
      */
-    @GetMapping("/email/exist")
+    @GetMapping("/check/email/exist")
     public IResultData checkEmailIsExist(@NotBlank(message = "邮箱不能为空！") String email,Long id){
         return ResultData.instance().setData("isExist",userService.checkEmailIsExist(email, id));
     }

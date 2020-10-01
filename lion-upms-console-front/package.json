@@ -23,7 +23,7 @@
   },
   "vuePlugins": {
     "service": [
-      "./vue-cli-plugin-lion-serve"
+      "./node_modules/@lion/lion-front-core/src/plugins/vue-cli-plugin-lion-serve.js"
     ]
   }
 }

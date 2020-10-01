@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Emit, Inject, Model, Prop, Provide, Vue, Watch} from 'vue-property-decorator';
+    import {Component,  Vue} from 'vue-property-decorator';
     import moment from 'moment';
     import 'moment/locale/zh-cn';
     import axios from "@lion/lion-front-core/src/network/axios";
