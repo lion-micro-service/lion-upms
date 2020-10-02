@@ -27,7 +27,7 @@ import javax.validation.constraints.Pattern;
  */
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "t_upms_resources",uniqueConstraints ={@UniqueConstraint(columnNames = "code")},indexes = {@Index(columnList = "name"),@Index(columnList = "parent_id")})
+@Table(name = "t_upms_resources",indexes = {@Index(columnList = "name"),@Index(columnList = "parent_id")})
 @DynamicUpdate
 @DynamicInsert
 @Data

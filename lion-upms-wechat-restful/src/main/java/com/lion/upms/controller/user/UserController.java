@@ -22,16 +22,4 @@ public class UserController extends BaseControllerImpl implements BaseController
 
     @Autowired
     private UserService userService;
-
-    @GetMapping("/list")
-//    @AuthorizationIgnore
-//    @PreAuthorize("hasAuthority('user_console_list1')")
-//    @SentinelResource()
-    public IResultData list(LionPage lionPage) {
-        IResultData resultData = (IResultData) userService.navigator(lionPage);
-        return resultData;
-    }
-
-
-
 }

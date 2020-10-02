@@ -24,7 +24,6 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "t_upms_user"
-        ,uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})}
         ,indexes = {@Index(columnList = "name"),@Index(columnList = "email"),@Index(columnList = "create_date_time") })
 @DynamicUpdate
 @DynamicInsert

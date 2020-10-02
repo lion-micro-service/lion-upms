@@ -24,7 +24,7 @@ import javax.validation.groups.ConvertGroup;
  */
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "t_upms_role",uniqueConstraints ={@UniqueConstraint(columnNames = "code")},indexes = {@Index(columnList = "name")})
+@Table(name = "t_upms_role",indexes = {@Index(columnList = "name")})
 @DynamicUpdate
 @DynamicInsert
 @Data

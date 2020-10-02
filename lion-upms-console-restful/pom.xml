@@ -12,9 +12,6 @@
 	<packaging>jar</packaging>
 	<version>${project.parent.version}</version>
 
-	<properties>
-		<lion-oauth2-resource-server.version>1.0.0-SNAPSHOT</lion-oauth2-resource-server.version>
-	</properties>
 
 	<dependencies>
 		<dependency>
@@ -29,6 +26,10 @@
 		<dependency>
 			<groupId>com.github.whvcse</groupId>
 			<artifactId>easy-captcha</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.lion</groupId>
+			<artifactId>lion-oauth2-resource-server</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
