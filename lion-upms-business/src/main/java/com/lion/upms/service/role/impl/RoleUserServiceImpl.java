@@ -48,4 +48,14 @@ public class RoleUserServiceImpl extends BaseServiceImpl<RoleUser> implements Ro
         return roleUserDao.findByRoleIdAndUserIdIn(roleId, userId);
     }
 
+    @Override
+    public void deleteByUserId(Long userId) {
+        roleUserDao.deleteByUserId(userId);
+    }
+
+    @Override
+    public void deleteByRoleId(Long roleId) {
+        roleUserDao.deleteByRoleId(roleId);
+    }
+
 }

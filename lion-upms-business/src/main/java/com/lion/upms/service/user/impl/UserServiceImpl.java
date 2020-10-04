@@ -11,7 +11,9 @@ import com.lion.upms.entity.user.User;
 import com.lion.upms.entity.user.dto.UserSearchDto;
 import com.lion.upms.entity.user.vo.UserListVo;
 import com.lion.upms.service.department.DepartmentService;
+import com.lion.upms.service.department.DepartmentUserService;
 import com.lion.upms.service.role.RoleService;
+import com.lion.upms.service.role.RoleUserService;
 import com.lion.upms.service.user.UserService;
 import com.lion.utils.ValidatorExceptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +58,12 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Autowired
     private DepartmentService departmentService;
+
+    @Autowired
+    private DepartmentUserService departmentUserService;
+
+    @Autowired
+    private RoleUserService roleUserService;
 
     @Override
     public Page<UserListVo> list(LionPage lionPage, UserSearchDto userSearchDto) {
@@ -120,7 +128,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public void deleteById(Serializable id) {
-        this.userDao.deleteByIdAndUsernameNotIn(id, Arrays.asList(new String[]{"admin", "superadmin"}));
+        userDao.deleteByIdAndUsernameNotIn(id, Arrays.asList(new String[]{"admin", "superadmin"}));
+        departmentUserService.deleteByUserId(Long.valueOf(String.valueOf(id)));
+        roleUserService.deleteByUserId(Long.valueOf(String.valueOf(id)));
     }
 
     /**

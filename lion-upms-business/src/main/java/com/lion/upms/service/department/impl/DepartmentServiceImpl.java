@@ -6,6 +6,7 @@ import com.lion.upms.dao.department.DepartmentDao;
 import com.lion.upms.entity.department.Department;
 import com.lion.upms.entity.department.vo.DepartmentTreeVo;
 import com.lion.upms.service.department.DepartmentService;
+import com.lion.upms.service.department.DepartmentUserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,9 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
 
     @Autowired
     private DepartmentDao departmentDao;
+
+    @Autowired
+    private DepartmentUserService departmentUserService;
 
     @Override
     public List<DepartmentTreeVo> listTree() {
@@ -61,6 +65,9 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
         list.add(department);
         findAllChilder(department.getId(),list);
         this.deleteInBatch(list);
+        list.forEach(d -> {
+            departmentUserService.deleteByDepartmentId(d.getId());
+        });
     }
 
     @Override

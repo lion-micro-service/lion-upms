@@ -54,5 +54,15 @@ public class DepartmentUserServiceImpl extends BaseServiceImpl<DepartmentUser> i
         return departmentUserDao.findNotInDepartmentUser(departmentId, userId);
     }
 
+    @Override
+    public void deleteByUserId(Long userId) {
+        departmentUserDao.deleteByUserId(userId);
+    }
+
+    @Override
+    public void deleteByDepartmentId(Long departmentId) {
+        departmentUserDao.deleteByDepartmentId(departmentId);
+    }
+
 
 }

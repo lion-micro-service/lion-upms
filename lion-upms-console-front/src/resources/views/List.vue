@@ -16,7 +16,7 @@
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
                             <a-button style="margin-left: 5px;" type="primary" icon="search" @click="search()" >查询</a-button>
-                            <a-button style="margin-left: 5px;" type="primary" icon="file-add" @click="add(0,0)" >添加</a-button>
+                            <a-button style="margin-left: 5px;" type="primary" v-if="getAuthority('SYSTEM_SETTINGS_RESOURCES_ADD')" icon="file-add" @click="add(0,0)" >添加</a-button>
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -26,9 +26,9 @@
         <a-card :bordered="false">
             <a-table bordered rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="false">
                 <span slot="action" slot-scope="text, record">
-                    <a-button style="margin-left: 5px;" icon="edit" size="small" @click="getDetails(record.id)">修改</a-button>
-                    <a-button style="margin-left: 5px;" v-if="record.type.key===0||record.type.key===1" icon="file-add" size="small" @click="add(record.id,record.type.key===0?1:2)">{{ record.type.key===0?'添加菜单':'添加功能' }}</a-button>
-                    <a-button style="margin-left: 5px;" v-if="!record.isDefault" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
+                    <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_RESOURCES_UPDATE')" icon="edit" size="small" @click="getDetails(record.id)">修改</a-button>
+                    <a-button style="margin-left: 5px;" v-if="(record.type.key===0||record.type.key===1) && getAuthority('SYSTEM_SETTINGS_RESOURCES_ADD') " icon="file-add" size="small" @click="add(record.id,record.type.key===0?1:2)">{{ record.type.key===0?'添加菜单':'添加功能' }}</a-button>
+                    <a-button style="margin-left: 5px;" v-if="(!record.isDefault) && getAuthority('SYSTEM_SETTINGS_RESOURCES_DELETE') " type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
                 </span>
             </a-table>
         </a-card>
@@ -84,6 +84,7 @@
     import {Component, Vue} from 'vue-property-decorator';
     import axios from "@lion/lion-front-core/src/network/axios";
     import { message } from 'ant-design-vue';
+    import authority from "@lion/lion-front-core/src/security/authority";
     @Component({})
     export default class List extends Vue{
         //列表数据源
@@ -364,6 +365,10 @@
             this.addOrUpdateModal=true;
         }
 
+        /**
+         * 获取详情
+         * @param id
+         */
         private getDetails(id:string):void{
             axios.get("/upms/resources/console/details",{params:{"id":id}})
             .then((data)=>{
@@ -391,6 +396,10 @@
             });
         }
 
+        /**
+         * 弹出删除警示框
+         * @param id
+         */
         private del(id:any):void{
             const _this =this;
             if (!id){
@@ -412,6 +421,10 @@
 
         }
 
+        /**
+         * 删除
+         * @param id
+         */
         private delete(id:any):void{
             axios.delete("/upms/resources/console/delete",{params:{id:id}})
             .then((data)=>{
@@ -424,7 +437,12 @@
             });
         }
 
-
+        /**
+         * 判断(获取)是否有权限
+         */
+        private getAuthority(authorityCode:string):any{
+            return authority(authorityCode);
+        }
         // @Watch("$route", { immediate: true,deep: true })
         // private onRouteChange(route: any):void {
         //     if (route.path === "/resources/list"){

@@ -38,10 +38,10 @@
         <a-card :bordered="false">
             <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
                 <span slot="action" slot-scope="text, record">
-                    <a-button style="margin-left: 5px;" icon="edit" size="small" @click="edit(record.id)">修改</a-button>
-                    <a-button style="margin-left: 5px;" icon="security-scan" size="small" @click="roleResources(record.id)">权限</a-button>
-                    <a-button style="margin-left: 5px;" icon="user" size="small" @click="roleUser(record.id)">用户</a-button>
-                    <a-button style="margin-left: 5px;" v-if="!record.isDefault" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
+                    <a-button style="margin-left: 5px;" icon="edit" v-if="getAuthority('SYSTEM_SETTINGS_ROLE_UPDATE')" size="small" @click="edit(record.id)">修改</a-button>
+                    <a-button style="margin-left: 5px;" icon="security-scan" v-if="getAuthority('SYSTEM_SETTINGS_ROLE_RESOURCES')" size="small" @click="roleResources(record.id)">权限</a-button>
+                    <a-button style="margin-left: 5px;" icon="user" v-if="getAuthority('SYSTEM_SETTINGS_ROLE_USER')" size="small" @click="roleUser(record.id)">用户</a-button>
+                    <a-button style="margin-left: 5px;" v-if="!record.isDefault && getAuthority('SYSTEM_SETTINGS_ROLE_UPDATE')" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
                 </span>
             </a-table>
         </a-card>
@@ -68,6 +68,7 @@
     import RoleDepartment from "@/role/components/roleDepartment.vue";
     import RoleUser from "@/role/components/roleUser.vue";
     import RolePosition from "@/role/components/rolePosition.vue";
+    import authority from "@lion/lion-front-core/src/security/authority";
     @Component({components:{RolePosition, RoleUser, RoleDepartment, addOrUpdate,roleResources}})
     export default class List extends Vue{
         //查询数据模型
@@ -272,7 +273,13 @@
             setTimeout(function () {
                 child.search();
             },500)
+        }
 
+        /**
+         * 判断(获取)是否有权限
+         */
+        private getAuthority(authorityCode:string):any{
+            return authority(authorityCode);
         }
     }
 </script>

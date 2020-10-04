@@ -16,7 +16,7 @@ import java.util.Map;
  * @create: 2020-02-20 20:32
  */
 @DubboService(interfaceClass = ICurrentUser.class)
-public class CurrentUserExposImpl implements ICurrentUser<User> {
+public class CurrentUserExposeImpl implements ICurrentUser<User> {
 
     @Autowired
     private UserService userService;

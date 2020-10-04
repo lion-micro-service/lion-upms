@@ -9,7 +9,6 @@ import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.JpqlParameter;
 import com.lion.core.persistence.Validator;
 import com.lion.upms.entity.common.enums.Scope;
-import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 import com.lion.upms.entity.role.Role;
 import com.lion.upms.entity.role.RoleResources;
 import com.lion.upms.entity.role.RoleUser;
@@ -22,10 +21,10 @@ import com.lion.upms.service.role.RoleService;
 import com.lion.upms.service.role.RoleUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.service.ApiListing;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -68,6 +67,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
      * @return
      */
     @GetMapping("/list")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_LIST')")
     public IResultData list(String name, String code,@RequestParam(name = "scope",defaultValue = "CONSOLE") Scope scope, LionPage lionPage){
         JpqlParameter jpqlParameter = new JpqlParameter();
         if (StringUtils.hasText(name)){
@@ -88,6 +88,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
      * @return
      */
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_ADD')")
     public IResultData add(@RequestBody @Validated({Validator.Insert.class}) Role role){
         this.roleService.save(role);
         return ResultData.instance();
@@ -99,6 +100,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
      * @return
      */
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_UPDATE')")
     public IResultData update(@RequestBody @Validated({Validator.Update.class})  Role role) {
         this.roleService.update(role);
         return ResultData.instance();
@@ -142,11 +144,14 @@ public class RoleController extends BaseControllerImpl implements BaseController
      * @return
      */
     @DeleteMapping("/delete")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_DELETE')")
     public IResultData delete(@NotNull(message = "id不能为空") @RequestParam(value = "id",required = false) List<Long> id){
         id.forEach(i->{
             Role role = this.roleService.findById(i);
             if (Objects.nonNull(role) && !role.getIsDefault()) {
                 roleService.deleteById(i);
+                roleUserService.deleteByRoleId(i);
+                roleResourcesService.deleteByRoleId(i);
             }
         });
         ResultData resultData = ResultData.instance();
@@ -168,7 +173,8 @@ public class RoleController extends BaseControllerImpl implements BaseController
      * @param addRoleResourcesdDto
      * @return
      */
-    @PostMapping("/add/resources")
+    @PostMapping("/save/resources")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_RESOURCES')")
     public IResultData addResources(@RequestBody @Validated AddRoleResourcesdDto addRoleResourcesdDto){
         this.roleResourcesService.saveRoleResources(addRoleResourcesdDto);
         return ResultData.instance();
@@ -180,8 +186,9 @@ public class RoleController extends BaseControllerImpl implements BaseController
      * @return
      */
     @GetMapping("/resources")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_RESOURCES')")
     public IResultData resources(@NotNull(message = "角色id不能为空") Long roleId){
-        List<RoleResources> list = this.roleResourcesService.getAllRoleResources(roleId);
+        List<RoleResources> list = this.roleResourcesService.findAllRoleResources(roleId);
         List<Long> returnList = new ArrayList<Long>();
         list.forEach(roleResources->{
             if (roleResources.getIsChecked()) {
@@ -197,6 +204,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
      * @return
      */
     @PostMapping("/save/user")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_USER')")
     public IResultData saveRoleUser(@RequestBody @Validated AddRoleUserDto addRoleUserDto){
         roleUserService.saveRoleUser(addRoleUserDto);
         return ResultData.instance();
@@ -209,6 +217,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
      * @return
      */
     @GetMapping("/user")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_USER')")
     public IResultData roleUser(@NotNull(message = "角色id不能为空") Long roleId,@RequestParam(name = "userId",required = false,defaultValue = "0") List<Long> userId){
         List<RoleUser> list = roleUserService.findRoleUser(roleId, userId);
         List<Long> returnList = new ArrayList<Long>();

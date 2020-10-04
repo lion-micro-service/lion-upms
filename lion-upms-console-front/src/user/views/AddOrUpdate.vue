@@ -215,7 +215,7 @@
          * @param id
          */
         private getUserInfo(id:string):void{
-            axios.get("/upms/user/console/info",{params:{id:id}})
+            axios.get("/upms/user/console/details",{params:{id:id}})
                 .then((data)=>{
                     this.addModel = data.data.user;
                 }).catch(error=>{

@@ -16,9 +16,8 @@ public interface RoleResourcesDao extends BaseDao<RoleResources> ,RoleResourcesD
     /**
      * 根据角色id删除权限（资源）
      * @param roleId
-     * @return
      */
-    public int deleteByRoleId(Long roleId);
+    public void deleteByRoleId(Long roleId);
 
     /**
      * 根据角色id获取所有权限（资源）
@@ -26,4 +25,11 @@ public interface RoleResourcesDao extends BaseDao<RoleResources> ,RoleResourcesD
      * @return
      */
     public List<RoleResources> findAllByRoleId(Long roleId);
+
+
+    /**
+     * 根据资源ID删除角色与权限(资源)的关联
+     * @param resourcesId
+     */
+    public void deleteByResourcesId(Long resourcesId);
 }

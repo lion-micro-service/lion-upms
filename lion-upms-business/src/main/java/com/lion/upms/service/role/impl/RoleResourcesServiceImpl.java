@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.persistence.Id;
 import javax.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ public class RoleResourcesServiceImpl extends BaseServiceImpl<RoleResources> imp
         if (Objects.nonNull(addRoleResourcesdDto.getResourcesId())){
             addRoleResourcesdDto.getResourcesId().forEach(resourcesId->{
                 RoleResources roleResources =newRoleResources(addRoleResourcesdDto.getRoleId(),resourcesId);
-                List<Resources> resourcesList = resourcesService.getAllParentResources(resourcesId);
+                List<Resources> resourcesList = resourcesService.findAllParentResources(resourcesId);
                 resourcesList.forEach(resources -> {
                     if (!addRoleResourcesdDto.getResourcesId().contains(resources.getId())){
                         RoleResources temp = newRoleResources(addRoleResourcesdDto.getRoleId(),resources.getId());
@@ -58,8 +57,18 @@ public class RoleResourcesServiceImpl extends BaseServiceImpl<RoleResources> imp
     }
 
     @Override
-    public List<RoleResources> getAllRoleResources(Long roleId) {
+    public List<RoleResources> findAllRoleResources(Long roleId) {
         return roleResourcesDao.findAllByRoleId(roleId);
+    }
+
+    @Override
+    public void deleteByRoleId(Long roleId) {
+        roleResourcesDao.deleteByRoleId(roleId);
+    }
+
+    @Override
+    public void deleteByResourcesId(Long resourcesId) {
+        roleResourcesDao.deleteByResourcesId(resourcesId);
     }
 
     /**

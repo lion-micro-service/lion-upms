@@ -28,12 +28,30 @@ public interface ResourcesDao extends BaseDao<Resources> ,ResourcesDaoEx {
     public List<Resources> findByParentIdAndStateAndScopeOrderBySort(Long parentId,State state, Scope scope);
 
     /**
+     * 查找所有根结点资源
+     * @param parentId
+     * @param state
+     * @param scope
+     * @param resourcesId
+     * @return
+     */
+    public List<Resources> findByParentIdAndStateAndScopeAndIdInOrderBySort(Long parentId,State state, Scope scope,List resourcesId);
+
+    /**
      * 根据父节点ID查找子资源
      * @param parentId
      * @param state
      * @return
      */
     public List<Resources> findByParentIdAndStateOrderBySort(Long parentId, State state);
+
+    /**
+     * 根据父节点ID查找子资源
+     * @param parentId
+     * @param state
+     * @return
+     */
+    public List<Resources> findByParentIdAndStateAndIdInOrderBySort(Long parentId, State state,List resourcesId);
 
     /**
      * 根据编码查询资源
@@ -72,4 +90,12 @@ public interface ResourcesDao extends BaseDao<Resources> ,ResourcesDaoEx {
      */
     @Query("select r from Resources r where r.id = (select r1.parentId from Resources r1 where r1.id =:id)")
     public List<Resources> findParentResourcesById(@Param("id") Long id, Pageable pageable);
+
+    /**
+     * 根据用户ID查询所关联的角色所有的资源
+     * @param userId
+     * @return
+     */
+    @Query( "select r from Resources r join RoleResources rr on r.id = rr.resourcesId join RoleUser ru on rr.roleId = ru.roleId where ru.userId = :userId")
+    public List<Resources> findAllResources(@Param("userId") Long userId);
 }

@@ -18,6 +18,7 @@ import com.lion.upms.entity.user.dto.UserUpdataDto;
 import com.lion.upms.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +48,7 @@ public class UserController extends BaseControllerImpl implements BaseController
      * @return
      */
     @GetMapping("/list")
-//    @PreAuthorize("hasAuthority('user_console_list1')")
+    @PreAuthorize("hasAnyAuthority('SYSTEM_SETTINGS_USER_LIST,SYSTEM_SETTINGS_ROLE_USER,SYSTEM_SETTINGS_DEPARTMENT_USER')")
 //    @SentinelResource()
     public IResultData list(LionPage lionPage, UserSearchDto userSearchDto) {
         JpqlParameter jpqlParameter = new JpqlParameter();
@@ -65,8 +66,8 @@ public class UserController extends BaseControllerImpl implements BaseController
      * @param id
      * @return
      */
-    @GetMapping("/info")
-    public IResultData info(@NotNull(message = "id不能为空")Long id){
+    @GetMapping("/details")
+    public IResultData details(@NotNull(message = "id不能为空")Long id){
         return ResultData.instance().setData("user",userService.findById(id));
     }
 
@@ -97,6 +98,7 @@ public class UserController extends BaseControllerImpl implements BaseController
      * @return
      */
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_USER_ADD')")
     public IResultData add( @RequestBody @Validated({Validator.Insert.class}) UserAddDto userAddDto){
         User user = new User();
         BeanUtil.copyProperties(userAddDto,user, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
@@ -115,6 +117,7 @@ public class UserController extends BaseControllerImpl implements BaseController
      * @return
      */
     @DeleteMapping("/delete")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_USER_DELETE')")
     public IResultData delete(@NotNull(message = "id不能为空") @RequestParam(value = "id",required = false) List<Long> id){
         id.forEach(i->{
             userService.deleteById(i);
@@ -129,6 +132,7 @@ public class UserController extends BaseControllerImpl implements BaseController
      * @return
      */
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_USER_UPDATE')")
     public IResultData update(@RequestBody @Validated({Validator.Update.class}) UserUpdataDto userUpdataDto){
         User user = new User();
         BeanUtil.copyProperties(userUpdataDto,user, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));

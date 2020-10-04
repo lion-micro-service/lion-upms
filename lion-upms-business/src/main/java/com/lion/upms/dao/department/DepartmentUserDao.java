@@ -42,4 +42,16 @@ public interface DepartmentUserDao extends BaseDao<DepartmentUser> ,DepartmentUs
             "   " +
             ") and du0.departmentId<>:departmentId and du0.userId in (:userId)")
     public List<DepartmentUser> findNotInDepartmentUser(@Param("departmentId") Long departmentId,@Param("userId") List<Long> userId);
+
+    /**
+     * 根据用户Id删除部门与用户的关联
+     * @param userId
+     */
+    public void deleteByUserId(Long userId);
+
+    /**
+     * 根据部门id删除部门与用户的关联
+     * @param departmentId
+     */
+    public void deleteByDepartmentId(Long departmentId);
 }

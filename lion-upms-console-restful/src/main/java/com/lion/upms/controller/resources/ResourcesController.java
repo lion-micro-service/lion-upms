@@ -8,12 +8,16 @@ import com.lion.core.persistence.Validator;
 import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.common.enums.Scope;
 import com.lion.upms.service.resources.ResourcesService;
+import com.lion.upms.service.role.RoleResourcesService;
+import com.lion.utils.CurrentUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author mr.liu
@@ -29,13 +33,18 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
     @Autowired
     private ResourcesService  resourcesService;
 
+    @Autowired
+    private RoleResourcesService roleResourcesService;
+
     /**
      * 左边菜单栏
      * @return
      */
     @GetMapping("/front/menu")
     public IResultData frontMenu(){
-       return ResultData.instance().setData("menu",resourcesService.listTree(Scope.CONSOLE));
+        Long userId = CurrentUserUtil.getCurrentUserId();
+        List<Long> resourcesId = resourcesService.findAllResourcesId(userId);
+        return ResultData.instance().setData("menu",resourcesService.listTree(Scope.CONSOLE,resourcesId));
     }
 
     /**
@@ -44,6 +53,7 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
      * @return
      */
     @GetMapping("/list/tree")
+    @PreAuthorize("hasAnyAuthority('SYSTEM_SETTINGS_RESOURCES_LIST,SYSTEM_SETTINGS_ROLE_RESOURCES')")
     public IResultData listTree(@RequestParam(value = "scope",defaultValue = "CONSOLE") Scope scope){
         return ResultData.instance().setData("list",resourcesService.listTree(scope));
     }
@@ -88,6 +98,7 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
      * @return
      */
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_RESOURCES_ADD')")
     public IResultData add(@RequestBody @Validated({Validator.Insert.class}) Resources resources){
         resources.setCode(resources.getCode().trim().toUpperCase());
         resourcesService.checkIsExist(resources);
@@ -101,6 +112,7 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
      * @return
      */
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_RESOURCES_UPDATE')")
     public IResultData update(@RequestBody @Validated({Validator.Update.class}) Resources resources){
         resources.setCode(resources.getCode().trim().toUpperCase());
         resourcesService.checkIsExist(resources);
@@ -125,8 +137,10 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
      * @return
      */
     @DeleteMapping("/delete")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_RESOURCES_DELETE')")
     public IResultData delete(@NotNull(message = "id不能为空") Long id){
         resourcesService.delete(id);
+        roleResourcesService.deleteByResourcesId(id);
         ResultData resultData = ResultData.instance();
         return resultData;
     }

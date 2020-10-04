@@ -58,7 +58,7 @@
          * 保存
          */
         private save():void{
-            axios.post("/upms/role/console/add/resources", {roleId:this.roleId,resourcesId:this.checkedKeys})
+            axios.post("/upms/role/console/save/resources", {roleId:this.roleId,resourcesId:this.checkedKeys})
             .then((data) => {
                 if (Object(data).status === 200){
                     message.success(Object(data).message);

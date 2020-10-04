@@ -9,6 +9,7 @@ import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.common.enums.Scope;
 import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 import com.lion.upms.service.resources.ResourcesService;
+import com.lion.utils.CurrentUserUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -16,9 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author mr.liu
@@ -34,11 +35,21 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
 
     @Override
     public List<ResourcesTreeVo> listTree(Scope scope) {
-        List<Resources> list = resourcesDao.findByParentIdAndStateAndScopeOrderBySort(0L, State.NORMAL, scope);
+        return listTree(scope,null);
+    }
+
+    @Override
+    public List<ResourcesTreeVo> listTree(Scope scope, List<Long> resourcesId) {
+        List<Resources> list = new ArrayList<Resources>();
+        if (Objects.isNull(resourcesId)){
+           list = resourcesDao.findByParentIdAndStateAndScopeOrderBySort(0L, State.NORMAL, scope);
+        }else if (resourcesId.size()>0){
+            list = resourcesDao.findByParentIdAndStateAndScopeAndIdInOrderBySort(0L, State.NORMAL, scope,resourcesId);
+        }
         List<ResourcesTreeVo> retuenList = convertVo(list);
         if (Objects.nonNull(retuenList)) {
             retuenList.forEach(resources -> {
-                resources.setChildren(listTree(resources.getId(), 0));
+                resources.setChildren(listTree(resources.getId(), 0,resourcesId));
             });
         }
         return retuenList;
@@ -151,16 +162,34 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
     }
 
     @Override
-    public List<Resources> getAllParentResources(Long id) {
+    public List<Resources> findAllParentResources(Long id) {
         List<Resources> list = new ArrayList<Resources>();
         List<Resources> resourceslist = resourcesDao.findParentResourcesById(id, new LionPage(0,1, Sort.unsorted()));
         list.addAll(resourceslist);
         if (Objects.nonNull(resourceslist) && resourceslist.size()>0) {
             resourceslist.forEach(resources -> {
-                getParentResources(resources.getId(), list);
+                findParentResources(resources.getId(), list);
             });
         }
         return list;
+    }
+
+    @Override
+    public List<Long> findAllResourcesId(Long userId) {
+        List<Long> list = new ArrayList<Long>();
+        List<Resources> listResources = findAllResources(userId);
+        listResources.forEach(resources -> {
+            list.add(resources.getId());
+        });
+        return list;
+    }
+
+    @Override
+    public List<Resources> findAllResources(Long userId) {
+        if (Objects.isNull(userId)){
+            return Collections.emptyList();
+        }
+        return resourcesDao.findAllResources(userId);
     }
 
     /**
@@ -168,12 +197,12 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
      * @param id
      * @param list
      */
-    private void getParentResources(Long id,List<Resources> list){
+    private void findParentResources(Long id, List<Resources> list){
         List<Resources> resourceslist = resourcesDao.findParentResourcesById(id, new LionPage(0,1, Sort.unsorted()));
         if (Objects.nonNull(resourceslist) && resourceslist.size()>0){
             list.addAll(resourceslist);
             resourceslist.forEach(resources -> {
-                getParentResources(resources.getParentId(),list);
+                findParentResources(resources.getParentId(),list);
             });
         }
     }
@@ -192,7 +221,31 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
         });
     }
 
-
+    /**
+     * 获取所有子节点
+     * @param parentId
+     * @param hierarchy 最深递归深度，防止栈内存溢出
+     * @param resourcesId
+     * @return
+     */
+    private List<ResourcesTreeVo> listTree(Long parentId,int hierarchy, List<Long> resourcesId) {
+        if (hierarchy == 10){
+            return null;
+        }
+        if (Objects.isNull(parentId)){
+            return null;
+        }
+        List<Resources> childList = listTree(parentId,resourcesId);
+        List<ResourcesTreeVo> retuenList = convertVo(childList);
+        if (Objects.nonNull(retuenList)) {
+            retuenList.forEach(resources -> {
+                int finalHierarchy = hierarchy;
+                finalHierarchy++;
+                resources.setChildren(listTree(resources.getId(), finalHierarchy,resourcesId));
+            });
+        }
+        return retuenList;
+    }
     /**
      * 获取所有子节点
      * @param parentId
@@ -200,22 +253,7 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
      * @return
      */
     private List<ResourcesTreeVo> listTree(Long parentId,int hierarchy) {
-        if (hierarchy == 10){
-            return null;
-        }
-        if (Objects.isNull(parentId)){
-            return null;
-        }
-        List<Resources> childList = listTree(parentId);
-        List<ResourcesTreeVo> retuenList = convertVo(childList);
-        if (Objects.nonNull(retuenList)) {
-            retuenList.forEach(resources -> {
-                int finalHierarchy = hierarchy;
-                finalHierarchy++;
-                resources.setChildren(listTree(resources.getId(), finalHierarchy));
-            });
-        }
-        return retuenList;
+        return listTree(parentId, hierarchy, null);
     }
 
     /**
@@ -224,7 +262,22 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
      * @return
      */
     private List<Resources> listTree(Long parentId) {
-        return resourcesDao.findByParentIdAndStateOrderBySort(parentId, State.NORMAL);
+        return listTree(parentId,null);
+    }
+
+    /**
+     * 根据父节点ID和资源id获取子资源
+     * @param parentId
+     * @param resourcesId
+     * @return
+     */
+    private List<Resources> listTree(Long parentId,List<Long> resourcesId) {
+        if (Objects.isNull(resourcesId)) {
+            return resourcesDao.findByParentIdAndStateOrderBySort(parentId, State.NORMAL);
+        }else if (resourcesId.size()>0){
+            return resourcesDao.findByParentIdAndStateAndIdInOrderBySort(parentId, State.NORMAL,resourcesId);
+        }
+        return Collections.emptyList();
     }
 
     /**

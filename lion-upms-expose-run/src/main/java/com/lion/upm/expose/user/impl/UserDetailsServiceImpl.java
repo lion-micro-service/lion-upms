@@ -2,7 +2,9 @@ package com.lion.upm.expose.user.impl;
 
 import com.lion.security.LionSimpleGrantedAuthority;
 import com.lion.security.LionUserDetails;
+import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.user.User;
+import com.lion.upms.service.resources.ResourcesService;
 import com.lion.upms.service.user.UserService;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +29,36 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ResourcesService resourcesService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user =  userService.findUser(username);
         if (Objects.isNull(user)){
             return null;
-//            return new LionUserDetails(null,null,null);
         }
-        LionSimpleGrantedAuthority grantedAuthority = new LionSimpleGrantedAuthority();
-//        grantedAuthority.setAuthority("user_console_list");
-        List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
-        list.add(grantedAuthority);
-        LionUserDetails userDetails = new LionUserDetails(user.getUsername(),user.getPassword(),list);
+        LionUserDetails userDetails = new LionUserDetails(user.getUsername(),user.getPassword(),getUserGrantedAuthority(user.getId()));
         return userDetails;
     }
+
+    /**
+     * 获取用户权限
+     * @param userId
+     * @return
+     */
+    private List<GrantedAuthority> getUserGrantedAuthority(Long userId){
+        List<Resources> listResources = resourcesService.findAllResources(userId);
+        List<GrantedAuthority> listGrantedAuthority = new ArrayList<GrantedAuthority>();
+        listResources.forEach(resources -> {
+            LionSimpleGrantedAuthority grantedAuthority = new LionSimpleGrantedAuthority();
+            grantedAuthority.setAuthority(resources.getCode());
+            listGrantedAuthority.add(grantedAuthority);
+        });
+        return listGrantedAuthority;
+    }
+
+
+
+
 }

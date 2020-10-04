@@ -35,4 +35,16 @@ public interface DepartmentUserService extends BaseService<DepartmentUser> {
      * @return
      */
     public List<DepartmentUser> findNotInDepartmentUser(Long departmentId,List<Long> userId);
+
+    /**
+     * 根据用户Id删除部门与用户的关联
+     * @param userId
+     */
+    public void deleteByUserId(Long userId);
+
+    /**
+     * 根据部门id删除部门与用户的关联
+     * @param departmentId
+     */
+    public void deleteByDepartmentId(Long departmentId);
 }

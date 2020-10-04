@@ -5,9 +5,9 @@
                 <a-row >
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
-                            <a-button style="margin-left: 5px;" type="primary" icon="search"  @click="()=>{this.searchModel.pageNumber =1;search()}">查询</a-button>
-                            <a-button style="margin-left: 5px;" type="primary" icon="file-add" @click="add()">新增</a-button>
-                            <a-button style="margin-left: 5px;" type="danger" icon="delete"  @click="del(null)">删除</a-button>
+                            <a-button style="margin-left: 5px;" type="primary" v-if="getAuthority('SYSTEM_SETTINGS_USER_LIST')" icon="search"  @click="()=>{this.searchModel.pageNumber =1;search()}">查询</a-button>
+                            <a-button style="margin-left: 5px;" type="primary" v-if="getAuthority('SYSTEM_SETTINGS_USER_ADD')"  icon="file-add" @click="add()">新增</a-button>
+                            <a-button style="margin-left: 5px;" type="danger" v-if="getAuthority('SYSTEM_SETTINGS_USER_DELETE')" icon="delete"  @click="del(null)">删除</a-button>
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -29,6 +29,7 @@
     import qs from 'qs';
     import searchFrom from "@/components/user/searchFrom.vue";
     import list from "@/components/user/list.vue";
+    import authority from "@lion/lion-front-core/src/security/authority";
     @Component({components:{searchFrom,list}})
     export default class List extends Vue{
         //组件是否已经挂载
@@ -164,6 +165,13 @@
             }).catch((fail)=>{
             }).finally(()=>{
             });
+        }
+
+        /**
+         * 判断(获取)是否有权限
+         */
+        private getAuthority(authorityCode:string):any{
+            return authority(authorityCode);
         }
     }
 </script>

@@ -11,6 +11,7 @@ import com.lion.upms.entity.department.dto.AddDepartmentUserDto;
 import com.lion.upms.service.department.DepartmentService;
 import com.lion.upms.service.department.DepartmentUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +42,7 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
      * @return
      */
     @GetMapping("/list/tree")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_LIST')")
     public IResultData listTree(){
         return ResultData.instance().setData("list",departmentService.listTree());
     }
@@ -63,6 +65,7 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
      * @return
      */
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_ADD')")
     public IResultData add(@RequestBody @Validated({Validator.Insert.class}) Department department){
         departmentService.save(department);
         return ResultData.instance();
@@ -74,6 +77,7 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
      * @return
      */
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_UPDATE')")
     public IResultData update(@RequestBody @Validated({Validator.Update.class}) Department department){
         departmentService.update(department);
         return ResultData.instance();
@@ -96,8 +100,10 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
      * @return
      */
     @DeleteMapping("/delete")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_DELETE')")
     public IResultData delete(@NotNull(message = "id不能为空") Long id){
         departmentService.delete(id);
+        departmentUserService.deleteByDepartmentId(id);
         return ResultData.instance();
     }
 
@@ -108,6 +114,7 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
      * @return
      */
     @PostMapping("/save/user")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_USER')")
     public IResultData saveUser(@RequestBody @Validated AddDepartmentUserDto addDepartmentUserDto){
         departmentUserService.saveUser(addDepartmentUserDto);
         return ResultData.instance();
@@ -120,6 +127,7 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
      * @return 已关联数据和不能关联数据（在其它部门已关联）
      */
     @GetMapping("/user")
+    @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_USER')")
     public IResultData user(@NotNull(message = "部门id不能为空") Long id, @RequestParam(name = "userId",defaultValue = "0",required = false) List<Long> userId){
         List<DepartmentUser> oldDepartmentUser = departmentUserService.findDepartmentUser(id,userId);
         List<DepartmentUser> notCheckDepartmentUser = departmentUserService.findNotInDepartmentUser(id,userId);

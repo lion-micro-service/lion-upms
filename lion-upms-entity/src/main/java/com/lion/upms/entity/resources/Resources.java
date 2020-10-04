@@ -39,15 +39,15 @@ public class Resources extends BaseEntity {
     @NotNull(message = "父节点ID不能为空",groups = {Validator.Insert.class})
     private Long parentId;
 
-    @Column(name = "code",unique = true,nullable = false,columnDefinition = " varchar(30) comment '资源编码' ")
+    @Column(name = "code",unique = true,nullable = false,columnDefinition = " varchar(100) comment '资源编码' ")
     @NotBlank(message = "资源编码不能为空",groups = {Validator.Update.class, Validator.Insert.class})
-    @Length(message = "资源编码为{min}-{max}个字符",max = 30,min = 2,groups = {Validator.Update.class, Validator.Insert.class})
+    @Length(message = "资源编码为{min}-{max}个字符",max = 100,min = 1,groups = {Validator.Update.class, Validator.Insert.class})
     @Pattern(regexp = "^\\w+$",message = "资源编码只能是数字、英文字母或者下划线组成的字符串",groups = {Validator.Update.class, Validator.Insert.class})
     private String code;
 
     @Column(name = "name",nullable = false,columnDefinition = " varchar(30) comment '资源名称' ")
     @NotBlank(message = "资源名称不能为空",groups = {Validator.Update.class, Validator.Insert.class})
-    @Length(message = "资源名称为{min}-{max}个字符",max = 30,min = 2,groups = {Validator.Update.class, Validator.Insert.class})
+    @Length(message = "资源名称为{min}-{max}个字符",max = 30,min = 1,groups = {Validator.Update.class, Validator.Insert.class})
     @Pattern(regexp = "^[\\u4E00-\\u9FA5\\w+]+$",message = "资源名称不能包含特殊字符",groups = {Validator.Update.class, Validator.Insert.class})
     private String name;
 

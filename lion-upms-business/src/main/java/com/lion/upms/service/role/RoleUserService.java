@@ -28,4 +28,16 @@ public interface RoleUserService extends BaseService<RoleUser> {
      * @return
      */
     public List<RoleUser> findRoleUser(Long roleId, List<Long> userId);
+
+    /**
+     * 根据用户删除角色与用户的关联
+     * @param userId
+     */
+    public void deleteByUserId(Long userId);
+
+    /**
+     * 根据角色id删除角色与用户的关联
+     * @param roleId
+     */
+    public void deleteByRoleId(Long roleId);
 }

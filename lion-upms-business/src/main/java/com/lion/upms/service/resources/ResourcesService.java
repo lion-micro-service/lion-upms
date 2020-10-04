@@ -27,6 +27,16 @@ public interface ResourcesService extends BaseService<Resources> {
     public List<ResourcesTreeVo> listTree(Scope scope);
 
     /**
+     * 资源树形结构
+     * @param scope
+     * @param resourcesId
+     * @return
+     */
+    public List<ResourcesTreeVo> listTree(Scope scope, List<Long> resourcesId);
+
+
+
+    /**
      * 根据编码查询资源
      * @param code
      * @return
@@ -113,5 +123,19 @@ public interface ResourcesService extends BaseService<Resources> {
      * @param id
      * @return
      */
-    public List<Resources> getAllParentResources(Long id);
+    public List<Resources> findAllParentResources(Long id);
+
+    /**
+     * 根据用户关联的角色查询所有资源ID
+     * @param userId
+     * @return
+     */
+    public List<Long> findAllResourcesId(Long userId);
+
+    /**
+     * 根据用户关联的角色查询所有资源
+     * @param userId
+     * @return
+     */
+    public List<Resources> findAllResources(Long userId);
 }

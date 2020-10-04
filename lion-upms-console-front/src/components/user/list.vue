@@ -9,14 +9,15 @@
             <samp v-for="(role,index) in record.role">{{role.name}}<samp v-if="index<record.role.length-1">/</samp></samp>
         </span>
         <span slot="action" slot-scope="text, record">
-            <a-button style="margin-left: 5px;" icon="edit" size="small" @click="edit(record.user.id)">修改</a-button>
-            <a-button style="margin-left: 5px;" type="danger" icon="delete" size="small" @click='del(record.user.id)'>删除</a-button>
+            <a-button style="margin-left: 5px;" icon="edit" v-if="getAuthority('SYSTEM_SETTINGS_USER_UPDATE')" size="small" @click="edit(record.user.id)">修改</a-button>
+            <a-button style="margin-left: 5px;" type="danger" v-if="getAuthority('SYSTEM_SETTINGS_USER_DELETE')" icon="delete" size="small" @click='del(record.user.id)'>删除</a-button>
         </span>
     </a-table>
 </template>
 
 <script lang="ts">
     import {Component, Emit, Vue} from 'vue-property-decorator';
+    import authority from "@lion/lion-front-core/src/security/authority";
     @Component({})
     export default class list extends Vue{
         private rowKey:any="user.id";
@@ -110,6 +111,13 @@
                 }
             }
             return parentDepartmentName;
+        }
+
+        /**
+         * 判断(获取)是否有权限
+         */
+        private getAuthority(authorityCode:string):any{
+            return authority(authorityCode);
         }
 
         /**

@@ -26,5 +26,17 @@ public interface RoleResourcesService extends BaseService<RoleResources> {
      * @param roleId
      * @return
      */
-    public List<RoleResources> getAllRoleResources(Long roleId);
+    public List<RoleResources> findAllRoleResources(Long roleId);
+
+    /**
+     * 根据角色ID删除角色与权限(资源)的关联
+     * @param roleId
+     */
+    public void deleteByRoleId(Long roleId);
+
+    /**
+     * 根据资源ID删除角色与权限(资源)的关联
+     * @param resourcesId
+     */
+    public void deleteByResourcesId(Long resourcesId);
 }

@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @create: 2020-01-19 11:01
  */
 @DubboService(interfaceClass = UserExposeService.class)
-public class UserExposServiceImpl extends BaseExposeServiceImpl<User> implements UserExposeService {
+public class UserExposeServiceImpl extends BaseExposeServiceImpl<User> implements UserExposeService {
 
     @Autowired
     private UserService userService;
