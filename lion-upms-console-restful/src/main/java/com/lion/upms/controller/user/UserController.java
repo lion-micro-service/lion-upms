@@ -18,13 +18,20 @@ import com.lion.upms.entity.user.dto.UserUpdataDto;
 import com.lion.upms.service.user.UserService;
 import com.lion.utils.CurrentUser;
 import com.lion.utils.CurrentUserUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -39,6 +46,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/upms/user/console")
 @Validated
+@Api(tags = "用户管理")
 public class UserController extends BaseControllerImpl implements BaseController {
 
     @Autowired
@@ -54,10 +62,11 @@ public class UserController extends BaseControllerImpl implements BaseController
      * @param userSearchDto
      * @return
      */
+    @ApiOperation(value = "用户列表")
     @GetMapping("/list")
     @PreAuthorize("hasAnyAuthority('SYSTEM_SETTINGS_USER_LIST,SYSTEM_SETTINGS_ROLE_USER,SYSTEM_SETTINGS_DEPARTMENT_USER')")
 //    @SentinelResource()
-    public IResultData list(LionPage lionPage, UserSearchDto userSearchDto) {
+    public IResultData list(@ApiIgnore LionPage lionPage, UserSearchDto userSearchDto) {
         return (IResultData) userService.list(lionPage, userSearchDto);
     }
 

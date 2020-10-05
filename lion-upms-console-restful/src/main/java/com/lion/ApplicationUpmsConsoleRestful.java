@@ -13,6 +13,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import springfox.documentation.oas.annotations.EnableOpenApi;
+import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 @SpringBootApplication ()
 @ComponentScan(basePackages = "com.lion.**")
@@ -21,6 +23,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = {"com.lion.upms.dao.**"}, repositoryFactoryBeanClass = BaseDaoFactoryBean.class)
 @EntityScan({"com.lion.upms.entity.**"})
 @EnableJpaAuditing
+@EnableOpenApi
 public class ApplicationUpmsConsoleRestful {
 
     public static void main ( String args[] ) throws Exception {
