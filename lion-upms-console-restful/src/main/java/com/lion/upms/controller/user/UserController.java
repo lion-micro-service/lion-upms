@@ -16,9 +16,12 @@ import com.lion.upms.entity.user.dto.UserAddDto;
 import com.lion.upms.entity.user.dto.UserSearchDto;
 import com.lion.upms.entity.user.dto.UserUpdataDto;
 import com.lion.upms.service.user.UserService;
+import com.lion.utils.CurrentUser;
+import com.lion.utils.CurrentUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +44,10 @@ public class UserController extends BaseControllerImpl implements BaseController
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
     /**
      * 列表
      * @param lionPage
@@ -51,14 +58,30 @@ public class UserController extends BaseControllerImpl implements BaseController
     @PreAuthorize("hasAnyAuthority('SYSTEM_SETTINGS_USER_LIST,SYSTEM_SETTINGS_ROLE_USER,SYSTEM_SETTINGS_DEPARTMENT_USER')")
 //    @SentinelResource()
     public IResultData list(LionPage lionPage, UserSearchDto userSearchDto) {
-        JpqlParameter jpqlParameter = new JpqlParameter();
-        if (StringUtils.hasText(userSearchDto.getName())){
-            jpqlParameter.setSearchParameter(SearchConstant.LIKE+"_name",userSearchDto.getName());
-        }
-        jpqlParameter.setSearchParameter(SearchConstant.NOT_IN+"_username",new String[]{"admin","superadmin"});
-        jpqlParameter.setSortParameter("createDateTime", Sort.Direction.DESC);
-        lionPage.setJpqlParameter(jpqlParameter);
         return (IResultData) userService.list(lionPage, userSearchDto);
+    }
+
+    /**
+     * 获取当前登陆用户详情
+     * @return
+     */
+    @GetMapping("/current/user/details")
+    public IResultData currentUserDetails(){
+        Long id = CurrentUserUtil.getCurrentUserId();
+        return ResultData.instance().setData("user",userService.findById(id));
+    }
+
+    /**
+     * 修改当前登陆用户密码
+     * @return
+     */
+    @PutMapping("/current/user/passwod/update")
+    public IResultData currentUserPasswordUpdate(@NotBlank(message = "密码不能为空")String password){
+        Long id = CurrentUserUtil.getCurrentUserId();
+        User user = userService.findById(id);
+        user.setPassword(passwordEncoder.encode(password));
+        userService.update(user);
+        return ResultData.instance();
     }
 
     /**

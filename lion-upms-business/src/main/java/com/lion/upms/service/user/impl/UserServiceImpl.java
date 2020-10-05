@@ -141,7 +141,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         if (Objects.nonNull(entity.getUsername()) && StringUtils.hasText(entity.getUsername())){
             User user = findUser(entity.getUsername());
             if (Objects.nonNull(user) && Objects.nonNull(entity.getId())){
-                if (Objects.equals(user.getId(),entity.getId())){
+                if (!Objects.equals(user.getId(),entity.getId())){
                     new BusinessException("该用户已存在");
                 }
             }

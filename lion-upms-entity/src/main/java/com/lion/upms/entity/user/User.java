@@ -28,7 +28,7 @@ import java.util.Date;
 @DynamicUpdate
 @DynamicInsert
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true,value = {"password","username","createDateTime","updateDateTime","createUserId","updateUserId"},allowSetters = true)
+@JsonIgnoreProperties(ignoreUnknown = true,value = {"password","createDateTime","updateDateTime","createUserId","updateUserId"},allowSetters = true)
 public class User extends BaseEntity {
 
 
@@ -64,6 +64,9 @@ public class User extends BaseEntity {
     @Past(message = "出生日期不能大于/等于当前日期", groups = {Validator.Insert.class, Validator.Update.class})
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
+
+    @Column(name = "head_portrait", columnDefinition = " BIGINT(18) comment '头像' ")
+    private Long headPortrait;
 
     @Getter(AccessLevel.NONE)
     @Column(name = "is_account_non_expired", nullable = false, columnDefinition = " bit(1) default b'1' comment '账号是否未过期'")
