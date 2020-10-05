@@ -2,32 +2,31 @@ package com.lion.upms.controller.user;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import com.lion.constant.SearchConstant;
 import com.lion.core.IResultData;
 import com.lion.core.LionPage;
+import com.lion.core.PageResultData;
 import com.lion.core.ResultData;
 import com.lion.core.common.enums.ResultDataState;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
-import com.lion.core.persistence.JpqlParameter;
 import com.lion.core.persistence.Validator;
 import com.lion.upms.entity.user.User;
 import com.lion.upms.entity.user.dto.UserAddDto;
 import com.lion.upms.entity.user.dto.UserSearchDto;
 import com.lion.upms.entity.user.dto.UserUpdataDto;
 import com.lion.upms.service.user.UserService;
-import com.lion.utils.CurrentUser;
 import com.lion.utils.CurrentUserUtil;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -46,7 +45,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/upms/user/console")
 @Validated
-@Api(tags = "用户管理")
+@Api(tags={"用户管理"})
 public class UserController extends BaseControllerImpl implements BaseController {
 
     @Autowired
@@ -62,10 +61,17 @@ public class UserController extends BaseControllerImpl implements BaseController
      * @param userSearchDto
      * @return
      */
-    @ApiOperation(value = "用户列表")
+    @ApiOperation("列表")
     @GetMapping("/list")
     @PreAuthorize("hasAnyAuthority('SYSTEM_SETTINGS_USER_LIST,SYSTEM_SETTINGS_ROLE_USER,SYSTEM_SETTINGS_DEPARTMENT_USER')")
 //    @SentinelResource()
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="pageNumber",value="页码",required=true,paramType="query",dataType="Integer"),
+            @ApiImplicitParam(name="pageSize",value="分页大小",required=true,paramType="query",dataType="Integer"),
+    })
+    @ApiResponses({
+            @ApiResponse(extensions = {@Extension(name = "data", properties = {@ExtensionProperty(name = "test",value = "{'name':'liufang'}",parseValue = true)})})
+    })
     public IResultData list(@ApiIgnore LionPage lionPage, UserSearchDto userSearchDto) {
         return (IResultData) userService.list(lionPage, userSearchDto);
     }
