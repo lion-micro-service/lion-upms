@@ -2,6 +2,9 @@ package com.lion.upms.controller.user;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import com.lion.annotation.swagger.LionApiModelPropertyIgnore;
+import com.lion.annotation.swagger.LionApiResponse;
+import com.lion.annotation.swagger.LionApiResponses;
 import com.lion.core.IResultData;
 import com.lion.core.LionPage;
 import com.lion.core.PageResultData;
@@ -17,13 +20,8 @@ import com.lion.upms.entity.user.dto.UserUpdataDto;
 import com.lion.upms.service.user.UserService;
 import com.lion.utils.CurrentUserUtil;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.extensions.Extension;
-import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -61,18 +59,15 @@ public class UserController extends BaseControllerImpl implements BaseController
      * @param userSearchDto
      * @return
      */
-    @ApiOperation("列表")
+    @ApiOperation(value = "列表",notes = "列表")
     @GetMapping("/list")
     @PreAuthorize("hasAnyAuthority('SYSTEM_SETTINGS_USER_LIST,SYSTEM_SETTINGS_ROLE_USER,SYSTEM_SETTINGS_DEPARTMENT_USER')")
 //    @SentinelResource()
-    @ApiImplicitParams({
-            @ApiImplicitParam(name="pageNumber",value="页码",required=true,paramType="query",dataType="Integer"),
-            @ApiImplicitParam(name="pageSize",value="分页大小",required=true,paramType="query",dataType="Integer"),
+    @LionApiResponses(returType = PageResultData.class,data = {
+            @LionApiResponse(),
+            @LionApiResponse()
     })
-    @ApiResponses({
-            @ApiResponse(extensions = {@Extension(name = "data", properties = {@ExtensionProperty(name = "test",value = "{'name':'liufang'}",parseValue = true)})})
-    })
-    public IResultData list(@ApiIgnore LionPage lionPage, UserSearchDto userSearchDto) {
+    public IResultData list(LionPage lionPage,UserSearchDto userSearchDto) {
         return (IResultData) userService.list(lionPage, userSearchDto);
     }
 
@@ -90,8 +85,9 @@ public class UserController extends BaseControllerImpl implements BaseController
      * 修改当前登陆用户密码
      * @return
      */
+    @ApiOperation(value = "修改当前登陆用户密码",notes = "修改当前登陆用户密码")
     @PutMapping("/current/user/passwod/update")
-    public IResultData currentUserPasswordUpdate(@NotBlank(message = "密码不能为空")String password){
+    public IResultData currentUserPasswordUpdate(@ApiParam(value ="新密码" ,name = "password",required = true,type = "string") @RequestParam  @NotBlank(message = "密码不能为空")String password){
         Long id = CurrentUserUtil.getCurrentUserId();
         User user = userService.findById(id);
         user.setPassword(passwordEncoder.encode(password));
@@ -137,7 +133,8 @@ public class UserController extends BaseControllerImpl implements BaseController
      */
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_USER_ADD')")
-    public IResultData add( @RequestBody @Validated({Validator.Insert.class}) UserAddDto userAddDto){
+    public IResultData add( @RequestBody @Validated({Validator.Insert.class})
+                            @LionApiModelPropertyIgnore(propertyIgnore = {"id","createDateTime","createUserId","updateDateTime","updateUserId","version"}) UserAddDto userAddDto){
         User user = new User();
         BeanUtil.copyProperties(userAddDto,user, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
         userService.save(user);

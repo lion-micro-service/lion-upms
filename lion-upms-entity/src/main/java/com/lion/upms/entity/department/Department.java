@@ -2,6 +2,8 @@ package com.lion.upms.entity.department;
 
 import com.lion.core.persistence.Validator;
 import com.lion.core.persistence.entity.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
@@ -25,20 +27,24 @@ import javax.validation.constraints.Pattern;
 @DynamicUpdate
 @DynamicInsert
 @Data
+@ApiModel("部门")
 public class Department extends BaseEntity {
 
     private static final long serialVersionUID = -7780210746115490265L;
 
+    @ApiModelProperty(name = "父节点ID",required = true,notes = "父节点ID")
     @Column(name = "parent_id",nullable = false,columnDefinition = " BIGINT(18) default 0 comment '父节点ID' ")
     @NotNull(message = "父节点ID不能为空",groups = {Validator.Update.class, Validator.Insert.class})
     private Long parentId;
 
+    @ApiModelProperty(name = "部门名称",required = true,notes = "部门名称")
     @Column(name = "name",nullable = false,columnDefinition = " varchar(30) comment '部门名称' ")
     @NotBlank(message = "部门名称不能为空",groups = {Validator.Update.class, Validator.Insert.class})
     @Length(message = "部门名称为{min}-{max}个字符",max = 30,min = 3,groups = {Validator.Update.class, Validator.Insert.class})
     @Pattern(regexp = "^[\\u4E00-\\u9FA5\\w+]+$",message = "部门名称不能包含特殊字符",groups = {Validator.Update.class, Validator.Insert.class})
     private String name;
 
+    @ApiModelProperty(name = "备注",notes = "备注")
     @Column(name = "remark",columnDefinition = " varchar(500) comment '备注' ")
     private String remark;
 }
