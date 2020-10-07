@@ -3,6 +3,9 @@ package com.lion;
 import com.lion.aop.exception.RestulException;
 import com.lion.config.EntityAuditorConfiguration;
 import com.lion.core.persistence.BaseDaoFactoryBean;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.dubbo.config.spring.context.annotation.DubboComponentScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,6 +27,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 @EntityScan({"com.lion.upms.entity.**"})
 @EnableJpaAuditing
 @EnableOpenApi
+//@OpenAPIDefinition(info = @Info(title = "upms",description = "upms",version = "${spring.cloud.nacos.group}"),tags = @Tag(name = "upms",description = "upms"))
 public class ApplicationUpmsConsoleRestful {
 
     public static void main ( String args[] ) throws Exception {
