@@ -41,6 +41,27 @@
                         <a-date-picker placeholder="请输入生日" valueFormat="YYYY-MM-DD" v-model="addModel.birthday" />
                     </a-form-model-item>
                 </a-col>
+                <a-col :span="8">
+                    <a-form-model-item label="头像" prop="headPortraitList" ref="headPortraitList" >
+                        <a-upload
+                                :action="uploadAction"
+                                list-type="picture-card"
+                                :file-list="headPortraitList"
+                                @preview="handlePreview"
+                                @change="handleChange"
+                        >
+                            <div v-if="headPortraitList.length < 1">
+                                <a-icon type="plus" />
+                                <div class="ant-upload-text">
+                                    Upload
+                                </div>
+                            </div>
+                        </a-upload>
+                        <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                            <img alt="example" style="width: 100%" :src="previewImage" />
+                        </a-modal>
+                    </a-form-model-item>
+                </a-col>
             </a-row>
 
             <a-row >
@@ -79,6 +100,10 @@
         private resetDisabled:boolean = false;
         //添加数据模型
         private addModel : any={};
+        //上传头像接口地址
+        private uploadAction:string=process.env.VUE_APP_BASEURL+"/common/file/console/upload"
+        //头像地址
+        private headPortraitList:Array<any>=[];
         //校验规则
         private rules:any={
             username:[{required:true,validator:this.checkUsernameIsExist,trigger:'blur'}],
@@ -287,4 +312,5 @@
     .ant-row >>> .ant-form-item-control-wrapper{
         width: calc(100% - 80px);
     }
+
 </style>
