@@ -42,24 +42,15 @@
                     </a-form-model-item>
                 </a-col>
                 <a-col :span="8">
-                    <a-form-model-item label="头像" prop="headPortraitList" ref="headPortraitList" >
-                        <a-upload
-                                :action="uploadAction"
-                                list-type="picture-card"
-                                :file-list="headPortraitList"
-                                @preview="handlePreview"
-                                @change="handleChange"
-                        >
+                    <a-form-model-item label="头像" prop="headPortrait" ref="headPortrait" >
+                        <a-upload :action="uploadAction" accept="image/png, image/jpeg" list-type="picture-card" :file-list="headPortraitList" @change="(e)=>headPortraitChange(e)" @remove="headPortraitRemove" @preview="">
                             <div v-if="headPortraitList.length < 1">
                                 <a-icon type="plus" />
                                 <div class="ant-upload-text">
-                                    Upload
+                                    上传
                                 </div>
                             </div>
                         </a-upload>
-                        <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-                            <img alt="example" style="width: 100%" :src="previewImage" />
-                        </a-modal>
                     </a-form-model-item>
                 </a-col>
             </a-row>
@@ -283,14 +274,34 @@
                     }
                 }
             });
-        };
+        }
+
+        /**
+         * 上传头像回调事件
+         */
+        private headPortraitChange( obj:any):void{
+            this.headPortraitList = obj.fileList;
+            if (obj.file.status === 'done'){
+                const response:any = eval('('+obj.file.xhr.response+')');
+                this.addModel.headPortrait=response.data.files[0].id;
+            }
+        }
+
+        /**
+         * 头像删除事件
+         */
+        private headPortraitRemove():boolean{
+            debugger;
+            delete this.addModel.headPortrait;
+            return true;
+        }
 
         /**
          * 返回
          */
         private back():void{
             this.$router.go(-1);
-        };
+        }
 
         /**
          * 重置所有输入框
