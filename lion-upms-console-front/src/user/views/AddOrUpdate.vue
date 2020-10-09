@@ -43,13 +43,14 @@
                 </a-col>
                 <a-col :span="8">
                     <a-form-model-item label="头像" prop="headPortrait" ref="headPortrait" >
-                        <a-upload :action="uploadAction" accept="image/png, image/jpeg" list-type="picture-card" :file-list="headPortraitList" @change="(e)=>headPortraitChange(e)" @remove="headPortraitRemove" @preview="">
+                        <a-upload :action="uploadAction" accept="image/png, image/jpeg" list-type="picture-card" :file-list="headPortraitList" @change="(e)=>headPortraitChange(e)" :remove="function(file){headPortraitRemove(file)} " @preview="handlePreview">
                             <div v-if="headPortraitList.length < 1">
                                 <a-icon type="plus" />
                                 <div class="ant-upload-text">
                                     上传
                                 </div>
                             </div>
+
                         </a-upload>
                     </a-form-model-item>
                 </a-col>
@@ -65,6 +66,10 @@
                 </a-col>
             </a-row>
         </a-form-model>
+
+        <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+            <img alt="example" style="width: 100%" :src="previewImage" />
+        </a-modal>
     </a-card>
 </template>
 
@@ -95,6 +100,10 @@
         private uploadAction:string=process.env.VUE_APP_BASEURL+"/common/file/console/upload"
         //头像地址
         private headPortraitList:Array<any>=[];
+        //头像预览窗口是否显示
+        private previewVisible:boolean=false;
+        //预览图片
+        private previewImage:any="";
         //校验规则
         private rules:any={
             username:[{required:true,validator:this.checkUsernameIsExist,trigger:'blur'}],
@@ -234,6 +243,16 @@
             axios.get("/upms/user/console/details",{params:{id:id}})
                 .then((data)=>{
                     this.addModel = data.data.user;
+                    if (this.addModel.headPortraitVo){
+                        this.headPortraitList=[{
+                            uid:this.addModel.headPortraitVo.id,
+                            name:this.addModel.headPortraitVo.originalFileName,
+                            status:"done",
+                            url:process.env.VUE_APP_BASEURL+this.addModel.headPortraitVo.url
+                        }];
+                    }
+
+                    delete this.addModel.headPortraitVo;
                 }).catch(error=>{
 
             }).finally(()=>{
@@ -290,10 +309,38 @@
         /**
          * 头像删除事件
          */
-        private headPortraitRemove():boolean{
-            debugger;
+        private headPortraitRemove(file:any):boolean{
             delete this.addModel.headPortrait;
             return true;
+        }
+
+        /**
+         * 显示预览窗口
+         */
+        async handlePreview(file:any){
+            if (!file.url && !file.preview) {
+                file.preview = await this.getBase64(file.originFileObj);
+            }
+            this.previewImage = file.url || file.preview;
+            this.previewVisible = true;
+        }
+        /**
+         * 获取图片base64编码
+         */
+        private getBase64(file:any) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        /**
+         * 取消预览
+         */
+        private handleCancel():void {
+            this.previewVisible = false;
         }
 
         /**

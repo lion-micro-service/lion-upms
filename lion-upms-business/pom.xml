@@ -11,7 +11,9 @@
 	<artifactId>lion-upms-business</artifactId>
 	<packaging>jar</packaging>
 	<version>${project.parent.version}</version>
-
+	<properties>
+		<lion-common-expose>1.0.0-SNAPSHOT</lion-common-expose>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>com.lion</groupId>
@@ -22,5 +24,11 @@
 			<groupId>com.lion</groupId>
 			<artifactId>lion-business-starter</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.lion</groupId>
+			<artifactId>lion-common-expose</artifactId>
+			<version>${lion-common-expose}</version>
+		</dependency>
+
     </dependencies>
 </project>

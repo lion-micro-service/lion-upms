@@ -100,6 +100,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     public void update(User entity) {
         checkUserExist(entity);
         super.update(entity);
+        if (Objects.isNull(entity.getHeadPortrait())){
+            userDao.updateHeadPortrait(entity.getId(),null);
+        }
     }
 
     @Override
@@ -124,6 +127,11 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
                 return true;
             }
         }
+    }
+
+    @Override
+    public int updateHeadPortrait(Long id, Long headPortrait) {
+        return userDao.updateHeadPortrait(id, headPortrait);
     }
 
     @Override

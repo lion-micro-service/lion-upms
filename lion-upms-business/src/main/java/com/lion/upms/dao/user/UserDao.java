@@ -2,6 +2,9 @@ package com.lion.upms.dao.user;
 
 import com.lion.core.persistence.curd.BaseDao;
 import com.lion.upms.entity.user.User;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -36,4 +39,14 @@ public interface UserDao extends BaseDao<User> ,UserDaoEx {
      * @return
      */
     int deleteByIdAndUsernameNotIn(Serializable id, Collection<String> usernames);
+
+    /**
+     * 更新用户头像（因使用本框架自身update更新entity不会操作null字段）
+     * @param id
+     * @param headPortrait
+     * @return
+     */
+    @Modifying
+    @Query(" update User set headPortrait =:headPortrait where id =:id ")
+    int updateHeadPortrait(@Param("id") Long id, @Param("headPortrait") Long headPortrait);
 }

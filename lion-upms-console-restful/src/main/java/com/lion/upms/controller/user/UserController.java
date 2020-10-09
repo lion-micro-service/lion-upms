@@ -3,6 +3,8 @@ package com.lion.upms.controller.user;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.lion.annotation.swagger.LionApiModelPropertyIgnore;
+import com.lion.common.entity.file.File;
+import com.lion.common.expose.file.FileExposeService;
 import com.lion.core.IResultData;
 import com.lion.core.LionPage;
 import com.lion.core.ResultData;
@@ -14,10 +16,13 @@ import com.lion.upms.entity.user.User;
 import com.lion.upms.entity.user.dto.UserAddDto;
 import com.lion.upms.entity.user.dto.UserSearchDto;
 import com.lion.upms.entity.user.dto.UserUpdataDto;
+import com.lion.upms.entity.user.vo.UserVo;
 import com.lion.upms.service.user.UserService;
 import com.lion.utils.CurrentUserUtil;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,6 +51,9 @@ public class UserController extends BaseControllerImpl implements BaseController
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @DubboReference
+    private FileExposeService fileExposeService;
+
 
     /**
      * 列表
@@ -67,7 +75,7 @@ public class UserController extends BaseControllerImpl implements BaseController
     @GetMapping("/current/user/details")
     public IResultData currentUserDetails(){
         Long id = CurrentUserUtil.getCurrentUserId();
-        return ResultData.instance().setData("user",userService.findById(id));
+        return ResultData.instance().setData("user",convertVo(userService.findById(id)));
     }
 
     /**
@@ -85,13 +93,27 @@ public class UserController extends BaseControllerImpl implements BaseController
     }
 
     /**
+     * 修改当前登陆用户头像
+     * @return
+     */
+    @PutMapping("/current/user/head/portrait/update")
+    public IResultData currentUserHeadPortraitUpdate(Long headPortrait){
+        Long id = CurrentUserUtil.getCurrentUserId();
+        if (Objects.nonNull(id)){
+            userService.updateHeadPortrait(id,headPortrait);
+        }
+        return ResultData.instance();
+    }
+
+    /**
      * 获取用户详情
      * @param id
      * @return
      */
     @GetMapping("/details")
     public IResultData details(@NotNull(message = "id不能为空")Long id){
-        return ResultData.instance().setData("user",userService.findById(id));
+        User user = userService.findById(id);
+        return ResultData.instance().setData("user",convertVo(user));
     }
 
     /**
@@ -162,5 +184,22 @@ public class UserController extends BaseControllerImpl implements BaseController
         BeanUtil.copyProperties(userUpdataDto,user, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
         userService.update(user);
         return ResultData.instance();
+    }
+
+    /**
+     * vo转换
+     * @param user
+     * @return
+     */
+    private UserVo convertVo(User user){
+        UserVo userVo = new UserVo();
+        if (Objects.nonNull(user)) {
+            BeanUtils.copyProperties(user, userVo);
+            if (Objects.nonNull(user.getHeadPortrait())){
+                File file = fileExposeService.findById(user.getHeadPortrait());
+                userVo.setHeadPortraitVo(file);
+            }
+        }
+        return userVo;
     }
 }

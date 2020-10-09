@@ -48,4 +48,12 @@ public interface UserService extends BaseService<User> {
      * @return
      */
     boolean checkEmailIsExist(@NotBlank(message = "邮箱不能为空")String email,Long id);
+
+    /**
+     * 修改用户头像
+     * @param id
+     * @param headPortrait
+     * @return
+     */
+    int updateHeadPortrait(Long id, Long headPortrait);
 }
