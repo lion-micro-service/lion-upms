@@ -29,6 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -64,7 +65,7 @@ public class UserController extends BaseControllerImpl implements BaseController
     @GetMapping("/list")
     @PreAuthorize("hasAnyAuthority('SYSTEM_SETTINGS_USER_LIST,SYSTEM_SETTINGS_ROLE_USER,SYSTEM_SETTINGS_DEPARTMENT_USER')")
 //    @SentinelResource()
-    public IResultData list(LionPage lionPage,UserSearchDto userSearchDto) {
+    public IResultData list(LionPage lionPage, UserSearchDto userSearchDto, HttpServletRequest request) {
         return (IResultData) userService.list(lionPage, userSearchDto);
     }
 
