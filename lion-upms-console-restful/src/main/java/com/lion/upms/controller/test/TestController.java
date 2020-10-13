@@ -1,5 +1,9 @@
 package com.lion.upms.controller.test;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.RuleConstant;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.lion.annotation.AuthorizationIgnore;
 import com.lion.common.expose.parameter.ParameterExposeService;
 import com.lion.core.IResultData;
@@ -14,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @description:
@@ -40,4 +46,42 @@ public class TestController {
 //        new BusinessException("测试(XA)分布式事物回滚");
         return ResultData.instance();
     }
+
+    @GetMapping("/sentinel")
+    @SentinelResource(value = "testSentinel",blockHandler = "blockHandler",defaultFallback = "defaultFallback")
+    @AuthorizationIgnore
+    public IResultData testSentinel(){
+        return ResultData.instance();
+    }
+
+    {
+        List<FlowRule> rules = new ArrayList<FlowRule>();
+        FlowRule rule = new FlowRule();
+        rule.setResource("testSentinel");
+        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        // Set limit QPS to 20.
+        rule.setCount(1);
+        rule.setControlBehavior(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
+        rules.add(rule);
+        FlowRuleManager.loadRules(rules);
+    }
+
+    public IResultData blockHandler(){
+        ResultData resultData = ResultData.instance();
+        resultData.setMessage("服务被降级/限流");
+        return resultData;
+    }
+
+    public IResultData fallback(){
+        ResultData resultData = ResultData.instance();
+        resultData.setMessage("服务被熔断");
+        return resultData;
+    }
+
+    public IResultData defaultFallback(){
+        ResultData resultData = ResultData.instance();
+        resultData.setMessage("服务被熔断/降级/限流");
+        return resultData;
+    }
+
 }
