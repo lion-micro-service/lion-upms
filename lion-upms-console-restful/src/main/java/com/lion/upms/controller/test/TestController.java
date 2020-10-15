@@ -10,6 +10,9 @@ import com.lion.core.IResultData;
 import com.lion.core.ResultData;
 import com.lion.exception.BusinessException;
 import io.seata.spring.annotation.GlobalTransactional;
+import lombok.SneakyThrows;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @description:
@@ -35,6 +39,9 @@ public class TestController {
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    private CuratorFramework client;
 
     @GetMapping("/xa")
 //    @AuthorizationIgnore
@@ -53,6 +60,38 @@ public class TestController {
     public IResultData testSentinel(){
         return ResultData.instance();
     }
+
+    //分布式测试变量
+    private Integer testI  = 1;
+    @GetMapping("/lock")
+    @AuthorizationIgnore
+    public IResultData testLock(){
+        InterProcessMutex lock = new InterProcessMutex(client, "/test-lock");
+        for (int i =0; i<10; i++){
+            new Thread("thread-"+i){
+                @SneakyThrows
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            lock.acquire(1, TimeUnit.SECONDS);
+                            if (testI >= 100) {
+                                return;
+                            }
+                            System.out.println(testI++);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        } finally {
+                            lock.release();
+                        }
+                    }
+                }
+            }.start();
+        }
+        return ResultData.instance();
+    }
+
+
 
     {
         List<FlowRule> rules = new ArrayList<FlowRule>();
@@ -83,5 +122,7 @@ public class TestController {
         resultData.setMessage("服务被熔断/降级/限流");
         return resultData;
     }
+
+
 
 }
