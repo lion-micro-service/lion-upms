@@ -8,8 +8,12 @@ import com.lion.core.persistence.Validator;
 import com.lion.upms.entity.department.Department;
 import com.lion.upms.entity.department.DepartmentUser;
 import com.lion.upms.entity.department.dto.AddDepartmentUserDto;
+import com.lion.upms.entity.department.vo.DepartmentTreeVo;
 import com.lion.upms.service.department.DepartmentService;
 import com.lion.upms.service.department.DepartmentUserService;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -43,8 +47,8 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
      */
     @GetMapping("/list/tree")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_LIST')")
-    public IResultData listTree(){
-        return ResultData.instance().setData("list",departmentService.listTree());
+    public IResultData<List<DepartmentTreeVo>> listTree(){
+        return ResultData.instance().setData(departmentService.listTree());
     }
 
     /**
@@ -55,8 +59,8 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
      * @return
      */
     @GetMapping("/check/name/exist")
-    public IResultData checkNameIsExist(@NotNull(message = "部门父节点id不能为空")Long parentId, @NotBlank(message = "名称不能为空")String name,Long id){
-        return ResultData.instance().setData("isExist",departmentService.checkNameIsExist(parentId, name,id));
+    public IResultData<Boolean> checkNameIsExist(@NotNull(message = "部门父节点id不能为空")Long parentId, @NotBlank(message = "名称不能为空")String name,Long id){
+        return ResultData.instance().setData(departmentService.checkNameIsExist(parentId, name,id));
     }
 
     /**
@@ -89,9 +93,9 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
      * @return
      */
     @GetMapping("/details")
-    public IResultData details(@NotNull(message = "id不能为空")Long id){
+    public IResultData<Department> details(@NotNull(message = "id不能为空")Long id){
         Department department = this.departmentService.findById(id);
-        return ResultData.instance().setData("department",department);
+        return ResultData.instance().setData(department);
     }
 
     /**
@@ -128,7 +132,7 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
      */
     @GetMapping("/user")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_USER')")
-    public IResultData user(@NotNull(message = "部门id不能为空") Long id, @RequestParam(name = "userId",defaultValue = "0",required = false) List<Long> userId){
+    public IResultData<DepartmetIdUserId> user(@NotNull(message = "部门id不能为空") Long id, @RequestParam(name = "userId",defaultValue = "0",required = false) List<Long> userId){
         List<DepartmentUser> oldDepartmentUser = departmentUserService.findDepartmentUser(id,userId);
         List<DepartmentUser> notCheckDepartmentUser = departmentUserService.findNotInDepartmentUser(id,userId);
         ResultData resultData = ResultData.instance();
@@ -140,10 +144,19 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
         notCheckDepartmentUser.forEach(departmentUser -> {
             notCheckUserId.add(departmentUser.getUserId());
         });
-        resultData.setData("oldUserId",oldUserId);
-        resultData.setData("notCheckUserId",notCheckUserId);
+        DepartmetIdUserId departmetIdUserId = new DepartmetIdUserId();
+        departmetIdUserId.setOldUserId(oldUserId);
+        departmetIdUserId.setNotCheckUserId(notCheckUserId);
+        resultData.setData(departmetIdUserId);
         return resultData;
     }
+}
 
-
+@ApiModel()
+@Data
+class DepartmetIdUserId{
+    @ApiModelProperty("已经选择中的user")
+    List<Long> oldUserId;
+    @ApiModelProperty("不能选择的user")
+    List<Long> notCheckUserId;
 }

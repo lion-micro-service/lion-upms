@@ -4,6 +4,8 @@ import com.lion.upms.entity.department.Department;
 import com.lion.upms.entity.department.vo.DepartmentTreeVo;
 import com.lion.upms.entity.role.Role;
 import com.lion.upms.entity.user.User;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 import sun.util.resources.ga.LocaleNames_ga;
@@ -17,21 +19,25 @@ import java.util.Objects;
  * @create: 2020-09-29 15:50
  **/
 @Data
+@ApiModel
 public class UserListVo {
 
     /**
      * 用户
      */
+    @ApiModelProperty("用户")
     private User user;
 
     /**
      * 部门
      */
+    @ApiModelProperty("部门")
     private DepartmentTreeVo department;
 
     /**
      * 角色
      */
+    @ApiModelProperty("角色")
     private List<Role> role;
 
     /**

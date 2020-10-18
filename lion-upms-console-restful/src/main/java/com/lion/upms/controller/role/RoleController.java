@@ -3,6 +3,7 @@ package com.lion.upms.controller.role;
 import com.lion.constant.SearchConstant;
 import com.lion.core.IResultData;
 import com.lion.core.LionPage;
+import com.lion.core.PageResultData;
 import com.lion.core.ResultData;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
@@ -14,6 +15,7 @@ import com.lion.upms.entity.role.RoleResources;
 import com.lion.upms.entity.role.RoleUser;
 import com.lion.upms.entity.role.dto.AddRoleResourcesdDto;
 import com.lion.upms.entity.role.dto.AddRoleUserDto;
+import com.lion.upms.entity.role.vo.RoleResourcesTreeVo;
 import com.lion.upms.service.resources.ResourcesService;
 import com.lion.upms.service.role.RoleDepartmentService;
 import com.lion.upms.service.role.RoleResourcesService;
@@ -68,7 +70,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
      */
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_LIST')")
-    public IResultData list(String name, String code,@RequestParam(name = "scope",defaultValue = "CONSOLE") Scope scope, LionPage lionPage){
+    public PageResultData<List<Role>> list(String name, String code, @RequestParam(name = "scope",defaultValue = "CONSOLE") Scope scope, LionPage lionPage){
         JpqlParameter jpqlParameter = new JpqlParameter();
         if (StringUtils.hasText(name)){
             jpqlParameter.setSearchParameter(SearchConstant.LIKE+"_name",name);
@@ -79,7 +81,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
         jpqlParameter.setSearchParameter(SearchConstant.EQUAL+"_scope",scope);
         jpqlParameter.setSortParameter("createDateTime", Sort.Direction.DESC);
         lionPage.setJpqlParameter(jpqlParameter);
-        return (IResultData) roleService.findNavigator(lionPage);
+        return (PageResultData) roleService.findNavigator(lionPage);
     }
 
     /**
@@ -113,8 +115,8 @@ public class RoleController extends BaseControllerImpl implements BaseController
      * @return
      */
     @GetMapping("/check/name/exist")
-    public IResultData checkNameIsExist(@NotBlank(message = "名称不能为空") String name, Long id){
-        return ResultData.instance().setData("isExist",roleService.checkNameIsExist(name, id));
+    public IResultData<Boolean> checkNameIsExist(@NotBlank(message = "名称不能为空") String name, Long id){
+        return ResultData.instance().setData(roleService.checkNameIsExist(name, id));
     }
 
     /**
@@ -124,8 +126,8 @@ public class RoleController extends BaseControllerImpl implements BaseController
      * @return
      */
     @GetMapping("/check/code/exist")
-    public IResultData checkCodeIsExist(@NotBlank(message = "名称不能为空") String code, Long id){
-        return ResultData.instance().setData("isExist",roleService.checkCodeIsExist(code, id));
+    public IResultData<Boolean> checkCodeIsExist(@NotBlank(message = "名称不能为空") String code, Long id){
+        return ResultData.instance().setData(roleService.checkCodeIsExist(code, id));
     }
 
     /**
@@ -134,8 +136,8 @@ public class RoleController extends BaseControllerImpl implements BaseController
      * @return
      */
     @GetMapping("/details")
-    public IResultData details(@NotNull(message = "id不能为空") Long id){
-        return ResultData.instance().setData("role",roleService.findById(id));
+    public IResultData<Role> details(@NotNull(message = "id不能为空") Long id){
+        return ResultData.instance().setData(roleService.findById(id));
     }
 
     /**
@@ -164,8 +166,8 @@ public class RoleController extends BaseControllerImpl implements BaseController
      * @return
      */
     @GetMapping("/resources/tree")
-    public IResultData roleResourcesTree(@RequestParam(name = "scope",defaultValue = "CONSOLE") Scope scope){
-        return ResultData.instance().setData("resources",roleService.roleResources(scope));
+    public IResultData<List<RoleResourcesTreeVo>> roleResourcesTree(@RequestParam(name = "scope",defaultValue = "CONSOLE") Scope scope){
+        return ResultData.instance().setData(roleService.roleResources(scope));
     }
 
     /**
@@ -187,7 +189,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
      */
     @GetMapping("/resources")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_RESOURCES')")
-    public IResultData resources(@NotNull(message = "角色id不能为空") Long roleId){
+    public IResultData<List<Long>> resources(@NotNull(message = "角色id不能为空") Long roleId){
         List<RoleResources> list = this.roleResourcesService.findAllRoleResources(roleId);
         List<Long> returnList = new ArrayList<Long>();
         list.forEach(roleResources->{
@@ -195,7 +197,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
                 returnList.add(roleResources.getResourcesId());
             }
         });
-        return ResultData.instance().setData("checkedKeys",returnList);
+        return ResultData.instance().setData(returnList);
     }
 
     /**
@@ -218,13 +220,13 @@ public class RoleController extends BaseControllerImpl implements BaseController
      */
     @GetMapping("/user")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_USER')")
-    public IResultData roleUser(@NotNull(message = "角色id不能为空") Long roleId,@RequestParam(name = "userId",required = false,defaultValue = "0") List<Long> userId){
+    public IResultData<List<Long>> roleUser(@NotNull(message = "角色id不能为空") Long roleId,@RequestParam(name = "userId",required = false,defaultValue = "0") List<Long> userId){
         List<RoleUser> list = roleUserService.findRoleUser(roleId, userId);
         List<Long> returnList = new ArrayList<Long>();
         list.forEach(roleUser -> {
             returnList.add(roleUser.getUserId());
         });
-        return ResultData.instance().setData("oldUserId", returnList);
+        return ResultData.instance().setData( returnList);
     }
 
 }

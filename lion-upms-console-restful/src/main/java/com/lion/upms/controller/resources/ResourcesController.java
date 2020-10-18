@@ -7,6 +7,7 @@ import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.Validator;
 import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.common.enums.Scope;
+import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 import com.lion.upms.service.resources.ResourcesService;
 import com.lion.upms.service.role.RoleResourcesService;
 import com.lion.utils.CurrentUserUtil;
@@ -41,10 +42,10 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
      * @return
      */
     @GetMapping("/front/menu")
-    public IResultData frontMenu(){
+    public IResultData<List<ResourcesTreeVo>> frontMenu(){
         Long userId = CurrentUserUtil.getCurrentUserId();
         List<Long> resourcesId = resourcesService.findAllResourcesId(userId);
-        return ResultData.instance().setData("menu",resourcesService.listTree(Scope.CONSOLE,resourcesId));
+        return ResultData.instance().setData(resourcesService.listTree(Scope.CONSOLE,resourcesId));
     }
 
     /**
@@ -54,8 +55,8 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
      */
     @GetMapping("/list/tree")
     @PreAuthorize("hasAnyAuthority('SYSTEM_SETTINGS_RESOURCES_LIST,SYSTEM_SETTINGS_ROLE_RESOURCES')")
-    public IResultData listTree(@RequestParam(value = "scope",defaultValue = "CONSOLE") Scope scope){
-        return ResultData.instance().setData("list",resourcesService.listTree(scope));
+    public IResultData<List<ResourcesTreeVo>> listTree(@RequestParam(value = "scope",defaultValue = "CONSOLE") Scope scope){
+        return ResultData.instance().setData(resourcesService.listTree(scope));
     }
 
     /**
@@ -65,8 +66,8 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
      * @return
      */
     @GetMapping("/check/code/exist")
-    public IResultData checkCodeIsExist(@NotBlank(message = "编码不能为空") String code, Long id){
-        return ResultData.instance().setData("isExist", resourcesService.checkCodeIsExist(code.trim().toUpperCase(), id));
+    public IResultData<Boolean> checkCodeIsExist(@NotBlank(message = "编码不能为空") String code, Long id){
+        return ResultData.instance().setData(resourcesService.checkCodeIsExist(code.trim().toUpperCase(), id));
     }
 
     /**
@@ -77,8 +78,8 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
      * @return
      */
     @GetMapping("/check/name/exist")
-    public IResultData checkNameIsExist(@NotBlank(message = "名称不能为空") String name, Long id, @NotNull(message = "父节点id不能为空")Long parentId){
-        return ResultData.instance().setData("isExist", resourcesService.checkNameIsExist(name, id,parentId));
+    public IResultData<Boolean> checkNameIsExist(@NotBlank(message = "名称不能为空") String name, Long id, @NotNull(message = "父节点id不能为空")Long parentId){
+        return ResultData.instance().setData(resourcesService.checkNameIsExist(name, id,parentId));
     }
 
     /**
@@ -88,8 +89,8 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
      * @return
      */
     @GetMapping("/check/url/exist")
-    public IResultData checkUrlIsExist(@NotBlank(message = "url不能为空") String url, Long id){
-        return ResultData.instance().setData("isExist", resourcesService.checkUrlIsExist(url, id));
+    public IResultData<Boolean> checkUrlIsExist(@NotBlank(message = "url不能为空") String url, Long id){
+        return ResultData.instance().setData(resourcesService.checkUrlIsExist(url, id));
     }
 
     /**
@@ -126,9 +127,9 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
      * @return
      */
     @GetMapping("/details")
-    public IResultData details(@NotNull(message = "id不能为空") Long id){
+    public IResultData<Resources> details(@NotNull(message = "id不能为空") Long id){
         Resources resources = this.resourcesService.findById(id);
-        return ResultData.instance().setData("resources",resources);
+        return ResultData.instance().setData(resources);
     }
 
     /**

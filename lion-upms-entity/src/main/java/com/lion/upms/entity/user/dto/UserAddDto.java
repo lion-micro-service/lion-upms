@@ -1,7 +1,6 @@
 package com.lion.upms.entity.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.lion.annotation.swagger.LionApiModelPropertyIgnore;
 import com.lion.upms.entity.user.User;
 import lombok.Data;
 
@@ -12,6 +11,5 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties(value={"isAccountNonExpired","isAccountNonLocked","isCredentialsNonExpired","isEnabled"})
-@LionApiModelPropertyIgnore(propertyIgnore = {"id","createDateTime","createUserId","updateDateTime","updateUserId","version"})
 public class UserAddDto extends User {
 }

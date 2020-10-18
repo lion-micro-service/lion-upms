@@ -2,12 +2,9 @@ package com.lion.upms.controller.user;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import com.lion.annotation.swagger.LionApiModelPropertyIgnore;
 import com.lion.common.entity.file.File;
 import com.lion.common.expose.file.FileExposeService;
-import com.lion.core.IResultData;
-import com.lion.core.LionPage;
-import com.lion.core.ResultData;
+import com.lion.core.*;
 import com.lion.core.common.enums.ResultDataState;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
@@ -16,9 +13,11 @@ import com.lion.upms.entity.user.User;
 import com.lion.upms.entity.user.dto.UserAddDto;
 import com.lion.upms.entity.user.dto.UserSearchDto;
 import com.lion.upms.entity.user.dto.UserUpdataDto;
+import com.lion.upms.entity.user.vo.UserListVo;
 import com.lion.upms.entity.user.vo.UserVo;
 import com.lion.upms.service.user.UserService;
 import com.lion.utils.CurrentUserUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -29,7 +28,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -44,6 +42,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/upms/user/console")
 @Validated
+@Api(tags = {"用户管理"})
 public class UserController extends BaseControllerImpl implements BaseController {
 
     @Autowired
@@ -64,9 +63,9 @@ public class UserController extends BaseControllerImpl implements BaseController
      */
     @GetMapping("/list")
     @PreAuthorize("hasAnyAuthority('SYSTEM_SETTINGS_USER_LIST,SYSTEM_SETTINGS_ROLE_USER,SYSTEM_SETTINGS_DEPARTMENT_USER')")
-//    @SentinelResource()
-    public IResultData list(LionPage lionPage, UserSearchDto userSearchDto, HttpServletRequest request) {
-        return (IResultData) userService.list(lionPage, userSearchDto);
+    @ApiOperation(value = "用户列表",notes = "用户列表")
+    public IPageResultData<List<UserListVo>> list(LionPage lionPage, UserSearchDto userSearchDto) {
+        return (IPageResultData) userService.list(lionPage, userSearchDto);
     }
 
     /**
@@ -74,9 +73,9 @@ public class UserController extends BaseControllerImpl implements BaseController
      * @return
      */
     @GetMapping("/current/user/details")
-    public IResultData currentUserDetails(){
+    public IResultData<UserVo> currentUserDetails(){
         Long id = CurrentUserUtil.getCurrentUserId();
-        return ResultData.instance().setData("user",convertVo(userService.findById(id)));
+        return ResultData.instance().setData(convertVo(userService.findById(id)));
     }
 
     /**
@@ -112,9 +111,9 @@ public class UserController extends BaseControllerImpl implements BaseController
      * @return
      */
     @GetMapping("/details")
-    public IResultData details(@NotNull(message = "id不能为空")Long id){
+    public IResultData<UserVo> details(@NotNull(message = "id不能为空")Long id){
         User user = userService.findById(id);
-        return ResultData.instance().setData("user",convertVo(user));
+        return ResultData.instance().setData(convertVo(user));
     }
 
     /**
@@ -123,8 +122,8 @@ public class UserController extends BaseControllerImpl implements BaseController
      * @return
      */
     @GetMapping("/check/username/exist")
-    public IResultData checkUsernameIsExist(@NotBlank(message = "登陆账号不能为空!") String username){
-        return ResultData.instance().setData("isExist",Objects.nonNull( userService.findUser(username)));
+    public IResultData<Boolean> checkUsernameIsExist(@NotBlank(message = "登陆账号不能为空!") String username){
+        return ResultData.instance().setData(Objects.nonNull( userService.findUser(username)));
     }
 
     /**
@@ -134,8 +133,8 @@ public class UserController extends BaseControllerImpl implements BaseController
      * @return
      */
     @GetMapping("/check/email/exist")
-    public IResultData checkEmailIsExist(@NotBlank(message = "邮箱不能为空！") String email,Long id){
-        return ResultData.instance().setData("isExist",userService.checkEmailIsExist(email, id));
+    public IResultData<Boolean> checkEmailIsExist(@NotBlank(message = "邮箱不能为空！") String email,Long id){
+        return ResultData.instance().setData(userService.checkEmailIsExist(email, id));
     }
 
     /**
@@ -145,8 +144,7 @@ public class UserController extends BaseControllerImpl implements BaseController
      */
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_USER_ADD')")
-    public IResultData add( @RequestBody @Validated({Validator.Insert.class})
-                            @LionApiModelPropertyIgnore(propertyIgnore = {"id","createDateTime","createUserId","updateDateTime","updateUserId","version"}) UserAddDto userAddDto){
+    public IResultData add( @RequestBody @Validated({Validator.Insert.class}) UserAddDto userAddDto){
         User user = new User();
         BeanUtil.copyProperties(userAddDto,user, CopyOptions.create().setIgnoreNullValue(true).setIgnoreError(true));
         userService.save(user);
