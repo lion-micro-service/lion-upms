@@ -38,7 +38,7 @@
         private async roleResources(){
             await axios.get("/upms/role/console/resources/tree", {params: {"scope": this.scope}})
             .then((data) => {
-                this.treeData = data.data.resources;
+                this.treeData = data.data;
             })
             .catch(fail => {
             })
@@ -46,7 +46,7 @@
             });
             await axios.get("/upms/role/console/resources", {params: {"roleId": this.roleId}})
             .then((data) => {
-                this.checkedKeys = data.data.checkedKeys;
+                this.checkedKeys = data.data;
             })
             .catch(fail => {
             })

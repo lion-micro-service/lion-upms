@@ -68,7 +68,7 @@
             axios.get("/upms/department/console/list/tree",{params:{}})
             .then((data)=>{
                 this.department=[];
-                let list:Array<any> = data.data.list
+                let list:Array<any> = data.data
                 for(let j = 0; j < list.length; j++) {
                     this.department[j] = {
                         title:list[j].name,
@@ -84,7 +84,7 @@
             });
             axios.get("/upms/role/console/list",{params:{pageSize:9999}})
             .then((data)=>{
-                this.role=data.data.list;
+                this.role=data.data;
             })
             .catch(fail => {
             })

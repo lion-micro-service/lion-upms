@@ -85,7 +85,7 @@
                         callback(new Error('异常错误！请检查'));
                         return;
                     }
-                    if (data.data.isExist) {
+                    if (data.data) {
                         callback(new Error('名称在同节点已存在'));
                     }else {
                         callback();
@@ -120,7 +120,7 @@
             this.loading=true;
             axios.get("/upms/department/console/list/tree",{params:{}})
             .then((data)=>{
-                this.data=data.data.list;
+                this.data=data.data;
             })
             .catch(fail => {
             })
@@ -234,7 +234,7 @@
         private getDetails(id:string):void{
             axios.get("/upms/department/console/details",{params:{id:id}})
             .then((data)=>{
-                this.addOrUpdateModel=data.data.department;
+                this.addOrUpdateModel=data.data;
                 this.modal = true;
             })
             .catch(fail => {

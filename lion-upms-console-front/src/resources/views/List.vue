@@ -150,7 +150,7 @@
                         callback(new Error('异常错误！请检查'));
                         return;
                     }
-                    if (data.data.isExist) {
+                    if (data.data) {
                         callback(new Error('该编码已存在'));
                     }else {
                         callback();
@@ -182,7 +182,7 @@
                             callback(new Error('异常错误！请检查'));
                             return;
                         }
-                        if (data.data.isExist) {
+                        if (data.data) {
                             callback(new Error('名称在同节点已存在'));
                         }else {
                             callback();
@@ -214,7 +214,7 @@
                             callback(new Error('异常错误！请检查'));
                             return;
                         }
-                        if (data.data.isExist) {
+                        if (data.data) {
                             callback(new Error('该url已存在'));
                         }else {
                             callback();
@@ -249,7 +249,7 @@
         private async mounted() {
             await axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.common.enums.Scope"}})
             .then((data) => {
-                this.scope = data.data.enum;
+                this.scope = data.data;
             })
             .catch(fail => {
             })
@@ -257,7 +257,7 @@
             });
             await axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.resources.enums.Type"}})
             .then((data) => {
-                this.type = data.data.enum;
+                this.type = data.data;
             })
             .catch(fail => {
             })
@@ -273,7 +273,7 @@
             this.loading=true;
             axios.get("/upms/resources/console/list/tree",{params:this.searchModel})
             .then((data)=>{
-                this.data=data.data.list;
+                this.data=data.data;
             })
             .catch(fail => {
             })
@@ -372,13 +372,13 @@
         private getDetails(id:string):void{
             axios.get("/upms/resources/console/details",{params:{"id":id}})
             .then((data)=>{
-                if (Object(data).status === 200 && data.data.resources){
-                    if (data.data.resources.type.key !== 1){
+                if (Object(data).status === 200){
+                    if (data.data.type.key !== 1){
                         this.urlDisabled=true;
                     }else {
                         this.urlDisabled=false;
                     }
-                    const resources = data.data.resources;
+                    const resources = data.data;
                     const _type = resources.type.name;
                     const _scope = resources.scope.name;
                     delete resources.state; //必须删除(该值为object),否则会有诡异问题

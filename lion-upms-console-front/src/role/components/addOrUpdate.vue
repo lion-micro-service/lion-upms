@@ -70,7 +70,7 @@
                         callback(new Error('异常错误！请检查'));
                         return;
                     }
-                    if (data.data.isExist) {
+                    if (data.data) {
                         callback(new Error('编码已存在'));
                     }else {
                         callback();
@@ -102,7 +102,7 @@
                         callback(new Error('异常错误！请检查'));
                         return;
                     }
-                    if (data.data.isExist) {
+                    if (data.data) {
                         callback(new Error('名称已存在'));
                     }else {
                         callback();
@@ -155,8 +155,8 @@
         private getDetails(id:string):void{
             axios.get("/upms/role/console/details",{params:{"id":id}})
             .then((data)=>{
-                if (Object(data).status === 200 && data.data.role){
-                    let role = data.data.role;
+                if (Object(data).status === 200){
+                    let role = data.data;
                     const _scope=role.scope.name;
                     delete role.state; //必须删除(该值为object),否则会有诡异问题
                     delete role.scope; //必须删除(该值为object),否则会有诡异问题

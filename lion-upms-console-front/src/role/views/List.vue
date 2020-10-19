@@ -131,7 +131,7 @@
             this.loading=true;
             axios.get("/upms/role/console/list",{params:this.searchModel})
             .then((data)=>{
-                this.data=data.data.list;
+                this.data=data.data;
                 this.paginationProps.total=Number((Object(data)).totalElements);
                 this.paginationProps.current=(Object(data)).pageNumber;
                 this.paginationProps.pageSize=(Object(data)).pageSize;
@@ -149,8 +149,8 @@
         private mounted() {
             axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.common.enums.Scope"}})
             .then((data) => {
-                this.scope = data.data.enum;
-                (this.$refs.addOrUpdate as any).scope=data.data.enum;
+                this.scope = data.data;
+                (this.$refs.addOrUpdate as any).scope=data.data;
                 (this.$refs.addOrUpdate as any).addOrUpdateModel.scope="CONSOLE";
                 this.search();
             })

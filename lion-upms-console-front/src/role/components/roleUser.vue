@@ -84,13 +84,13 @@
             }
             await axios.get("/upms/user/console/list",{params:this.searchModel})
             .then((data)=> {
-                list.data = data.data.list;
+                list.data = data.data;
                 list.paginationProps.total = Number((Object(data)).totalElements);
                 list.paginationProps.current = (Object(data)).pageNumber;
                 list.paginationProps.pageSize = (Object(data)).pageSize;
                 this.userId=[];
-                for(let j:number = 0,len=data.data.list.length; j < len; j++) {
-                    this.userId[j]=(data.data.list[j].user.id);
+                for(let j:number = 0,len=data.data.length; j < len; j++) {
+                    this.userId[j]=(data.data[j].user.id);
                 }
             })
             .catch(fail => {
@@ -104,7 +104,7 @@
                     return qs.stringify(params, { indices: false })
                 }})
             .then((data)=>{
-                this.oldUserId= data.data.oldUserId
+                this.oldUserId= data.data
                 list.selectedRowKeys=this.oldUserId;
             })
             .catch(fail => {

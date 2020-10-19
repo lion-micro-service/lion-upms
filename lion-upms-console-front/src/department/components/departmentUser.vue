@@ -96,13 +96,13 @@
             //获取用户列表数据
             await axios.get("/upms/user/console/list",{params:this.searchModel})
             .then((data)=> {
-                _data = data.data.list;
+                _data = data.data;
                 total = Number((Object(data)).totalElements);
                 current = (Object(data)).pageNumber;
                 pageSize = (Object(data)).pageSize;
                 this.userId=[];
-                for(let j:number = 0,len=data.data.list.length; j < len; j++) {
-                    this.userId[j]=(data.data.list[j].user.id);
+                for(let j:number = 0,len=data.data.length; j < len; j++) {
+                    this.userId[j]=(data.data[j].user.id);
                 }
             })
             .catch(fail => {

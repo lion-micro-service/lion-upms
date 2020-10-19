@@ -134,7 +134,7 @@
                             callback(new Error('异常错误！请检查'));
                             return;
                         }
-                        if (data.data.isExist) {
+                        if (data.data) {
                             callback(new Error('该账号已存在'));
                         }else {
                             callback();
@@ -164,7 +164,7 @@
                         callback(new Error('异常错误！请检查'));
                         return;
                     }
-                    if (data.data.isExist){
+                    if (data.data){
                         callback(new Error('该邮箱已存在'));
                     }else {
                         callback();
@@ -242,7 +242,7 @@
         private getUserInfo(id:string):void{
             axios.get("/upms/user/console/details",{params:{id:id}})
                 .then((data)=>{
-                    this.addModel = data.data.user;
+                    this.addModel = data.data;
                     if (this.addModel.headPortraitVo){
                         this.headPortraitList=[{
                             uid:this.addModel.headPortraitVo.id,

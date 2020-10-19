@@ -80,7 +80,7 @@
                     return qs.stringify(params, { indices: false })
                 }})
             .then((data)=>{
-                list.data=data.data.list;
+                list.data=data.data;
                 list.paginationProps.total=Number((Object(data)).totalElements);
                 list.paginationProps.current=(Object(data)).pageNumber;
                 list.paginationProps.pageSize=(Object(data)).pageSize;
