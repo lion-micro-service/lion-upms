@@ -1,10 +1,7 @@
 package com.lion.upms.controller.role;
 
 import com.lion.constant.SearchConstant;
-import com.lion.core.IResultData;
-import com.lion.core.LionPage;
-import com.lion.core.PageResultData;
-import com.lion.core.ResultData;
+import com.lion.core.*;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.JpqlParameter;
@@ -67,7 +64,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_LIST')")
     @ApiOperation(value = "角色列表",notes = "角色列表")
-    public PageResultData<List<Role>> list(String name, String code, @RequestParam(name = "scope",defaultValue = "CONSOLE") Scope scope, LionPage lionPage){
+    public IPageResultData<List<Role>> list(String name, String code, @RequestParam(name = "scope",defaultValue = "CONSOLE") Scope scope, LionPage lionPage){
         JpqlParameter jpqlParameter = new JpqlParameter();
         if (StringUtils.hasText(name)){
             jpqlParameter.setSearchParameter(SearchConstant.LIKE+"_name",name);
@@ -78,7 +75,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
         jpqlParameter.setSearchParameter(SearchConstant.EQUAL+"_scope",scope);
         jpqlParameter.setSortParameter("createDateTime", Sort.Direction.DESC);
         lionPage.setJpqlParameter(jpqlParameter);
-        return (PageResultData) roleService.findNavigator(lionPage);
+        return (IPageResultData) roleService.findNavigator(lionPage);
     }
 
     @ApiOperation(value = "新增角色",notes = "新增角色")
