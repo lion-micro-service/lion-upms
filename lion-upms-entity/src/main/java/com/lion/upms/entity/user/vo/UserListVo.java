@@ -19,25 +19,25 @@ import java.util.Objects;
  * @create: 2020-09-29 15:50
  **/
 @Data
-@ApiModel
+@ApiModel(description = "用户列表数据模型")
 public class UserListVo {
 
     /**
      * 用户
      */
-    @ApiModelProperty("用户")
+    @ApiModelProperty(value="用户")
     private User user;
 
     /**
      * 部门
      */
-    @ApiModelProperty("部门")
+    @ApiModelProperty(value="部门")
     private DepartmentTreeVo department;
 
     /**
      * 角色
      */
-    @ApiModelProperty("角色")
+    @ApiModelProperty(value="角色")
     private List<Role> role;
 
     /**

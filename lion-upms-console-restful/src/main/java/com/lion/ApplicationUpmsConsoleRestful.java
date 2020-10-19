@@ -3,6 +3,7 @@ package com.lion;
 import com.lion.aop.exception.RestulException;
 import com.lion.config.EntityAuditorConfiguration;
 import com.lion.core.persistence.BaseDaoFactoryBean;
+import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.tags.Tag;

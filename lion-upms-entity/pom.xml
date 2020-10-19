@@ -10,7 +10,6 @@
 	</parent>
 	<artifactId>lion-upms-entity</artifactId>
 	<packaging>jar</packaging>
-	<version>${project.parent.version}</version>
 
 	<dependencies>
 		<dependency>
@@ -30,7 +29,6 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-boot-starter</artifactId>
-			<version>${springfox.version}</version>
 			<scope>provided</scope>
 		</dependency>
     </dependencies>

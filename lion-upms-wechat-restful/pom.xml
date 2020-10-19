@@ -10,7 +10,6 @@
 	</parent>
 	<artifactId>lion-upms-wechat-restful</artifactId>
 	<packaging>jar</packaging>
-	<version>${project.parent.version}</version>
 
 	<dependencies>
 		<dependency>
@@ -21,10 +20,6 @@
 		<dependency>
 			<groupId>com.lion</groupId>
 			<artifactId>lion-restful-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.lion</groupId>
-			<artifactId>lion-oauth2-resource-server</artifactId>
 		</dependency>
 	</dependencies>
 	<build>

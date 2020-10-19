@@ -11,6 +11,9 @@ import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 import com.lion.upms.service.resources.ResourcesService;
 import com.lion.upms.service.role.RoleResourcesService;
 import com.lion.utils.CurrentUserUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -29,6 +32,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/upms/resources/console")
 @Validated
+@Api(tags = {"资源管理"})
 public class ResourcesController extends BaseControllerImpl implements BaseController {
 
     @Autowired
@@ -37,67 +41,40 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
     @Autowired
     private RoleResourcesService roleResourcesService;
 
-    /**
-     * 左边菜单栏
-     * @return
-     */
     @GetMapping("/front/menu")
+    @ApiOperation(value = "菜单栏",notes = "菜单栏")
     public IResultData<List<ResourcesTreeVo>> frontMenu(){
         Long userId = CurrentUserUtil.getCurrentUserId();
         List<Long> resourcesId = resourcesService.findAllResourcesId(userId);
         return ResultData.instance().setData(resourcesService.listTree(Scope.CONSOLE,resourcesId));
     }
 
-    /**
-     * 资源树形列表
-     * @param scope
-     * @return
-     */
     @GetMapping("/list/tree")
     @PreAuthorize("hasAnyAuthority('SYSTEM_SETTINGS_RESOURCES_LIST,SYSTEM_SETTINGS_ROLE_RESOURCES')")
+    @ApiOperation(value = "资源树形列表",notes = "资源树形列表")
     public IResultData<List<ResourcesTreeVo>> listTree(@RequestParam(value = "scope",defaultValue = "CONSOLE") Scope scope){
         return ResultData.instance().setData(resourcesService.listTree(scope));
     }
 
-    /**
-     * 判断编码是否存在
-     * @param code
-     * @param id
-     * @return
-     */
     @GetMapping("/check/code/exist")
-    public IResultData<Boolean> checkCodeIsExist(@NotBlank(message = "编码不能为空") String code, Long id){
+    @ApiOperation(value = "判断编码是否存在",notes = "判断编码是否存在")
+    public IResultData<Boolean> checkCodeIsExist(@NotBlank(message = "编码不能为空") String code,@ApiParam(value = "修改需要传id，新增则不需要传") Long id){
         return ResultData.instance().setData(resourcesService.checkCodeIsExist(code.trim().toUpperCase(), id));
     }
 
-    /**
-     * 判断名称是否存在
-     * @param name
-     * @param id
-     * @param parentId
-     * @return
-     */
+    @ApiOperation(value = "判断名称是否存在",notes = "判断名称是否存在")
     @GetMapping("/check/name/exist")
-    public IResultData<Boolean> checkNameIsExist(@NotBlank(message = "名称不能为空") String name, Long id, @NotNull(message = "父节点id不能为空")Long parentId){
+    public IResultData<Boolean> checkNameIsExist(@NotBlank(message = "名称不能为空") String name,@ApiParam(value = "修改需要传id，新增则不需要传") Long id, @NotNull(message = "父节点id不能为空")Long parentId){
         return ResultData.instance().setData(resourcesService.checkNameIsExist(name, id,parentId));
     }
 
-    /**
-     * 判断名称是否存在
-     * @param url
-     * @param id
-     * @return
-     */
     @GetMapping("/check/url/exist")
-    public IResultData<Boolean> checkUrlIsExist(@NotBlank(message = "url不能为空") String url, Long id){
+    @ApiOperation(value = "判断url是否存在",notes = "判断url是否存在")
+    public IResultData<Boolean> checkUrlIsExist(@NotBlank(message = "url不能为空") String url,@ApiParam(value = "修改需要传id，新增则不需要传")  Long id){
         return ResultData.instance().setData(resourcesService.checkUrlIsExist(url, id));
     }
 
-    /**
-     * 新建资源
-     * @param resources
-     * @return
-     */
+    @ApiOperation(value = "新建资源",notes = "新建资源")
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_RESOURCES_ADD')")
     public IResultData add(@RequestBody @Validated({Validator.Insert.class}) Resources resources){
@@ -107,11 +84,7 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
         return ResultData.instance();
     }
 
-    /**
-     * 修改资源
-     * @param resources
-     * @return
-     */
+    @ApiOperation(value = "修改资源",notes = "修改资源")
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_RESOURCES_UPDATE')")
     public IResultData update(@RequestBody @Validated({Validator.Update.class}) Resources resources){
@@ -121,25 +94,17 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
         return ResultData.instance();
     }
 
-    /**
-     * 根据id获取详情
-     * @param id
-     * @return
-     */
+    @ApiOperation(value = "根据id获取详情",notes = "根据id获取详情")
     @GetMapping("/details")
     public IResultData<Resources> details(@NotNull(message = "id不能为空") Long id){
         Resources resources = this.resourcesService.findById(id);
         return ResultData.instance().setData(resources);
     }
 
-    /**
-     * 删除资源
-     * @param id
-     * @return
-     */
+    @ApiOperation(value = "删除资源",notes = "删除资源")
     @DeleteMapping("/delete")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_RESOURCES_DELETE')")
-    public IResultData delete(@NotNull(message = "id不能为空") Long id){
+    public IResultData delete(@NotNull(message = "id不能为空") @ApiParam(value = "数组(id=1&id=2)") Long id){
         resourcesService.delete(id);
         roleResourcesService.deleteByResourcesId(id);
         ResultData resultData = ResultData.instance();

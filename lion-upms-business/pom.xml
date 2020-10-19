@@ -10,7 +10,7 @@
 	</parent>
 	<artifactId>lion-upms-business</artifactId>
 	<packaging>jar</packaging>
-	<version>${project.parent.version}</version>
+
 	<properties>
 		<lion-common-expose>1.0.0-SNAPSHOT</lion-common-expose>
 	</properties>

@@ -11,8 +11,7 @@ import com.lion.upms.entity.department.dto.AddDepartmentUserDto;
 import com.lion.upms.entity.department.vo.DepartmentTreeVo;
 import com.lion.upms.service.department.DepartmentService;
 import com.lion.upms.service.department.DepartmentUserService;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.*;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +32,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/upms/department/console")
 @Validated
+@Api(tags = {"部门管理"})
 public class DepartmentController extends BaseControllerImpl implements BaseController {
 
     @Autowired
@@ -41,33 +41,20 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
     @Autowired
     private DepartmentUserService departmentUserService;
 
-    /**
-     * 部门树形结构
-     * @return
-     */
     @GetMapping("/list/tree")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_LIST')")
+    @ApiOperation(value = "部门列表树形结构",notes = "部门列表树形结构")
     public IResultData<List<DepartmentTreeVo>> listTree(){
         return ResultData.instance().setData(departmentService.listTree());
     }
 
-    /**
-     * 根据父节点ID检查同节点的名称是否存在
-     * @param parentId
-     * @param name
-     * @param id
-     * @return
-     */
     @GetMapping("/check/name/exist")
-    public IResultData<Boolean> checkNameIsExist(@NotNull(message = "部门父节点id不能为空")Long parentId, @NotBlank(message = "名称不能为空")String name,Long id){
+    @ApiOperation(value = "根据父节点ID检查同节点的名称是否存在",notes = "根据父节点ID检查同节点的名称是否存在")
+    public IResultData<Boolean> checkNameIsExist(@NotNull(message = "部门父节点id不能为空")Long parentId, @NotBlank(message = "名称不能为空")String name,@ApiParam(value = "修改需要传id，新增则不需要传") Long id){
         return ResultData.instance().setData(departmentService.checkNameIsExist(parentId, name,id));
     }
 
-    /**
-     * 新增部门
-     * @param department
-     * @return
-     */
+    @ApiOperation(value = "新增部门",notes = "新增部门")
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_ADD')")
     public IResultData add(@RequestBody @Validated({Validator.Insert.class}) Department department){
@@ -75,11 +62,7 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
         return ResultData.instance();
     }
 
-    /**
-     * 更新部门
-     * @param department
-     * @return
-     */
+    @ApiOperation(value = "更新部门",notes = "更新部门")
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_UPDATE')")
     public IResultData update(@RequestBody @Validated({Validator.Update.class}) Department department){
@@ -87,36 +70,23 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
         return ResultData.instance();
     }
 
-    /**
-     * 获取部门详情
-     * @param id
-     * @return
-     */
+    @ApiOperation(value = "获取部门详情",notes = "获取部门详情")
     @GetMapping("/details")
     public IResultData<Department> details(@NotNull(message = "id不能为空")Long id){
         Department department = this.departmentService.findById(id);
         return ResultData.instance().setData(department);
     }
 
-    /**
-     * 删除资源
-     * @param id
-     * @return
-     */
+    @ApiOperation(value = "删除资源",notes = "删除资源")
     @DeleteMapping("/delete")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_DELETE')")
-    public IResultData delete(@NotNull(message = "id不能为空") Long id){
+    public IResultData delete(@NotNull(message = "id不能为空") @ApiParam(value = "数组(id=1&id=2)") Long id){
         departmentService.delete(id);
         departmentUserService.deleteByDepartmentId(id);
         return ResultData.instance();
     }
 
-
-    /**
-     * 保存部门关联的用户
-     * @param addDepartmentUserDto
-     * @return
-     */
+    @ApiOperation(value = "保存部门关联的用户",notes = "保存部门关联的用户")
     @PostMapping("/save/user")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_USER')")
     public IResultData saveUser(@RequestBody @Validated AddDepartmentUserDto addDepartmentUserDto){
@@ -124,12 +94,7 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
         return ResultData.instance();
     }
 
-    /**
-     * 根据部门id和userid获取部门所关联的用户
-     * @param id
-     * @param userId
-     * @return 已关联数据和不能关联数据（在其它部门已关联）
-     */
+    @ApiOperation(value = "根据部门id和userid获取部门所关联的用户 返回(已关联数据和不能关联数据（在其它部门已关联）)",notes = "根据部门id和userid获取部门所关联的用户 返回(已关联数据和不能关联数据（在其它部门已关联）)")
     @GetMapping("/user")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_USER')")
     public IResultData<DepartmetIdUserId> user(@NotNull(message = "部门id不能为空") Long id, @RequestParam(name = "userId",defaultValue = "0",required = false) List<Long> userId){

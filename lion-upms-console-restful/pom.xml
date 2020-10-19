@@ -10,8 +10,6 @@
 	</parent>
 	<artifactId>lion-upms-console-restful</artifactId>
 	<packaging>jar</packaging>
-	<version>${project.parent.version}</version>
-
 
 	<dependencies>
 		<dependency>
@@ -26,10 +24,6 @@
 		<dependency>
 			<groupId>com.github.whvcse</groupId>
 			<artifactId>easy-captcha</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.lion</groupId>
-			<artifactId>lion-oauth2-resource-server</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.lion</groupId>

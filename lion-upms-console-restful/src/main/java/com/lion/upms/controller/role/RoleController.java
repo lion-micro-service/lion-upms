@@ -21,6 +21,9 @@ import com.lion.upms.service.role.RoleDepartmentService;
 import com.lion.upms.service.role.RoleResourcesService;
 import com.lion.upms.service.role.RoleService;
 import com.lion.upms.service.role.RoleUserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,6 +46,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/upms/role/console")
 @Validated
+@Api(tags = {"角色管理"})
 public class RoleController extends BaseControllerImpl implements BaseController {
 
     @Autowired
@@ -60,16 +64,9 @@ public class RoleController extends BaseControllerImpl implements BaseController
     @Autowired
     private ResourcesService resourcesService;
 
-
-    /**
-     * 列表
-     * @param name
-     * @param code
-     * @param lionPage
-     * @return
-     */
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_LIST')")
+    @ApiOperation(value = "角色列表",notes = "角色列表")
     public PageResultData<List<Role>> list(String name, String code, @RequestParam(name = "scope",defaultValue = "CONSOLE") Scope scope, LionPage lionPage){
         JpqlParameter jpqlParameter = new JpqlParameter();
         if (StringUtils.hasText(name)){
@@ -84,11 +81,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
         return (PageResultData) roleService.findNavigator(lionPage);
     }
 
-    /**
-     * 新增角色
-     * @param role
-     * @return
-     */
+    @ApiOperation(value = "新增角色",notes = "新增角色")
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_ADD')")
     public IResultData add(@RequestBody @Validated({Validator.Insert.class}) Role role){
@@ -96,11 +89,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
         return ResultData.instance();
     }
 
-    /**
-     * 修改角色
-     * @param role
-     * @return
-     */
+    @ApiOperation(value = "修改角色",notes = "修改角色")
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_UPDATE')")
     public IResultData update(@RequestBody @Validated({Validator.Update.class})  Role role) {
@@ -108,46 +97,28 @@ public class RoleController extends BaseControllerImpl implements BaseController
         return ResultData.instance();
     }
 
-    /**
-     * 检查名称是否存在
-     * @param name
-     * @param id
-     * @return
-     */
+    @ApiOperation(value = "检查名称是否存在",notes = "检查名称是否存在")
     @GetMapping("/check/name/exist")
-    public IResultData<Boolean> checkNameIsExist(@NotBlank(message = "名称不能为空") String name, Long id){
+    public IResultData<Boolean> checkNameIsExist(@NotBlank(message = "名称不能为空") String name,@ApiParam(value = "新增时不需要传,修改需要传") Long id){
         return ResultData.instance().setData(roleService.checkNameIsExist(name, id));
     }
 
-    /**
-     * 检查编码是否存在
-     * @param code
-     * @param id
-     * @return
-     */
+    @ApiOperation(value = "检查编码是否存在",notes = "检查编码是否存在")
     @GetMapping("/check/code/exist")
-    public IResultData<Boolean> checkCodeIsExist(@NotBlank(message = "名称不能为空") String code, Long id){
+    public IResultData<Boolean> checkCodeIsExist(@NotBlank(message = "名称不能为空") String code,@ApiParam(value = "新增时不需要传,修改需要传") Long id){
         return ResultData.instance().setData(roleService.checkCodeIsExist(code, id));
     }
 
-    /**
-     * 根据id获取详情
-     * @param id
-     * @return
-     */
+    @ApiOperation(value = "根据id获取详情",notes = "根据id获取详情")
     @GetMapping("/details")
     public IResultData<Role> details(@NotNull(message = "id不能为空") Long id){
         return ResultData.instance().setData(roleService.findById(id));
     }
 
-    /**
-     * 删除角色
-     * @param id
-     * @return
-     */
+    @ApiOperation(value = "删除角色",notes = "删除角色")
     @DeleteMapping("/delete")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_DELETE')")
-    public IResultData delete(@NotNull(message = "id不能为空") @RequestParam(value = "id",required = false) List<Long> id){
+    public IResultData delete(@NotNull(message = "id不能为空") @RequestParam(value = "id",required = false) @ApiParam(value = "数组(id=1&id=2)") List<Long> id){
         id.forEach(i->{
             Role role = this.roleService.findById(i);
             if (Objects.nonNull(role) && !role.getIsDefault()) {
@@ -160,21 +131,13 @@ public class RoleController extends BaseControllerImpl implements BaseController
         return resultData;
     }
 
-    /**
-     * 获取资源树形结构（角色配置专用）
-     * @param scope
-     * @return
-     */
+    @ApiOperation(value = "获取资源树形结构（角色配置专用）",notes = "获取资源树形结构（角色配置专用）")
     @GetMapping("/resources/tree")
     public IResultData<List<RoleResourcesTreeVo>> roleResourcesTree(@RequestParam(name = "scope",defaultValue = "CONSOLE") Scope scope){
         return ResultData.instance().setData(roleService.roleResources(scope));
     }
 
-    /**
-     * 保存角色权限（资源）
-     * @param addRoleResourcesdDto
-     * @return
-     */
+    @ApiOperation(value = "保存角色权限（资源）",notes = "保存角色权限（资源）")
     @PostMapping("/save/resources")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_RESOURCES')")
     public IResultData addResources(@RequestBody @Validated AddRoleResourcesdDto addRoleResourcesdDto){
@@ -182,11 +145,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
         return ResultData.instance();
     }
 
-    /**
-     * 获取角色权限（资源）
-     * @param roleId
-     * @return
-     */
+    @ApiOperation(value = "获取角色权限（资源）",notes = "获取角色权限（资源）")
     @GetMapping("/resources")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_RESOURCES')")
     public IResultData<List<Long>> resources(@NotNull(message = "角色id不能为空") Long roleId){
@@ -200,11 +159,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
         return ResultData.instance().setData(returnList);
     }
 
-    /**
-     * 保存角色关联的用户
-     * @param addRoleUserDto
-     * @return
-     */
+    @ApiOperation(value = "保存角色关联的用户",notes = "保存角色关联的用户")
     @PostMapping("/save/user")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_USER')")
     public IResultData saveRoleUser(@RequestBody @Validated AddRoleUserDto addRoleUserDto){
@@ -212,15 +167,10 @@ public class RoleController extends BaseControllerImpl implements BaseController
         return ResultData.instance();
     }
 
-    /**
-     * 根据角色id和用户id查询角色所关联的用户
-     * @param roleId
-     * @param userId
-     * @return
-     */
+    @ApiOperation(value = "根据角色id和用户id查询角色所关联的用户",notes = "根据角色id和用户id查询角色所关联的用户")
     @GetMapping("/user")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_USER')")
-    public IResultData<List<Long>> roleUser(@NotNull(message = "角色id不能为空") Long roleId,@RequestParam(name = "userId",required = false,defaultValue = "0") List<Long> userId){
+    public IResultData<List<Long>> roleUser(@NotNull(message = "角色id不能为空") Long roleId,@RequestParam(name = "userId",required = false,defaultValue = "0") @ApiParam(value = "数组(userId=1&userId=2)")  List<Long> userId){
         List<RoleUser> list = roleUserService.findRoleUser(roleId, userId);
         List<Long> returnList = new ArrayList<Long>();
         list.forEach(roleUser -> {
