@@ -9,7 +9,7 @@ ENV JAVA_OPTS='-Xmx256m -Xmx256m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128
 WORKDIR /opt
 ENTRYPOINT ["/bin/sh","-c","java -jar app.jar ${JAVA_OPTS} --spring.cloud.nacos.config.server-addr=${SPRING_CLOUD_NACOS_CONFIG_SERVER_ADDR} --spring.cloud.nacos.config.namespace=${SPRING_CLOUD_NACOS_CONFIG_NAMESPACE} "]
 
-#usermod -a -G docker root
+#usermod -a -G docker gitlab-runner
 #vim /lib/systemd/system/docker.service               -H tcp://0.0.0.0:2375
 
 #docker rmi $(docker images -q -f dangling=true)
