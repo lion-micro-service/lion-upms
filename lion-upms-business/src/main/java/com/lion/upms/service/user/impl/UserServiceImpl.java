@@ -1,5 +1,6 @@
 package com.lion.upms.service.user.impl;
 
+import com.lion.common.expose.parameter.ParameterExposeService;
 import com.lion.core.LionPage;
 import com.lion.core.PageResultData;
 import com.lion.core.ResultData;
@@ -16,10 +17,16 @@ import com.lion.upms.service.role.RoleService;
 import com.lion.upms.service.role.RoleUserService;
 import com.lion.upms.service.user.UserService;
 import com.lion.utils.ValidatorExceptionUtil;
+import io.seata.core.model.ResourceManager;
+import io.seata.spring.annotation.GlobalTransactional;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
@@ -64,6 +71,12 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Autowired
     private RoleUserService roleUserService;
+
+    @DubboReference
+    private ParameterExposeService parameterExposeService;
+
+    @Autowired
+    private PlatformTransactionManager platformTransactionManager;
 
     @Override
     public Page<UserListVo> list(LionPage lionPage, UserSearchDto userSearchDto) {
@@ -132,6 +145,13 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @Override
     public int updateHeadPortrait(Long id, Long headPortrait) {
         return userDao.updateHeadPortrait(id, headPortrait);
+    }
+
+    @Override
+    @GlobalTransactional
+    public void testXa() {
+        parameterExposeService.testSeataTransactional("test","test111");
+        new BusinessException("测试XA分布式事物回滚");
     }
 
     @Override

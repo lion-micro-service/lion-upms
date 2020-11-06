@@ -9,12 +9,15 @@ import com.lion.common.expose.parameter.ParameterExposeService;
 import com.lion.core.IResultData;
 import com.lion.core.ResultData;
 import com.lion.exception.BusinessException;
+import com.lion.upms.service.user.UserService;
+import io.seata.rm.datasource.xa.DataSourceProxyXA;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.SneakyThrows;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,29 +37,24 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/test")
 public class TestController {
 
-    @DubboReference
-    private ParameterExposeService parameterExposeService;
-
-    @Autowired
-    private DataSource dataSource;
-
     @Autowired
     private CuratorFramework client;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/xa")
-//    @AuthorizationIgnore
-    //在Seata Xa 模式下不用全局事物注解会报错
-//    @GlobalTransactional()
+    @AuthorizationIgnore
     public IResultData testXa(){
         //调用远程dubbo(rpc)服务
-        parameterExposeService.testSeataTransactional("test","test111");
-//        new BusinessException("测试(XA)分布式事物回滚");
+        userService.testXa();
         return ResultData.instance();
     }
 
     @GetMapping("/sentinel")
     @SentinelResource(value = "testSentinel",blockHandler = "blockHandler",defaultFallback = "defaultFallback")
     @AuthorizationIgnore
+    @Transactional
     public IResultData testSentinel(){
         return ResultData.instance();
     }

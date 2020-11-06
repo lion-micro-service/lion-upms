@@ -56,4 +56,6 @@ public interface UserService extends BaseService<User> {
      * @return
      */
     int updateHeadPortrait(Long id, Long headPortrait);
+
+    void testXa();
 }
