@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/test")
 public class TestController {
 
-    @Autowired
+//    @Autowired
     private CuratorFramework client;
 
     @Autowired

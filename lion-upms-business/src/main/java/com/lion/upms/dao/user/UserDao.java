@@ -5,6 +5,7 @@ import com.lion.upms.entity.user.User;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -46,6 +47,7 @@ public interface UserDao extends BaseDao<User> ,UserDaoEx {
      * @param headPortrait
      * @return
      */
+    @Transactional
     @Modifying
     @Query(" update User set headPortrait =:headPortrait where id =:id ")
     int updateHeadPortrait(@Param("id") Long id, @Param("headPortrait") Long headPortrait);
