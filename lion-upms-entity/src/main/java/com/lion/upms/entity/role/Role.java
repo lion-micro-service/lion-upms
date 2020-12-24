@@ -5,7 +5,6 @@ import com.lion.core.common.enums.StateConverter;
 import com.lion.core.persistence.Validator;
 import com.lion.core.persistence.entity.BaseEntity;
 import com.lion.upms.entity.common.enums.Scope;
-import com.lion.upms.entity.common.enums.ScopeConverter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,7 +16,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.validation.groups.ConvertGroup;
 
 /**
  * @description: 角色表
@@ -51,7 +49,7 @@ public class Role extends BaseEntity {
 
     @ApiModelProperty(value = "作用域（0:app,1:后台,2:前端,3:微信）")
     @Column(name = "scope",nullable = false,columnDefinition = " int default 1 comment '作用域（0:app,1:后台,2:前端,3:微信）'")
-    @Convert(converter = ScopeConverter.class)
+    @Convert(converter = Scope.ScopeConverter.class)
     private Scope scope;
 
     @ApiModelProperty(value = "是否默认角色（0：否，1：是）默认角色不能删除")

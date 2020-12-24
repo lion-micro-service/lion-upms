@@ -2,6 +2,7 @@ package com.lion.upms.entity.common.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.lion.core.IEnum;
+import com.lion.core.common.enums.EnumConverter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,4 +59,9 @@ public enum Scope implements IEnum {
         }
         return null;
     }
+
+    public class ScopeConverter extends EnumConverter<Scope,Integer> {
+    }
 }
+
+

@@ -5,7 +5,6 @@ import com.lion.core.common.enums.StateConverter;
 import com.lion.core.persistence.Validator;
 import com.lion.core.persistence.entity.BaseEntity;
 import com.lion.upms.entity.common.enums.Scope;
-import com.lion.upms.entity.common.enums.ScopeConverter;
 import com.lion.upms.entity.resources.enums.Type;
 import com.lion.upms.entity.resources.enums.TypeConverter;
 import io.swagger.annotations.ApiModel;
@@ -59,7 +58,7 @@ public class Resources extends BaseEntity {
 
     @ApiModelProperty(value = "作用域（0:app,1:后台,2:前端,3:微信）")
     @Column(name = "scope",nullable = false,columnDefinition = " int default 1 comment '作用域（0:app,1:后台,2:前端,3:微信）'")
-    @Convert(converter = ScopeConverter.class)
+    @Convert(converter = Scope.ScopeConverter.class)
     private Scope scope;
 
     @ApiModelProperty(value = "类型（0:目录,1:菜单,2:功能）")
