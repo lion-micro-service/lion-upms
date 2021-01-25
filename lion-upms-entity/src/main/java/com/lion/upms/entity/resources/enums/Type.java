@@ -50,7 +50,7 @@ public enum Type implements IEnum {
     }
 
     @JsonCreator
-    public static Type getScope(String name){
+    public static Type instance(String name){
         for(Type item : values()){
             if(Objects.equals(item.getName(),name)){
                 return item;
