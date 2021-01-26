@@ -1,12 +1,10 @@
 package com.lion.upms.entity.resources;
 
 import com.lion.core.common.enums.State;
-import com.lion.core.common.enums.StateConverter;
 import com.lion.core.persistence.Validator;
 import com.lion.core.persistence.entity.BaseEntity;
 import com.lion.upms.entity.common.enums.Scope;
 import com.lion.upms.entity.resources.enums.Type;
-import com.lion.upms.entity.resources.enums.TypeConverter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -63,7 +61,7 @@ public class Resources extends BaseEntity {
 
     @ApiModelProperty(value = "类型（0:目录,1:菜单,2:功能）")
     @Column(name = "type",nullable = false,columnDefinition = " int default 0 comment '类型（0:目录,1:菜单,2:功能）'")
-    @Convert(converter = TypeConverter.class)
+    @Convert(converter = Type.TypeConverter.class)
     private Type type;
 
     @ApiModelProperty(value = "排序")
@@ -72,7 +70,7 @@ public class Resources extends BaseEntity {
 
     @ApiModelProperty(value = "状态（0：禁用，1：启用）")
     @Column(name = "state",nullable = false,columnDefinition = " int default 1 comment '状态（0：禁用，1：启用）'")
-    @Convert(converter = StateConverter.class)
+    @Convert(converter = State.StateConverter.class)
     private State state;
 
     @ApiModelProperty(value = "是否默认资源（0：否，1：是）默认资源不能删除")

@@ -2,6 +2,8 @@ package com.lion.upms.entity.resources.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.lion.core.IEnum;
+import com.lion.core.common.enums.Delete;
+import com.lion.core.common.enums.EnumConverter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,12 +52,31 @@ public enum Type implements IEnum {
     }
 
     @JsonCreator
-    public static Type instance(String name){
+    public static Type instance(Object value){
+        if (value instanceof Integer) {
+            return instance((Integer) value);
+        }
+        return instance(String.valueOf(value));
+    }
+
+    private static Type instance(Integer key){
+        for(Type item : values()){
+            if (item.getKey()==key){
+                return item;
+            }
+        }
+        return null;
+    }
+
+    private static Type instance(String name){
         for(Type item : values()){
             if(Objects.equals(item.getName(),name)){
                 return item;
             }
         }
         return null;
+    }
+
+    public class TypeConverter extends EnumConverter<Type,Integer> {
     }
 }

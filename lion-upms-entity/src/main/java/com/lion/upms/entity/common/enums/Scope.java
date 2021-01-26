@@ -51,7 +51,23 @@ public enum Scope implements IEnum {
     }
 
     @JsonCreator
-    public static Scope instance(String name){
+    public static Scope instance(Object value){
+        if (value instanceof Integer) {
+            return instance((Integer) value);
+        }
+        return instance(String.valueOf(value));
+    }
+
+    private static Scope instance(Integer key){
+        for(Scope item : values()){
+            if (item.getKey()==key){
+                return item;
+            }
+        }
+        return null;
+    }
+
+    private static Scope instance(String name){
         for(Scope item : values()){
             if(Objects.equals(item.getName(),name)){
                 return item;
@@ -63,5 +79,6 @@ public enum Scope implements IEnum {
     public class ScopeConverter extends EnumConverter<Scope,Integer> {
     }
 }
+
 
 

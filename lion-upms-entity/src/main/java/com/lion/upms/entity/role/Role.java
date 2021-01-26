@@ -1,7 +1,6 @@
 package com.lion.upms.entity.role;
 
 import com.lion.core.common.enums.State;
-import com.lion.core.common.enums.StateConverter;
 import com.lion.core.persistence.Validator;
 import com.lion.core.persistence.entity.BaseEntity;
 import com.lion.upms.entity.common.enums.Scope;
@@ -62,6 +61,6 @@ public class Role extends BaseEntity {
 
     @ApiModelProperty(value = "状态（0：禁用，1：启用）")
     @Column(name = "state",nullable = false,columnDefinition = " bit(1) default b'1' comment '状态（0：禁用，1：启用）'")
-    @Convert(converter = StateConverter.class)
+    @Convert(converter = State.StateConverter.class)
     private State state;
 }
