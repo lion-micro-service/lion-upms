@@ -76,7 +76,7 @@ public enum Scope implements IEnum {
         return null;
     }
 
-    public class ScopeConverter extends EnumConverter<Scope,Integer> {
+    public static class ScopeConverter extends EnumConverter<Scope,Integer> {
     }
 }
 

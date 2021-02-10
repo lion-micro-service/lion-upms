@@ -77,6 +77,6 @@ public enum Type implements IEnum {
         return null;
     }
 
-    public class TypeConverter extends EnumConverter<Type,Integer> {
+    public static class TypeConverter extends EnumConverter<Type,Integer> {
     }
 }

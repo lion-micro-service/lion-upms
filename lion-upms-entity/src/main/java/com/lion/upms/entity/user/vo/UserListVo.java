@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
-import sun.util.resources.ga.LocaleNames_ga;
 
 import java.util.List;
 import java.util.Objects;
