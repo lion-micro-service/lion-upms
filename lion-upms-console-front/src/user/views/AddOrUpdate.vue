@@ -302,7 +302,7 @@
             this.headPortraitList = obj.fileList;
             if (obj.file.status === 'done'){
                 const response:any = eval('('+obj.file.xhr.response+')');
-                this.addModel.headPortrait=response.data.files[0].id;
+                this.addModel.headPortrait=response.data[0].id;
             }
         }
 
