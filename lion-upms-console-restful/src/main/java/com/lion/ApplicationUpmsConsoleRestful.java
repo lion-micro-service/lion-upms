@@ -19,7 +19,6 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @EntityScan({"com.lion.upms.entity.**"})
 @EnableJpaAuditing
 @EnableOpenApi
-//@OpenAPIDefinition(info = @Info(title = "upms",description = "upms",version = "${spring.cloud.nacos.group}"),tags = @Tag(name = "upms",description = "upms"))
 public class ApplicationUpmsConsoleRestful {
 
     public static void main ( String args[] ) throws Exception {
