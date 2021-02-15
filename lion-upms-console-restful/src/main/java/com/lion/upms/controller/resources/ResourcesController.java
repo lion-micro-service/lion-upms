@@ -38,9 +38,6 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
     @Autowired
     private ResourcesService  resourcesService;
 
-    @Autowired
-    private RoleResourcesService roleResourcesService;
-
     @GetMapping("/front/menu")
     @ApiOperation(value = "菜单栏",notes = "菜单栏")
     public IResultData<List<ResourcesTreeVo>> frontMenu(){
@@ -106,7 +103,6 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_RESOURCES_DELETE')")
     public IResultData delete(@NotNull(message = "id不能为空") @ApiParam(value = "数组(id=1&id=2)") Long id){
         resourcesService.delete(id);
-        roleResourcesService.deleteByResourcesId(id);
         ResultData resultData = ResultData.instance();
         return resultData;
     }

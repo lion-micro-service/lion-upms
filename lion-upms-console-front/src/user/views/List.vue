@@ -14,7 +14,7 @@
             </search-from>
         </a-card>
 
-        <a-card :bordered="false">
+        <a-card v-if="getAuthority('SYSTEM_SETTINGS_USER_LIST')" :bordered="false">
             <list @edit="edit" @del="del" @search="search" @set-page-info="setPageInfo" ref="list">
 
             </list>
@@ -64,6 +64,9 @@
          * 查询
          */
         private search():void{
+            if (!this.getAuthority('SYSTEM_SETTINGS_USER_LIST')){
+                return;
+            }
             const list = (this.$refs.list as any);
             list.selectedRowKeys=[];
             const searchFrom = (this.$refs.searchFrom as any);

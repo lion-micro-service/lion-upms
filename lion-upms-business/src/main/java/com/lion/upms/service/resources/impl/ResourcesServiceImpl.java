@@ -5,15 +5,18 @@ import com.lion.core.common.enums.State;
 import com.lion.core.service.impl.BaseServiceImpl;
 import com.lion.exception.BusinessException;
 import com.lion.upms.dao.resources.ResourcesDao;
+import com.lion.upms.dao.role.RoleResourcesDao;
 import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.common.enums.Scope;
 import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 import com.lion.upms.service.resources.ResourcesService;
+import com.lion.upms.service.role.RoleResourcesService;
 import com.lion.utils.CurrentUserUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -32,6 +35,9 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
 
     @Autowired
     private ResourcesDao resourcesDao;
+
+    @Autowired
+    private RoleResourcesDao roleResourcesDao;
 
     @Override
     public List<ResourcesTreeVo> listTree(Scope scope) {
@@ -144,6 +150,7 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
     }
 
     @Override
+    @Transactional
     public Boolean delete(Long id) {
         Resources resources = this.findById(id);
         if (Objects.nonNull(resources) && resources.getIsDefault()){
@@ -214,10 +221,10 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
     private void delete(List<ResourcesTreeVo> list){
         list.forEach(r->{
             this.deleteById(r.getId());
+            roleResourcesDao.deleteByResourcesId(r.getId());
             if (Objects.nonNull(r.getChildren()) && r.getChildren().size()>0){
                 delete(r.getChildren());
             }
-            //todo 删除角色所关联的资源
         });
     }
 

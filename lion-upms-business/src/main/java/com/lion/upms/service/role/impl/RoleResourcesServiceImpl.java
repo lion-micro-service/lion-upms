@@ -10,6 +10,7 @@ import com.lion.upms.service.role.RoleResourcesService;
 import com.lion.utils.ValidatorExceptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.validation.Validator;
@@ -36,6 +37,7 @@ public class RoleResourcesServiceImpl extends BaseServiceImpl<RoleResources> imp
     private Validator validator;
 
     @Override
+    @Transactional
     public void saveRoleResources(AddRoleResourcesdDto addRoleResourcesdDto) {
         roleResourcesDao.deleteByRoleId(addRoleResourcesdDto.getRoleId());
         List<RoleResources> list = new ArrayList<RoleResources>();

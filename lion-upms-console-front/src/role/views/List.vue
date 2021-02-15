@@ -26,16 +26,16 @@
                 <a-row >
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
-                            <a-button style="margin-left: 5px;" type="primary" icon="search" @click="search()">查询</a-button>
-                            <a-button style="margin-left: 5px;" type="primary" icon="file-add" @click="add()">添加</a-button>
-                            <a-button style="margin-left: 5px;" type="danger" icon="delete" @click="del()">删除</a-button>
+                            <a-button v-if="getAuthority('SYSTEM_SETTINGS_ROLE_LIST')" style="margin-left: 5px;" type="primary" icon="search" @click="search()">查询</a-button>
+                            <a-button v-if="getAuthority('SYSTEM_SETTINGS_ROLE_ADD')" style="margin-left: 5px;" type="primary" icon="file-add" @click="add()">添加</a-button>
+                            <a-button v-if="getAuthority('SYSTEM_SETTINGS_ROLE_ADD')" style="margin-left: 5px;" type="danger" icon="delete" @click="del()">删除</a-button>
                         </a-form-item>
                     </a-col>
                 </a-row>
             </a-form-model>
         </a-card>
 
-        <a-card :bordered="false">
+        <a-card v-if="getAuthority('SYSTEM_SETTINGS_ROLE_LIST')" :bordered="false">
             <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
                 <span slot="action" slot-scope="text, record">
                     <a-button style="margin-left: 5px;" icon="edit" v-if="getAuthority('SYSTEM_SETTINGS_ROLE_UPDATE')" size="small" @click="edit(record.id)">修改</a-button>
@@ -128,6 +128,9 @@
          * 查询
          */
         private search():void{
+            if (!this.getAuthority('SYSTEM_SETTINGS_ROLE_LIST')){
+                return;
+            }
             this.loading=true;
             axios.get("/upms/role/console/list",{params:this.searchModel})
             .then((data)=>{

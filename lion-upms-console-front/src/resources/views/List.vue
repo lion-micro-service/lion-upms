@@ -15,7 +15,7 @@
                 <a-row >
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
-                            <a-button style="margin-left: 5px;" type="primary" icon="search" @click="search()" >查询</a-button>
+                            <a-button style="margin-left: 5px;" type="primary" v-if="getAuthority('SYSTEM_SETTINGS_RESOURCES_LIST')" icon="search" @click="search()" >查询</a-button>
                             <a-button style="margin-left: 5px;" type="primary" v-if="getAuthority('SYSTEM_SETTINGS_RESOURCES_ADD')" icon="file-add" @click="add(0,0)" >添加</a-button>
                         </a-form-item>
                     </a-col>
@@ -23,7 +23,7 @@
             </a-form-model>
         </a-card>
 
-        <a-card :bordered="false">
+        <a-card v-if="getAuthority('SYSTEM_SETTINGS_RESOURCES_LIST')" :bordered="false">
             <a-table bordered rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="false">
                 <span slot="action" slot-scope="text, record">
                     <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_RESOURCES_UPDATE')" icon="edit" size="small" @click="getDetails(record.id)">修改</a-button>
@@ -270,6 +270,9 @@
          * 查询
          */
         private search():void{
+            if (!this.getAuthority('SYSTEM_SETTINGS_RESOURCES_LIST')){
+                return;
+            }
             this.loading=true;
             axios.get("/upms/resources/console/list/tree",{params:this.searchModel})
             .then((data)=>{
