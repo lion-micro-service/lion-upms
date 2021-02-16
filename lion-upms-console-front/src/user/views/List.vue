@@ -1,7 +1,7 @@
 <template>
     <div>
         <a-card class="card" style="border-bottom-width: 5px;" >
-            <search-from ref="searchFrom">
+            <search-from ref="searchFrom" >
                 <a-row >
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
@@ -148,7 +148,6 @@
                 onCancel() {
                 },
             });
-
         }
 
         /**

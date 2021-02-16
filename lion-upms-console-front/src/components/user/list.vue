@@ -125,14 +125,14 @@
          * @param is
          */
         @Emit()
-        private edit(is:string):void{}
+        private edit(id:string):void{}
 
         /**
          * 事件传递调用父组件删除方法
          * @param is
          */
         @Emit()
-        private del(is:string):void{}
+        private del(id:string):void{}
 
         /**
          * 事件传递调用父组件查询方法
