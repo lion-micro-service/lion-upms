@@ -166,6 +166,8 @@
                 }
             }).catch((fail)=>{
             }).finally(()=>{
+                const list = (this.$refs.list as any);
+                list.selectedRowKeys=[];
             });
         }
 
