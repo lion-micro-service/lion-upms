@@ -17,16 +17,10 @@ import java.util.List;
 @ApiModel(description = "添加部门关联用户模型")
 public class AddDepartmentUserDto {
 
-    /**
-     * 部门ID
-     */
     @ApiModelProperty(value = "部门ID")
     @NotNull(message = "部门id不能为空")
     private Long departmentId;
 
-    /**
-     * 新选择的用户
-     */
     @ApiModelProperty(value = "新选择的用户")
     private List<Long> newUserId;
 

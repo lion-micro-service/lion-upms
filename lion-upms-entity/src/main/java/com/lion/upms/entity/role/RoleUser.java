@@ -34,12 +34,12 @@ public class RoleUser extends BaseEntity {
     private static final long serialVersionUID = 1834558062801001562L;
 
     @ApiModelProperty(value = "角色ID")
-    @Column(name = "role_id",columnDefinition = " BIGINT(18) comment '角色ID' ", nullable = false)
+    @Column(name = "role_id",nullable = false)
     @NotNull(message = "角色ID不能为空", groups = {Validator.Insert.class,Validator.Update.class})
     private Long roleId;
 
     @ApiModelProperty(value = "用户ID")
-    @Column(name = "user_id",columnDefinition = " BIGINT(18) comment '用户ID' ", nullable = false)
+    @Column(name = "user_id", nullable = false)
     @NotNull(message = "用户ID不能为空", groups = {Validator.Insert.class,Validator.Update.class})
     private Long userId;
 

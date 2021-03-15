@@ -30,16 +30,16 @@ public class RoleResources extends BaseEntity {
     private static final long serialVersionUID = -772859768017737144L;
 
     @ApiModelProperty(value = "角色ID")
-    @Column(name = "role_id",columnDefinition = " BIGINT(18) comment '角色ID' ", nullable = false)
+    @Column(name = "role_id", nullable = false)
     @NotNull(message = "角色ID不能为空", groups = {Validator.Insert.class,Validator.Update.class})
     private Long roleId;
 
     @ApiModelProperty(value = "资源ID")
-    @Column(name = "resources_id",columnDefinition = " BIGINT(18) comment '资源ID' ", nullable = false)
+    @Column(name = "resources_id", nullable = false)
     @NotNull(message = "资源ID不能为空", groups = {Validator.Insert.class,Validator.Update.class})
     private Long resourcesId;
 
     @ApiModelProperty(value = "是否选中（针对前端显示用）")
-    @Column(name = "is_checked",columnDefinition = " bit(1) default b'1' comment '是否选中（针对前端显示用）' ", nullable = false)
+    @Column(name = "is_checked", nullable = false)
     private Boolean isChecked;
 }

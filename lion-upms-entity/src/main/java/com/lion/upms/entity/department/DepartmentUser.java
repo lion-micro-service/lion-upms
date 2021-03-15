@@ -29,12 +29,12 @@ public class DepartmentUser extends BaseEntity {
     private static final long serialVersionUID = 5483603548923984650L;
 
     @ApiModelProperty(value = "部门ID")
-    @Column(name = "department_id",columnDefinition = " BIGINT(18) comment '部门ID' ", nullable = false)
+    @Column(name = "department_id", nullable = false)
     @NotNull(message = "部门ID不能为空", groups = {Validator.Insert.class,Validator.Update.class})
     private Long departmentId;
 
     @ApiModelProperty(value = "用户ID")
-    @Column(name = "user_id",columnDefinition = " BIGINT(18) comment '用户ID' ", nullable = false)
+    @Column(name = "user_id", nullable = false)
     @NotNull(message = "用户ID不能为空", groups = {Validator.Insert.class,Validator.Update.class})
     private Long userId;
 }

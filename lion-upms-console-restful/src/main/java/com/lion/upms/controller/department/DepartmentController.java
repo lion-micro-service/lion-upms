@@ -80,7 +80,7 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
     @ApiOperation(value = "删除资源",notes = "删除资源")
     @DeleteMapping("/delete")
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_DEPARTMENT_DELETE')")
-    public IResultData delete(@NotNull(message = "id不能为空") @ApiParam(value = "数组(id=1&id=2)") Long id){
+    public IResultData delete(@NotNull(message = "id不能为空")Long id){
         departmentService.delete(id);
         departmentUserService.deleteByDepartmentId(id);
         return ResultData.instance();
