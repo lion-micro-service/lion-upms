@@ -1,5 +1,6 @@
 server:
   port: 0
+
 spring:
   application:
     name: @project.artifactId@
@@ -38,3 +39,7 @@ spring:
           - data-id: lion-zookeeper-common.${spring.cloud.nacos.config.file-extension}
             refresh: true
             group: GLOBAL_GROUP
+
+dubbo:
+  protocol:
+    host:

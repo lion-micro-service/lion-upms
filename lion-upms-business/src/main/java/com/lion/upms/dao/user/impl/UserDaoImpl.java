@@ -69,7 +69,7 @@ public class UserDaoImpl implements UserDaoEx {
             searchParameter.put("roleId", userSearchDto.getRoleId());
         }
 //        sb.append(" and u.username not in ('admin','superadmin') ");
-        sb.append(" order by u.createDateTime desc");
+//        sb.append(" order by u.createDateTime  desc");
         Page page = baseDao.findNavigator(pageable, sb.toString(), searchParameter);
 
         return (Page<UserListVo>) page;
