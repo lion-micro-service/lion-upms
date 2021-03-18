@@ -41,5 +41,5 @@ public class RoleResources extends BaseEntity {
 
     @ApiModelProperty(value = "是否选中（针对前端显示用）")
     @Column(name = "is_checked", nullable = false)
-    private Boolean isChecked;
+    private Boolean isChecked = true;
 }
