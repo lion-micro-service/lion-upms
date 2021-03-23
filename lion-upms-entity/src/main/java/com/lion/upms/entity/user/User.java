@@ -82,19 +82,19 @@ public class User extends BaseEntity {
 
     @ApiModelProperty(hidden = true,notes = "账号是否未过期")
     @Column(name = "is_account_non_expired", nullable = false)
-    private Boolean isAccountNonExpired;
+    private Boolean isAccountNonExpired = false;
 
     @ApiModelProperty(hidden = true,notes = "账号是否未锁定")
     @Column(name = "is_account_non_locked", nullable = false)
-    private Boolean isAccountNonLocked;
+    private Boolean isAccountNonLocked = false;
 
     @ApiModelProperty(hidden = true,notes = "账号凭证是否未过期")
     @Column(name = "is_credentials_non_expired", nullable = false)
-    private Boolean isCredentialsNonExpired;
+    private Boolean isCredentialsNonExpired = false;
 
     @ApiModelProperty(hidden = true,notes = "账号是否可用")
     @Column(name = "is_nabled", nullable = false)
-    private Boolean isEnabled;
+    private Boolean isEnabled =true;
 
 
 }
