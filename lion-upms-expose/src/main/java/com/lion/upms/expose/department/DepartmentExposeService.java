@@ -1,6 +1,5 @@
 package com.lion.upms.expose.department;
 
-import com.lion.core.service.BaseExposeService;
 import com.lion.upms.entity.department.Department;
 
 /**
@@ -9,5 +8,5 @@ import com.lion.upms.entity.department.Department;
  * @description: 部门rpc暴露service
  * @date 2020/8/17上午11:18
  */
-public interface DepartmentExposeService extends BaseExposeService<Department> {
+public interface DepartmentExposeService extends com.lion.core.service.BaseService<Department> {
 }

@@ -1,6 +1,5 @@
 package com.lion.upms.expose.user;
 
-import com.lion.core.service.BaseExposeService;
 import com.lion.upms.entity.user.User;
 
 /**
@@ -8,7 +7,7 @@ import com.lion.upms.entity.user.User;
  * @author: Mr.Liu
  * @create: 2020-01-19 10:50
  */
-public interface UserExposeService extends BaseExposeService<User> {
+public interface UserExposeService extends com.lion.core.service.BaseService<User> {
 
     /**
      * 创建user

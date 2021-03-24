@@ -1,6 +1,5 @@
 package com.lion.upms.expose.resources.impl;
 
-import com.lion.core.service.impl.BaseExposeServiceImpl;
 import com.lion.upms.expose.resources.ResourcesExposeService;
 import com.lion.upms.entity.resources.Resources;
 import org.apache.dubbo.config.annotation.DubboService;
@@ -12,5 +11,5 @@ import org.apache.dubbo.config.annotation.DubboService;
  * @date 2020/8/17上午11:29
  */
 @DubboService(interfaceClass = ResourcesExposeService.class)
-public class ResourcesExposeServiceImpl extends BaseExposeServiceImpl<Resources> implements ResourcesExposeService {
+public class ResourcesExposeServiceImpl extends com.lion.core.service.impl.BaseServiceImpl<Resources> implements ResourcesExposeService, com.lion.core.service.BaseService<Resources> {
 }

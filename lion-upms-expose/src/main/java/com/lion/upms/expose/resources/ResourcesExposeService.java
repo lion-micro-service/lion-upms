@@ -1,6 +1,5 @@
 package com.lion.upms.expose.resources;
 
-import com.lion.core.service.BaseExposeService;
 import com.lion.upms.entity.resources.Resources;
 
 /**
@@ -9,5 +8,5 @@ import com.lion.upms.entity.resources.Resources;
  * @description: 资源rpc暴露service
  * @date 2020/8/17上午11:09
  */
-public interface ResourcesExposeService extends BaseExposeService<Resources> {
+public interface ResourcesExposeService extends com.lion.core.service.BaseService<Resources> {
 }
