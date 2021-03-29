@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
  */
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "t_upms_role_department",indexes = {@Index(columnList = "department_id"),@Index(columnList = "role_id")})
+@Table(name = "t_role_department",indexes = {@Index(columnList = "department_id"),@Index(columnList = "role_id")})
 @DynamicUpdate
 @DynamicInsert
 @Data

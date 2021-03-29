@@ -26,7 +26,7 @@ import java.util.Date;
  */
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "t_upms_user"
+@Table(name = "t_user"
         ,indexes = {@Index(columnList = "name"),@Index(columnList = "email"),@Index(columnList = "create_date_time") })
 @DynamicUpdate
 @DynamicInsert

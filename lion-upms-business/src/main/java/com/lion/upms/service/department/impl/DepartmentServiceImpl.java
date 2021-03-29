@@ -33,9 +33,11 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
     public List<DepartmentTreeVo> listTree() {
         List<Department> list = departmentDao.findByParentId(0L);
         List<DepartmentTreeVo> listTree = convertVo(list);
-        listTree.forEach(departmentTreeVo -> {
-            departmentTreeVo.setChildren(convertVo(findChildren(departmentTreeVo.getId())));
-        });
+        if (Objects.nonNull(listTree) && listTree.size()>0) {
+            listTree.forEach(departmentTreeVo -> {
+                departmentTreeVo.setChildren(convertVo(findChildren(departmentTreeVo.getId())));
+            });
+        }
         return listTree;
     }
 

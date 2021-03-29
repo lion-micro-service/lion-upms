@@ -17,7 +17,7 @@ import javax.persistence.Table;
  **/
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "t_upms_department_position_user")
+@Table(name = "t_department_position_user")
 @DynamicUpdate
 @DynamicInsert
 @Data

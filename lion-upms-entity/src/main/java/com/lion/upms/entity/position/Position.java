@@ -18,7 +18,7 @@ import javax.persistence.UniqueConstraint;
  **/
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "t_upms_position")
+@Table(name = "t_position")
 @DynamicUpdate
 @DynamicInsert
 @Data
