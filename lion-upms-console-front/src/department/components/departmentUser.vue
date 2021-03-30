@@ -41,7 +41,7 @@
          */
         private save():void{
             const list = (this.$refs.list as any);
-            axios.post("/upms/department/console/save/user", {departmentId:this.departmentId,oldUserId:this.oldUserId,newUserId:list.selectedRowKeys})
+            axios.post("/lion-upms-console-restful/department/console/save/user", {departmentId:this.departmentId,oldUserId:this.oldUserId,newUserId:list.selectedRowKeys})
                 .then((data) =>{
                     if (Object(data).status === 200){
                         message.success(Object(data).message);
@@ -94,7 +94,7 @@
             let current:number=0;
             let pageSize:number=0;
             //获取用户列表数据
-            await axios.get("/upms/user/console/list",{params:this.searchModel})
+            await axios.get("/lion-upms-console-restful/user/console/list",{params:this.searchModel})
             .then((data)=> {
                 _data = data.data;
                 total = Number((Object(data)).totalElements);
@@ -111,7 +111,7 @@
                 list.loading=false;
             });
             //获取已经选中的用户以及不能选择的用户
-            await axios.get("/upms/department/console/user",{params:{id: this.departmentId,userId: this.userId},
+            await axios.get("/lion-upms-console-restful/department/console/user",{params:{id: this.departmentId,userId: this.userId},
             paramsSerializer: params => {
                 return qs.stringify(params, { indices: false })
             }})

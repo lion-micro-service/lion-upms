@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2020/8/15下午6:01
  */
 @RestController
-@RequestMapping("/upms/department/wechat")
+@RequestMapping("/department/wechat")
 public class DepartmentController extends BaseControllerImpl implements BaseController {
 
     @Autowired

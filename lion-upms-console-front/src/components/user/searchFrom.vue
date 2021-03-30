@@ -65,7 +65,7 @@
         //组件挂载后调用（初始化数据）
         private mounted():void{
             //获取部门数据
-            axios.get("/upms/department/console/list/tree",{params:{}})
+            axios.get("/lion-upms-console-restful/department/console/list/tree",{params:{}})
             .then((data)=>{
                 this.department=[];
                 let list:Array<any> = data.data
@@ -82,7 +82,7 @@
             })
             .finally(()=>{
             });
-            axios.get("/upms/role/console/list",{params:{pageSize:9999}})
+            axios.get("/lion-upms-console-restful/role/console/list",{params:{pageSize:9999}})
             .then((data)=>{
                 this.role=data.data;
             })

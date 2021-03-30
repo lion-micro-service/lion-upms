@@ -36,7 +36,7 @@
          * 弹出窗口
          */
         private async roleResources(){
-            await axios.get("/upms/role/console/resources/tree", {params: {"scope": this.scope}})
+            await axios.get("/lion-upms-console-restful/role/console/resources/tree", {params: {"scope": this.scope}})
             .then((data) => {
                 this.treeData = data.data;
             })
@@ -44,7 +44,7 @@
             })
             .finally(() => {
             });
-            await axios.get("/upms/role/console/resources", {params: {"roleId": this.roleId}})
+            await axios.get("/lion-upms-console-restful/role/console/resources", {params: {"roleId": this.roleId}})
             .then((data) => {
                 this.checkedKeys = data.data;
             })
@@ -58,7 +58,7 @@
          * 保存
          */
         private save():void{
-            axios.post("/upms/role/console/save/resources", {roleId:this.roleId,resourcesId:this.checkedKeys})
+            axios.post("/lion-upms-console-restful/role/console/save/resources", {roleId:this.roleId,resourcesId:this.checkedKeys})
             .then((data) => {
                 if (Object(data).status === 200){
                     message.success(Object(data).message);

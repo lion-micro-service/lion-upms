@@ -30,7 +30,7 @@ import java.util.List;
  * @date 2020/8/15下午5:54
  */
 @RestController
-@RequestMapping("/upms/resources/console")
+@RequestMapping("/resources/console")
 @Validated
 @Api(tags = {"资源管理"})
 public class ResourcesController extends BaseControllerImpl implements BaseController {

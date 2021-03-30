@@ -78,7 +78,7 @@
                     _this.searchModel[key]=searchFrom.searchModel[key];
                 });
             }
-            axios.get("/upms/user/console/list",{params:this.searchModel,
+            axios.get("/lion-upms-console-restful/user/console/list",{params:this.searchModel,
                 paramsSerializer: params => {
                     return qs.stringify(params, { indices: false })
                 }})
@@ -155,7 +155,7 @@
          * @param id
          */
         private delete(id:any):void{
-            axios.delete("/upms/user/console/delete",{params:{id:id},
+            axios.delete("/lion-upms-console-restful/user/console/delete",{params:{id:id},
             paramsSerializer: params => {
                 return qs.stringify(params, { indices: false })
             }})

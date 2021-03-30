@@ -97,7 +97,7 @@
         //添加数据模型
         private addModel : any={};
         //上传头像接口地址
-        private uploadAction:string=process.env.VUE_APP_BASEURL+"/common/file/console/upload"
+        private uploadAction:string=process.env.VUE_APP_BASEURL+process.env.VUE_APP_BASEAPI+"/lion-common-console-restful/file/console/upload"
         //头像地址
         private headPortraitList:Array<any>=[];
         //头像预览窗口是否显示
@@ -128,7 +128,7 @@
                 callback(new Error('请输入登陆账号'));
                 return;
             }else if (value && value.trim() !== ''){
-                axios.get("/upms/user/console/check/username/exist",{params:{"username":this.addModel.username}})
+                axios.get("/lion-upms-console-restful/user/console/check/username/exist",{params:{"username":this.addModel.username}})
                     .then((data)=> {
                         if (Object(data).status !== 200){
                             callback(new Error('异常错误！请检查'));
@@ -158,7 +158,7 @@
         private checkEmailIsExist(rule :any, value:string, callback:any):void{
             const id = this.$route.query.id;
             if (value && value.trim() !== ''){
-                axios.get("/upms/user/console/check/email/exist",{params:{email:value,id:id}})
+                axios.get("/lion-upms-console-restful/user/console/check/email/exist",{params:{email:value,id:id}})
                 .then((data)=>{
                     if (Object(data).status !== 200){
                         callback(new Error('异常错误！请检查'));
@@ -240,7 +240,7 @@
          * @param id
          */
         private getUserInfo(id:string):void{
-            axios.get("/upms/user/console/details",{params:{id:id}})
+            axios.get("/lion-upms-console-restful/user/console/details",{params:{id:id}})
                 .then((data)=>{
                     this.addModel = data.data;
                     if (this.addModel.headPortraitVo){
@@ -248,7 +248,7 @@
                             uid:this.addModel.headPortraitVo.id,
                             name:this.addModel.headPortraitVo.originalFileName,
                             status:"done",
-                            url:process.env.VUE_APP_BASEURL+this.addModel.headPortraitVo.url
+                            url:process.env.VUE_APP_BASEURL+process.env.VUE_APP_BASEAPI+this.addModel.headPortraitVo.url
                         }];
                     }
 
@@ -270,7 +270,7 @@
                     const id = this.$route.query.id;
                     if(id){
                         this.addModel.id=id;
-                        axios.put("/upms/user/console/update",this.addModel)
+                        axios.put("/lion-upms-console-restful/user/console/update",this.addModel)
                         .then((data) =>{
                             if (Object(data).status === 200){
                                 message.success(Object(data).message);
@@ -281,7 +281,7 @@
                         })
                     }else{
                         this.addModel.password = md5(this.addModel.pass);
-                        axios.post("/upms/user/console/add",this.addModel)
+                        axios.post("/lion-upms-console-restful/user/console/add",this.addModel)
                         .then((data) =>{
                             if (Object(data).status === 200){
                                 message.success(Object(data).message);

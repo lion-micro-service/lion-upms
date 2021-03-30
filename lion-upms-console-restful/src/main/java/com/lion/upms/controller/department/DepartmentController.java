@@ -30,7 +30,7 @@ import java.util.List;
  * @date 2020/8/15下午6:01
  */
 @RestController
-@RequestMapping("/upms/department/console")
+@RequestMapping("/department/console")
 @Validated
 @Api(tags = {"部门管理"})
 public class DepartmentController extends BaseControllerImpl implements BaseController {

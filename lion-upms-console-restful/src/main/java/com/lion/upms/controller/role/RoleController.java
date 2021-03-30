@@ -41,7 +41,7 @@ import java.util.Objects;
  * @date 2020/8/15下午5:51
  */
 @RestController
-@RequestMapping("/upms/role/console")
+@RequestMapping("/role/console")
 @Validated
 @Api(tags = {"角色管理"})
 public class RoleController extends BaseControllerImpl implements BaseController {

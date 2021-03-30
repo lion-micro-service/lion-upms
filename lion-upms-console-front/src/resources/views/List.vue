@@ -144,7 +144,7 @@
                 callback(new Error('请输入编码'));
                 return;
             }else if (value && value.trim() !== ''){
-                axios.get("/upms/resources/console/check/code/exist",{params:{"code":this.addOrUpdateModel.code,"id":this.addOrUpdateModel.id}})
+                axios.get("/lion-upms-console-restful/resources/console/check/code/exist",{params:{"code":this.addOrUpdateModel.code,"id":this.addOrUpdateModel.id}})
                 .then((data)=> {
                     if (Object(data).status !== 200){
                         callback(new Error('异常错误！请检查'));
@@ -176,7 +176,7 @@
                 callback(new Error('请输入名称'));
                 return;
             }else if (value && value.trim() !== ''){
-                axios.get("/upms/resources/console/check/name/exist",{params:{"name":this.addOrUpdateModel.name,"id":this.addOrUpdateModel.id,"parentId":this.addOrUpdateModel.parentId}})
+                axios.get("/lion-upms-console-restful/resources/console/check/name/exist",{params:{"name":this.addOrUpdateModel.name,"id":this.addOrUpdateModel.id,"parentId":this.addOrUpdateModel.parentId}})
                     .then((data)=> {
                         if (Object(data).status !== 200){
                             callback(new Error('异常错误！请检查'));
@@ -208,7 +208,7 @@
                 callback(new Error('请输入url'));
                 return;
             }else if (this.addOrUpdateModel.type ==='MENU' && value && value.trim() !== ''){
-                axios.get("/upms/resources/console/check/url/exist",{params:{"url":this.addOrUpdateModel.url,"id":this.addOrUpdateModel.id}})
+                axios.get("/lion-upms-console-restful/resources/console/check/url/exist",{params:{"url":this.addOrUpdateModel.url,"id":this.addOrUpdateModel.id}})
                     .then((data)=> {
                         if (Object(data).status !== 200){
                             callback(new Error('异常错误！请检查'));
@@ -247,7 +247,7 @@
          * 组件挂载后触发事件
          */
         private async mounted() {
-            await axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.common.enums.Scope"}})
+            await axios.get("/lion-common-console-restful/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.common.enums.Scope"}})
             .then((data) => {
                 this.scope = data.data;
             })
@@ -255,7 +255,7 @@
             })
             .finally(() => {
             });
-            await axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.resources.enums.Type"}})
+            await axios.get("/lion-common-console-restful/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.resources.enums.Type"}})
             .then((data) => {
                 this.type = data.data;
             })
@@ -274,7 +274,7 @@
                 return;
             }
             this.loading=true;
-            axios.get("/upms/resources/console/list/tree",{params:this.searchModel})
+            axios.get("/lion-upms-console-restful/resources/console/list/tree",{params:this.searchModel})
             .then((data)=>{
                 this.data=data.data;
             })
@@ -297,7 +297,7 @@
                 if (validate) {
                     this.isSave=true;
                     if (this.addOrUpdateModel.id){
-                        axios.put("/upms/resources/console/update",this.addOrUpdateModel)
+                        axios.put("/lion-upms-console-restful/resources/console/update",this.addOrUpdateModel)
                         .then((data) =>{
                             if (Object(data).status === 200){
                                 message.success(Object(data).message);
@@ -308,7 +308,7 @@
                             this.isSave=false;
                         })
                     }else {
-                        axios.post("/upms/resources/console/add",this.addOrUpdateModel)
+                        axios.post("/lion-upms-console-restful/resources/console/add",this.addOrUpdateModel)
                         .then((data) =>{
                             if (Object(data).status === 200){
                                 message.success(Object(data).message);
@@ -373,7 +373,7 @@
          * @param id
          */
         private getDetails(id:string):void{
-            axios.get("/upms/resources/console/details",{params:{"id":id}})
+            axios.get("/lion-upms-console-restful/resources/console/details",{params:{"id":id}})
             .then((data)=>{
                 if (Object(data).status === 200){
                     if (data.data.type.key !== 1){
@@ -429,7 +429,7 @@
          * @param id
          */
         private delete(id:any):void{
-            axios.delete("/upms/resources/console/delete",{params:{id:id}})
+            axios.delete("/lion-upms-console-restful/resources/console/delete",{params:{id:id}})
             .then((data)=>{
                 if((Object(data)).status === 200 && (Object(data)).message){
                     message.success((Object(data)).message);

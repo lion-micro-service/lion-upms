@@ -45,7 +45,7 @@
          */
         private save():void{
             const list = (this.$refs.list as any);
-            axios.post("/upms/role/console/save/user", {roleId:this.roleId,oldUserId:this.oldUserId,newUserId:list.selectedRowKeys})
+            axios.post("/lion-upms-console-restful/role/console/save/user", {roleId:this.roleId,oldUserId:this.oldUserId,newUserId:list.selectedRowKeys})
             .then((data) =>{
                 if (Object(data).status === 200){
                     message.success(Object(data).message);
@@ -82,7 +82,7 @@
                     _this.searchModel[key]=searchFrom.searchModel[key];
                 });
             }
-            await axios.get("/upms/user/console/list",{params:this.searchModel})
+            await axios.get("/lion-upms-console-restful/user/console/list",{params:this.searchModel})
             .then((data)=> {
                 list.data = data.data;
                 list.paginationProps.total = Number((Object(data)).totalElements);
@@ -99,7 +99,7 @@
                 list.loading=false;
             });
 
-            await axios.get("/upms/role/console/user",{params:{roleId: this.roleId,userId: this.userId},
+            await axios.get("/lion-upms-console-restful/role/console/user",{params:{roleId: this.roleId,userId: this.userId},
                 paramsSerializer: params => {
                     return qs.stringify(params, { indices: false })
                 }})

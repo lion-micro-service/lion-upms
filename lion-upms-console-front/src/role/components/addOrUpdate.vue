@@ -64,7 +64,7 @@
                 callback(new Error('请输入编码'));
                 return;
             }else if (value && value.trim() !== ''){
-                axios.get("/upms/role/console/check/code/exist",{params:{"code":this.addOrUpdateModel.code,"id":this.addOrUpdateModel.id}})
+                axios.get("/lion-upms-console-restful/role/console/check/code/exist",{params:{"code":this.addOrUpdateModel.code,"id":this.addOrUpdateModel.id}})
                 .then((data)=> {
                     if (Object(data).status !== 200){
                         callback(new Error('异常错误！请检查'));
@@ -96,7 +96,7 @@
                 callback(new Error('请输入名称'));
                 return;
             }else if (value && value.trim() !== ''){
-                axios.get("/upms/role/console/check/name/exist",{params:{"name":this.addOrUpdateModel.name,"id":this.addOrUpdateModel.id}})
+                axios.get("/lion-upms-console-restful/role/console/check/name/exist",{params:{"name":this.addOrUpdateModel.name,"id":this.addOrUpdateModel.id}})
                 .then((data)=> {
                     if (Object(data).status !== 200){
                         callback(new Error('异常错误！请检查'));
@@ -124,7 +124,7 @@
             (this.$refs.addOrUpdateForm as any).validate((validate: boolean) => {
                 if (validate) {
                     if (this.addOrUpdateModel.id){
-                        axios.put("/upms/role/console/update",this.addOrUpdateModel)
+                        axios.put("/lion-upms-console-restful/role/console/update",this.addOrUpdateModel)
                         .then((data) =>{
                             if (Object(data).status === 200){
                                 message.success(Object(data).message);
@@ -134,7 +134,7 @@
                         }).finally(()=>{
                         })
                     }else {
-                        axios.post("/upms/role/console/add",this.addOrUpdateModel)
+                        axios.post("/lion-upms-console-restful/role/console/add",this.addOrUpdateModel)
                         .then((data) =>{
                             if (Object(data).status === 200){
                                 message.success(Object(data).message);
@@ -153,7 +153,7 @@
          * @param id
          */
         private getDetails(id:string):void{
-            axios.get("/upms/role/console/details",{params:{"id":id}})
+            axios.get("/lion-upms-console-restful/role/console/details",{params:{"id":id}})
             .then((data)=>{
                 if (Object(data).status === 200){
                     let role = data.data;

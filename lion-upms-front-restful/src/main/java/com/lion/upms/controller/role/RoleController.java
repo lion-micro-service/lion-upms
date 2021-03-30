@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2020/8/15下午5:51
  */
 @RestController
-@RequestMapping("/upms/role/front")
+@RequestMapping("/role/front")
 public class RoleController extends BaseControllerImpl implements BaseController {
 
     @Autowired

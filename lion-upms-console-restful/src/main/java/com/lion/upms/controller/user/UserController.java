@@ -38,7 +38,7 @@ import java.util.Objects;
  * @date 2020/8/15下午5:45
  */
 @RestController
-@RequestMapping("/upms/user/console")
+@RequestMapping("/user/console")
 @Validated
 @Api(tags = {"用户管理"})
 public class UserController extends BaseControllerImpl implements BaseController {

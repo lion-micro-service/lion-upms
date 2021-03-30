@@ -79,7 +79,7 @@
                 callback(new Error('请输入名称'));
                 return;
             }else if (value && value.trim() !== ''){
-                axios.get("/upms/department/console/check/name/exist",{params:{"name":this.addOrUpdateModel.name,"id":this.addOrUpdateModel.id,"parentId":this.addOrUpdateModel.parentId}})
+                axios.get("/lion-upms-console-restful/department/console/check/name/exist",{params:{"name":this.addOrUpdateModel.name,"id":this.addOrUpdateModel.id,"parentId":this.addOrUpdateModel.parentId}})
                 .then((data)=> {
                     if (Object(data).status !== 200){
                         callback(new Error('异常错误！请检查'));
@@ -118,7 +118,7 @@
           */
         private search():void{
             this.loading=true;
-            axios.get("/upms/department/console/list/tree",{params:{}})
+            axios.get("/lion-upms-console-restful/department/console/list/tree",{params:{}})
             .then((data)=>{
                 this.data=data.data;
             })
@@ -144,7 +144,7 @@
          */
         private addOrUpdate():void{
             if (this.addOrUpdateModel.id){
-                axios.put("/upms/department/console/update",this.addOrUpdateModel)
+                axios.put("/lion-upms-console-restful/department/console/update",this.addOrUpdateModel)
                 .then((data)=>{
                     if (Object(data).status === 200){
                         message.success(Object(data).message);
@@ -157,7 +157,7 @@
                     this.loading=false;
                 });
             }else{
-                axios.post("/upms/department/console/add",this.addOrUpdateModel)
+                axios.post("/lion-upms-console-restful/department/console/add",this.addOrUpdateModel)
                 .then((data)=>{
                     if (Object(data).status === 200){
                         message.success(Object(data).message);
@@ -203,7 +203,7 @@
          * @param id
          */
         private delete(id:any):void{
-            axios.delete("/upms/department/console/delete",{params:{id:id},
+            axios.delete("/lion-upms-console-restful/department/console/delete",{params:{id:id},
                 paramsSerializer: params => {
                     return qs.stringify(params, { indices: false })
                 }})
@@ -232,7 +232,7 @@
          * @param id
          */
         private getDetails(id:string):void{
-            axios.get("/upms/department/console/details",{params:{id:id}})
+            axios.get("/lion-upms-console-restful/department/console/details",{params:{id:id}})
             .then((data)=>{
                 this.addOrUpdateModel=data.data;
                 this.modal = true;

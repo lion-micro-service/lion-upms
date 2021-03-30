@@ -132,7 +132,7 @@
                 return;
             }
             this.loading=true;
-            axios.get("/upms/role/console/list",{params:this.searchModel})
+            axios.get("/lion-upms-console-restful/role/console/list",{params:this.searchModel})
             .then((data)=>{
                 this.data=data.data;
                 this.paginationProps.total=Number((Object(data)).totalElements);
@@ -150,7 +150,7 @@
          * 组件挂载后触发事件
          */
         private mounted() {
-            axios.get("/common/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.common.enums.Scope"}})
+            axios.get("/lion-common-console-restful/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.common.enums.Scope"}})
             .then((data) => {
                 this.scope = data.data;
                 (this.$refs.addOrUpdate as any).scope=data.data;
@@ -224,7 +224,7 @@
          * @param id
          */
         private delete(id:any):void{
-            axios.delete("/upms/role/console/delete",{params:{id:id},
+            axios.delete("/lion-upms-console-restful/role/console/delete",{params:{id:id},
                 paramsSerializer: params => {
                     return qs.stringify(params, { indices: false })
                 }})
