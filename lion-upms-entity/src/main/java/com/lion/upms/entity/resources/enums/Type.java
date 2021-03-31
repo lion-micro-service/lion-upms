@@ -1,5 +1,6 @@
 package com.lion.upms.entity.resources.enums;
 
+import cn.hutool.core.util.NumberUtil;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.lion.core.IEnum;
 import com.lion.core.common.enums.Delete;
@@ -53,8 +54,11 @@ public enum Type implements IEnum {
 
     @JsonCreator
     public static Type instance(Object value){
-        if (value instanceof Integer) {
-            return instance((Integer) value);
+        if (Objects.isNull(value)){
+            return null;
+        }
+        if (NumberUtil.isInteger(String.valueOf(value))) {
+            return instance(Integer.valueOf(String.valueOf(value)));
         }
         return instance(String.valueOf(value));
     }
