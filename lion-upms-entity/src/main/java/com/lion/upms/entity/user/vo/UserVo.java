@@ -19,6 +19,6 @@ public class UserVo extends User {
      * 头像
      */
     @ApiModelProperty(value ="用户头像")
-    private BaseEntity headPortraitVo;
+    private String headPortraitUrl;
 }
 

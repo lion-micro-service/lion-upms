@@ -248,7 +248,7 @@
                             uid:this.addModel.headPortraitVo.id,
                             name:this.addModel.headPortraitVo.originalFileName,
                             status:"done",
-                            url:process.env.VUE_APP_BASEURL+process.env.VUE_APP_BASEAPI+this.addModel.headPortraitVo.url
+                            url:process.env.VUE_APP_BASEURL+process.env.VUE_APP_BASEAPI+this.addModel.headPortraitUrl
                         }];
                     }
 

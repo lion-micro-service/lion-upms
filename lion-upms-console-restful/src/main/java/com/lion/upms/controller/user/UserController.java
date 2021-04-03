@@ -153,8 +153,8 @@ public class UserController extends BaseControllerImpl implements BaseController
         if (Objects.nonNull(user)) {
             BeanUtils.copyProperties(user, userVo);
             if (Objects.nonNull(user.getHeadPortrait())){
-                File file = fileExposeService.findById(user.getHeadPortrait());
-                userVo.setHeadPortraitVo(file);
+                String file = fileExposeService.getUrl(user.getHeadPortrait());
+                userVo.setHeadPortraitUrl(file);
             }
         }
         return userVo;
