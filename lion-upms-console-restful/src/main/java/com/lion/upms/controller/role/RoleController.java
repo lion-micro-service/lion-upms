@@ -7,6 +7,8 @@ import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.JpqlParameter;
 import com.lion.core.persistence.Validator;
 import com.lion.upms.entity.common.enums.Scope;
+import com.lion.upms.entity.resources.Resources;
+import com.lion.upms.entity.resources.enums.Type;
 import com.lion.upms.entity.role.Role;
 import com.lion.upms.entity.role.RoleResources;
 import com.lion.upms.entity.role.RoleUser;
@@ -152,6 +154,15 @@ public class RoleController extends BaseControllerImpl implements BaseController
             if (roleResources.getIsChecked()) {
                 returnList.add(roleResources.getResourcesId());
             }
+        });
+        List<Resources> resourcesList = resourcesService.findByTypeAndIdIn(Type.CATALOG,returnList);
+        resourcesList.forEach(resources -> {
+            List<Resources> chiledList = resourcesService.findAllChilderResources(resources.getId());
+            chiledList.forEach(r ->{
+                if (!returnList.contains(r.getId())){
+                    returnList.remove(resources.getId());
+                }
+            });
         });
         return ResultData.instance().setData(returnList);
     }

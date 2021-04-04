@@ -38,7 +38,7 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
     @Autowired
     private ResourcesService  resourcesService;
 
-    @GetMapping("/front/menu")
+    @GetMapping("/menu")
     @ApiOperation(value = "菜单栏",notes = "菜单栏")
     public IResultData<List<ResourcesTreeVo>> frontMenu(){
         Long userId = CurrentUserUtil.getCurrentUserId();

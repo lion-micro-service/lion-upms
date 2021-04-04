@@ -8,6 +8,7 @@ import com.lion.upms.dao.resources.ResourcesDao;
 import com.lion.upms.dao.role.RoleResourcesDao;
 import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.common.enums.Scope;
+import com.lion.upms.entity.resources.enums.Type;
 import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 import com.lion.upms.service.resources.ResourcesService;
 import com.lion.upms.service.role.RoleResourcesService;
@@ -182,6 +183,17 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
     }
 
     @Override
+    public List<Resources> findAllChilderResources(Long id) {
+        List <Resources> list = resourcesDao.findByParentIdAndStateOrderBySort(id,State.NORMAL);
+        List<Resources> returnList = new ArrayList<Resources>();
+        returnList.addAll(list);
+        list.forEach(resources -> {
+            returnList.addAll(findAllChilderResources(resources.getId()));
+        });
+        return returnList;
+    }
+
+    @Override
     public List<Long> findAllResourcesId(Long userId) {
         List<Long> list = new ArrayList<Long>();
         List<Resources> listResources = findAllResources(userId);
@@ -197,6 +209,11 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
             return Collections.emptyList();
         }
         return resourcesDao.findAllResources(userId);
+    }
+
+    @Override
+    public List<Resources> findByTypeAndIdIn(Type type, List<Long> id) {
+        return resourcesDao.findByTypeAndIdIn(type,id);
     }
 
     /**

@@ -4,6 +4,7 @@ import com.lion.core.common.enums.State;
 import com.lion.core.persistence.curd.BaseDao;
 import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.common.enums.Scope;
+import com.lion.upms.entity.resources.enums.Type;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -98,4 +99,14 @@ public interface ResourcesDao extends BaseDao<Resources> ,ResourcesDaoEx {
      */
     @Query( "select r from Resources r join RoleResources rr on r.id = rr.resourcesId join RoleUser ru on rr.roleId = ru.roleId where ru.userId = :userId")
     public List<Resources> findAllResources(@Param("userId") Long userId);
+
+    /**
+     * 根据id查询某个type的资源
+     * @param type
+     * @param id
+     * @return
+     */
+    public List<Resources> findByTypeAndIdIn(Type type,List<Long> id);
+
+
 }
