@@ -75,8 +75,6 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     @DubboReference
     private ParameterExposeService parameterExposeService;
 
-    @Autowired
-    private PlatformTransactionManager platformTransactionManager;
 
     @Override
     public Page<UserListVo> list(LionPage lionPage, UserSearchDto userSearchDto) {
