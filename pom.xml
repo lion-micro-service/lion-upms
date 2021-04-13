@@ -21,7 +21,7 @@
 		<module>lion-upms-entity</module>
 		<module>lion-upms-console-restful</module>
 		<module>lion-upms-app-restful</module>
-		<module>lion-upms-front-restful</module>
+		<module>lion-upms-frontend-restful</module>
 		<module>lion-upms-wechat-restful</module>
     </modules>
 

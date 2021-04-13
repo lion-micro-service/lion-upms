@@ -13,13 +13,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan({"com.lion.upms.entity.**"})
 @EnableDiscoveryClient
 @EnableJpaAuditing
-public class ApplicationUpmsFrontRestful {
+public class ApplicationUpmsFrontendRestful {
 
     public static void main ( String args[] ) throws Exception {
         /*
          * new SpringApplicationBuilder(Application.class)
          * .web(WebApplicationType.NONE) .run(args);
          */
-        SpringApplication.run(ApplicationUpmsFrontRestful.class, args);
+        SpringApplication.run(ApplicationUpmsFrontendRestful.class, args);
     }
 }

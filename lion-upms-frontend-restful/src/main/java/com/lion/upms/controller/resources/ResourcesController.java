@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2020/8/15下午5:54
  */
 @RestController
-@RequestMapping("/resources/front")
+@RequestMapping("/resources/frontend")
 public class ResourcesController extends BaseControllerImpl implements BaseController {
 
     @Autowired
