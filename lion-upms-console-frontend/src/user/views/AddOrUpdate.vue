@@ -75,7 +75,7 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import axios from "@lion/lion-front-core/src/network/axios";
+    import axios from "@lion/lion-frontend-core/src/network/axios";
     import { message } from 'ant-design-vue'
     import moment from 'moment';
     import 'moment/locale/zh-cn';

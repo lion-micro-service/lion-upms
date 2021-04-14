@@ -60,7 +60,7 @@
 
 <script lang="ts">
     import {Component,  Vue} from 'vue-property-decorator';
-    import axios from "@lion/lion-front-core/src/network/axios";
+    import axios from "@lion/lion-frontend-core/src/network/axios";
     import addOrUpdate from "@/role/components/addOrUpdate.vue";
     import roleResources from "@/role/components/roleResources.vue";
     import { message } from 'ant-design-vue';
@@ -68,7 +68,7 @@
     import RoleDepartment from "@/role/components/roleDepartment.vue";
     import RoleUser from "@/role/components/roleUser.vue";
     import RolePosition from "@/role/components/rolePosition.vue";
-    import authority from "@lion/lion-front-core/src/security/authority";
+    import authority from "@lion/lion-frontend-core/src/security/authority";
     @Component({components:{RolePosition, RoleUser, RoleDepartment, addOrUpdate,roleResources}})
     export default class List extends Vue{
         //查询数据模型

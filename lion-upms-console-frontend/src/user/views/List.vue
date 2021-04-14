@@ -24,12 +24,12 @@
 
 <script lang="ts">
     import {Component, Vue, Watch} from 'vue-property-decorator';
-    import axios from "@lion/lion-front-core/src/network/axios";
+    import axios from "@lion/lion-frontend-core/src/network/axios";
     import { message } from 'ant-design-vue';
     import qs from 'qs';
     import searchFrom from "@/components/user/searchFrom.vue";
     import list from "@/components/user/list.vue";
-    import authority from "@lion/lion-front-core/src/security/authority";
+    import authority from "@lion/lion-frontend-core/src/security/authority";
     @Component({components:{searchFrom,list}})
     export default class List extends Vue{
         //组件是否已经挂载

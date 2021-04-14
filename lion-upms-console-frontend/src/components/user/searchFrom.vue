@@ -49,7 +49,7 @@
     import {Component,  Vue} from 'vue-property-decorator';
     import moment from 'moment';
     import 'moment/locale/zh-cn';
-    import axios from "@lion/lion-front-core/src/network/axios";
+    import axios from "@lion/lion-frontend-core/src/network/axios";
     import { TreeSelect } from 'ant-design-vue';
     @Component({})
     export default class searchFrom extends Vue{

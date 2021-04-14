@@ -17,7 +17,7 @@
 
 <script lang="ts">
     import {Component, Emit, Vue} from 'vue-property-decorator';
-    import authority from "@lion/lion-front-core/src/security/authority";
+    import authority from "@lion/lion-frontend-core/src/security/authority";
     @Component({})
     export default class list extends Vue{
         private rowKey:any="user.id";
