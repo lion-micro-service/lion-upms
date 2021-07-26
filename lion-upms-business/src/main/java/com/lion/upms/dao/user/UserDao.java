@@ -49,6 +49,6 @@ public interface UserDao extends BaseDao<User> ,UserDaoEx {
      */
     @Transactional
     @Modifying
-    @Query(" update User set headPortrait =:headPortrait where id =:id ")
+    @Query(" update User set headPortrait =:headPortrait , version = version + 1 where id =:id ")
     int updateHeadPortrait(@Param("id") Long id, @Param("headPortrait") Long headPortrait);
 }
