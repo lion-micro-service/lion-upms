@@ -21,7 +21,7 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "t_department_user",indexes = {@Index(columnList = "department_id"),@Index(columnList = "user_id")})
-@DynamicUpdate
+
 @DynamicInsert
 @Data
 @ApiModel(description = "部门与用户关联表")

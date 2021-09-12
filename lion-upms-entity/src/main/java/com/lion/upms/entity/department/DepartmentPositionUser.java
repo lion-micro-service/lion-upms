@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "t_position_user")
-@DynamicUpdate
+
 @DynamicInsert
 @Data
 public class DepartmentPositionUser extends BaseEntity {

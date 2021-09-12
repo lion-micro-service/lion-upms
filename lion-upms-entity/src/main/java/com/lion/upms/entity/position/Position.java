@@ -19,7 +19,7 @@ import javax.persistence.UniqueConstraint;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "t_position")
-@DynamicUpdate
+
 @DynamicInsert
 @Data
 public class Position extends BaseEntity {

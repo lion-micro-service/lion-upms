@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "t_role",indexes = {@Index(columnList = "name")})
-@DynamicUpdate
+
 @DynamicInsert
 @Data
 @ApiModel(description = "角色")

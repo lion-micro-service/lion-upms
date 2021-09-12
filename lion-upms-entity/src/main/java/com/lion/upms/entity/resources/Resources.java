@@ -27,7 +27,7 @@ import javax.validation.constraints.Pattern;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "t_resources",indexes = {@Index(columnList = "name"),@Index(columnList = "parent_id")})
-@DynamicUpdate
+
 @DynamicInsert
 @Data
 @ApiModel(description = "用户更新")
