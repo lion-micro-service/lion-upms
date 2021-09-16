@@ -1,9 +1,9 @@
 package com.lion.upms.controller.test;
 
-import com.alibaba.csp.sentinel.annotation.SentinelResource;
-import com.alibaba.csp.sentinel.slots.block.RuleConstant;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
+//import com.alibaba.csp.sentinel.annotation.SentinelResource;
+//import com.alibaba.csp.sentinel.slots.block.RuleConstant;
+//import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
+//import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.lion.annotation.AuthorizationIgnore;
 import com.lion.common.expose.parameter.ParameterExposeService;
 import com.lion.core.IResultData;
@@ -52,7 +52,7 @@ public class TestController {
     }
 
     @GetMapping("/sentinel")
-    @SentinelResource(value = "testSentinel",blockHandler = "blockHandler",defaultFallback = "defaultFallback")
+//    @SentinelResource(value = "testSentinel",blockHandler = "blockHandler",defaultFallback = "defaultFallback")
     @AuthorizationIgnore
     @Transactional
     public IResultData testSentinel(){
@@ -91,17 +91,17 @@ public class TestController {
 
 
 
-    {
-        List<FlowRule> rules = new ArrayList<FlowRule>();
-        FlowRule rule = new FlowRule();
-        rule.setResource("testSentinel");
-        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
-        // Set limit QPS to 20.
-        rule.setCount(1);
-        rule.setControlBehavior(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
-        rules.add(rule);
-        FlowRuleManager.loadRules(rules);
-    }
+//    {
+//        List<FlowRule> rules = new ArrayList<FlowRule>();
+//        FlowRule rule = new FlowRule();
+//        rule.setResource("testSentinel");
+//        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
+//        // Set limit QPS to 20.
+//        rule.setCount(1);
+//        rule.setControlBehavior(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
+//        rules.add(rule);
+//        FlowRuleManager.loadRules(rules);
+//    }
 
     public IResultData blockHandler(){
         ResultData resultData = ResultData.instance();
