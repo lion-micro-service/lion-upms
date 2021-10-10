@@ -2,8 +2,8 @@ package com.lion.upms.entity.user.vo;
 
 import com.lion.core.persistence.entity.BaseEntity;
 import com.lion.upms.entity.user.User;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import lombok.Data;
 
 /**
@@ -12,13 +12,13 @@ import lombok.Data;
  * @create: 2020-10-09 09:47
  **/
 @Data
-@ApiModel(description="用户列表VO")
+@Schema(description="用户列表VO")
 public class UserVo extends User {
 
     /**
      * 头像
      */
-    @ApiModelProperty(value ="用户头像")
+    @Schema(description ="用户头像")
     private String headPortraitUrl;
 }
 

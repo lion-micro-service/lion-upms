@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.lion.core.persistence.Validator;
 import com.lion.upms.entity.user.User;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,7 +24,7 @@ import java.time.LocalDate;
  */
 @Data
 @JsonIgnoreProperties(value={"username","password","isAccountNonExpired","isAccountNonLocked","isCredentialsNonExpired","isEnabled","createDateTime","updateDateTime","createUserId","updateUserId"})
-@ApiModel(description = "用户更新")
+@Schema(description = "用户更新")
 public class UserUpdataDto extends User {
 
 }

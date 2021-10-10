@@ -4,8 +4,8 @@ import com.lion.upms.entity.department.Department;
 import com.lion.upms.entity.department.vo.DepartmentTreeVo;
 import com.lion.upms.entity.role.Role;
 import com.lion.upms.entity.user.User;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
@@ -18,16 +18,16 @@ import java.util.Objects;
  * @create: 2020-09-29 15:50
  **/
 @Data
-@ApiModel(description = "用户列表数据模型")
+@Schema(description = "用户列表数据模型")
 public class UserListVo {
 
-    @ApiModelProperty(value="用户")
+    @Schema(description="用户")
     private User user;
 
-    @ApiModelProperty(value="部门")
+    @Schema(description="部门")
     private DepartmentTreeVo department;
 
-    @ApiModelProperty(value="角色")
+    @Schema(description="角色")
     private List<Role> role;
 
     /**

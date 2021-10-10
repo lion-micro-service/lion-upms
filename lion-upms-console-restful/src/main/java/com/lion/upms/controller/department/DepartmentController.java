@@ -12,6 +12,7 @@ import com.lion.upms.entity.department.vo.DepartmentTreeVo;
 import com.lion.upms.service.department.DepartmentService;
 import com.lion.upms.service.department.DepartmentUserService;
 import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -117,11 +118,11 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
     }
 }
 
-@ApiModel()
+@Schema()
 @Data
 class DepartmetIdUserId{
-    @ApiModelProperty("已经选择中的user")
+    @Schema(description = "已经选择中的user")
     List<Long> oldUserId;
-    @ApiModelProperty("不能选择的user")
+    @Schema(description = "不能选择的user")
     List<Long> notCheckUserId;
 }

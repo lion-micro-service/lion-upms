@@ -3,8 +3,8 @@ package com.lion.upms.entity.role;
 import com.lion.core.persistence.Validator;
 import com.lion.core.persistence.entity.BaseEntity;
 import com.lion.upms.entity.user.User;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicInsert;
@@ -28,17 +28,17 @@ import javax.validation.constraints.NotNull;
 
 @DynamicInsert
 @Data
-@ApiModel(description = "角色资源关联表")
+@Schema(description = "角色资源关联表")
 public class RoleUser extends BaseEntity {
 
     private static final long serialVersionUID = 1834558062801001562L;
 
-    @ApiModelProperty(value = "角色ID")
+    @Schema(description = "角色ID")
     @Column(name = "role_id",nullable = false)
     @NotNull(message = "角色ID不能为空", groups = {Validator.Insert.class,Validator.Update.class})
     private Long roleId;
 
-    @ApiModelProperty(value = "用户ID")
+    @Schema(description = "用户ID")
     @Column(name = "user_id", nullable = false)
     @NotNull(message = "用户ID不能为空", groups = {Validator.Insert.class,Validator.Update.class})
     private Long userId;
