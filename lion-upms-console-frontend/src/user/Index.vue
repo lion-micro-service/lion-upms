@@ -1,19 +1,19 @@
 <template>
-    <div>
-        <keep-alive>
-            <router-view v-if="$route.meta.keepAlive"></router-view>
-        </keep-alive>
-        <router-view v-if="!$route.meta.keepAlive"></router-view>
-    </div>
+  <router-view v-slot="{ Component }">
+    <keep-alive>
+      <component :is="Component"  v-if="$route.meta.keepAlive"/>
+    </keep-alive>
+    <component :is="Component"  v-if="!$route.meta.keepAlive"/>
+  </router-view>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    @Component({})
-    export default class Index extends Vue{
-        private created() {
-        }
-    }
+import {Options, Vue} from 'vue-property-decorator';
+@Options({
+  components:{}
+})
+export default class Index extends Vue{
+}
 </script>
 
 <style lang="less" scoped>

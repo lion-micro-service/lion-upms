@@ -1,43 +1,43 @@
 <template>
-    <a-modal destroyOnClose v-model="addOrUpdateModal" width="800px" title="添加/修改角色" centered @ok="addOrUpdate" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
-        <a-form-model layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
+    <a-modal destroyOnClose v-model:value="addOrUpdateModal" width="800px" title="添加/修改角色" centered @ok="addOrUpdate" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
+        <a-form layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
             <a-row>
                 <a-col :span="12">
-                    <a-form-model-item label="作用域" prop="scope" ref="scope" >
-                        <a-select disabled="disabled"  v-model="addOrUpdateModel.scope">
+                    <a-form-item label="作用域" name="scope" ref="scope" >
+                        <a-select disabled="disabled"  v-model:value="addOrUpdateModel.scope">
                             <a-select-option :key="value.key" v-for="(value) in scope" :value="value.name">{{value.desc}}</a-select-option>
                         </a-select>
-                    </a-form-model-item>
+                    </a-form-item>
                 </a-col>
                 <a-col :span="12">
-                    <a-form-model-item label="名称" prop="name" ref="name">
-                        <a-input placeholder="请输入名称" v-model="addOrUpdateModel.name" />
-                    </a-form-model-item>
+                    <a-form-item label="名称" name="name" ref="name">
+                        <a-input placeholder="请输入名称" v-model:value="addOrUpdateModel.name" />
+                    </a-form-item>
                 </a-col>
             </a-row>
             <a-row>
                 <a-col :span="12">
-                    <a-form-model-item label="编码" prop="code" ref="code">
-                        <a-input placeholder="请输入编码" v-model="addOrUpdateModel.code" />
-                    </a-form-model-item>
+                    <a-form-item label="编码" name="code" ref="code">
+                        <a-input placeholder="请输入编码" v-model:value="addOrUpdateModel.code" />
+                    </a-form-item>
                 </a-col>
             </a-row>
             <a-row>
                 <a-col id="remark" :span="24">
-                    <a-form-model-item label="备注" prop="remark" ref="remark">
-                        <a-textarea  placeholder="请输入备注" :rows="4" v-model="addOrUpdateModel.remark"/>
-                    </a-form-model-item>
+                    <a-form-item label="备注" name="remark" ref="remark">
+                        <a-textarea  placeholder="请输入备注" :rows="4" v-model:value="addOrUpdateModel.remark"/>
+                    </a-form-item>
                 </a-col>
             </a-row>
-        </a-form-model>
+        </a-form>
     </a-modal>
 </template>
 
 <script lang="ts">
-    import {Component,  Vue} from 'vue-property-decorator';
+    import {Options,  Vue} from 'vue-property-decorator';
     import axios from "@lion/lion-frontend-core/src/network/axios";
     import { message } from 'ant-design-vue';
-    @Component({})
+    @Options({components:{}})
     export default class addOrUpdate extends Vue{
         //是否点击阴影层关闭窗口
         private maskClosable:boolean=false;

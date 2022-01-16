@@ -1,57 +1,57 @@
 <template>
-    <a-form-model layout="inline" ref="from" :model="searchModel" >
+    <a-form layout="inline" ref="from" :model="searchModel" >
         <a-row>
             <a-col :span="6">
-                <a-form-model-item label="登陆账号" prop="username" ref="username" >
-                    <a-input placeholder="请输入登陆账号" v-model="searchModel.username"/>
-                </a-form-model-item>
+                <a-form-item label="登陆账号" name="username" ref="username" >
+                    <a-input placeholder="请输入登陆账号" v-model:value="searchModel.username"/>
+                </a-form-item>
             </a-col>
             <a-col :span="6">
-                <a-form-model-item label="姓名" prop="name" ref="name" >
-                    <a-input placeholder="请输入姓名" v-model="searchModel.name"/>
-                </a-form-model-item>
+                <a-form-item label="姓名" name="name" ref="name" >
+                    <a-input placeholder="请输入姓名" v-model:value="searchModel.name"/>
+                </a-form-item>
             </a-col>
             <a-col :span="6">
-                <a-form-model-item label="年龄" prop="age" ref="age" >
-                    <a-input-number placeholder="请输入年龄" v-model="searchModel.age"/>
-                </a-form-model-item>
+                <a-form-item label="年龄" name="age" ref="age" >
+                    <a-input-number placeholder="请输入年龄" v-model:value="searchModel.age"/>
+                </a-form-item>
             </a-col>
             <a-col :span="6">
-                <a-form-model-item label="邮箱" prop="email" ref="email" >
-                    <a-input placeholder="请输入邮箱" v-model="searchModel.email"/>
-                </a-form-model-item>
+                <a-form-item label="邮箱" name="email" ref="email" >
+                    <a-input placeholder="请输入邮箱" v-model:value="searchModel.email"/>
+                </a-form-item>
             </a-col>
         </a-row>
         <a-row>
             <a-col :span="6">
-                <a-form-model-item label="生日" prop="birthday" ref="birthday" >
-                    <a-date-picker placeholder="请输入生日" v-model="searchModel.birthday" />
-                </a-form-model-item>
+                <a-form-item label="生日" name="birthday" ref="birthday" >
+                    <a-date-picker placeholder="请输入生日" v-model:value="searchModel.birthday" />
+                </a-form-item>
             </a-col>
             <a-col :span="6">
-                <a-form-model-item label="部门" prop="departmentId" ref="departmentId" >
-                    <a-tree-select v-model="searchModel.departmentId" :tree-data="department" tree-checkable :show-checked-strategy="SHOW_PARENT" search-placeholder="请选择部门"/>
-                </a-form-model-item>
+                <a-form-item label="部门" name="departmentId" ref="departmentId" >
+                    <a-tree-select v-model:value="searchModel.departmentId" :tree-data="department" tree-checkable :show-checked-strategy="SHOW_PARENT" search-placeholder="请选择部门"/>
+                </a-form-item>
             </a-col>
             <a-col :span="6">
-                <a-form-model-item label="角色" prop="roleId" ref="roleId" >
-                    <a-select allowClear v-model="searchModel.roleId" >
+                <a-form-item label="角色" name="roleId" ref="roleId" >
+                    <a-select allowClear v-model:value="searchModel.roleId" >
                         <a-select-option :key="value.id" v-for="(value) in role" :value="value.id">{{value.name}}</a-select-option>
                     </a-select>
-                </a-form-model-item>
+                </a-form-item>
             </a-col>
         </a-row>
         <slot></slot>
-    </a-form-model>
+    </a-form>
 </template>
 
 <script lang="ts">
-    import {Component,  Vue} from 'vue-property-decorator';
+    import {Options,  Vue} from 'vue-property-decorator';
     import moment from 'moment';
     import 'moment/locale/zh-cn';
     import axios from "@lion/lion-frontend-core/src/network/axios";
     import { TreeSelect } from 'ant-design-vue';
-    @Component({})
+    @Options({components:{}})
     export default class searchFrom extends Vue{
         //antdv组件汉化
         private moment:any = moment;
@@ -63,7 +63,7 @@
         private searchModel:any={};
         private SHOW_PARENT:any = Object(TreeSelect).SHOW_PARENT;
         //组件挂载后调用（初始化数据）
-        private mounted():void{
+        public mounted():void{
             //获取部门数据
             axios.get("/lion-upms-console-restful/department/console/list/tree",{params:{}})
             .then((data)=>{

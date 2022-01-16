@@ -1,14 +1,14 @@
 <template>
     <div>
         <a-card class="card" style="border-bottom-width: 5px;">
-            <a-form-model layout="inline" ref="from" :model="searchModel" >
+            <a-form layout="inline" ref="from" :model="searchModel" >
                 <a-row>
                     <a-col :span="6">
-                        <a-form-model-item label="作用域" prop="scope" ref="scope" >
-                            <a-select  v-model="searchModel.scope" @change="searchScopelChange">
+                        <a-form-item label="作用域" name="scope" ref="scope" >
+                            <a-select  v-model:value="searchModel.scope" @change="searchScopelChange">
                                 <a-select-option :key="value.key" v-for="(value) in scope" :value="value.name">{{value.desc}}</a-select-option>
                             </a-select>
-                        </a-form-model-item>
+                        </a-form-item>
                     </a-col>
 
                 </a-row>
@@ -20,11 +20,11 @@
                         </a-form-item>
                     </a-col>
                 </a-row>
-            </a-form-model>
+            </a-form>
         </a-card>
 
         <a-card v-if="getAuthority('SYSTEM_SETTINGS_RESOURCES_LIST')" :bordered="false">
-            <a-table bordered rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="false">
+            <a-table bordered rowKey="id" :columns="columns" :dataSource="listData" :loading="loading" :pagination="false">
                 <span slot="action" slot-scope="text, record">
                     <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_RESOURCES_UPDATE')" icon="edit" size="small" @click="getDetails(record.id)">修改</a-button>
                     <a-button style="margin-left: 5px;" v-if="(record.type.key===1) && getAuthority('SYSTEM_SETTINGS_RESOURCES_ADD') " icon="file-add" size="small" @click="add(record.id,2)">添加功能</a-button>
@@ -35,62 +35,62 @@
             </a-table>
         </a-card>
 
-        <a-modal destroyOnClose v-model="addOrUpdateModal" width="800px" title="添加/修改资源" :maskClosable="maskClosable"  centered @ok="addOrUpdate" cancelText="关闭" okText="保存">
-            <a-form-model layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
+        <a-modal destroyOnClose v-model:value="addOrUpdateModal" width="800px" title="添加/修改资源" :maskClosable="maskClosable"  centered @ok="addOrUpdate" cancelText="关闭" okText="保存">
+            <a-form layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
                 <a-row>
                     <a-col :span="12">
-                        <a-form-model-item label="作用域" prop="scope" ref="scope" >
-                            <a-select disabled="disabled"  v-model="addOrUpdateModel.scope">
+                        <a-form-item label="作用域" name="scope" ref="scope" >
+                            <a-select disabled="disabled"  v-model:value="addOrUpdateModel.scope">
                                 <a-select-option :key="value.key" v-for="(value) in scope" :value="value.name">{{value.desc}}</a-select-option>
                             </a-select>
-                        </a-form-model-item>
+                        </a-form-item>
                     </a-col>
                     <a-col :span="12">
-                        <a-form-model-item label="类型" prop="type" ref="type" >
-                            <a-select disabled="disabled" v-model="addOrUpdateModel.type" @change="typeChange">
+                        <a-form-item label="类型" name="type" ref="type" >
+                            <a-select disabled="disabled" v-model:value="addOrUpdateModel.type" @change="typeChange">
                                 <a-select-option :key="value.key" v-for="(value) in type" :value="value.name">{{value.desc}}</a-select-option>
                             </a-select>
-                        </a-form-model-item>
+                        </a-form-item>
                     </a-col>
                 </a-row>
                 <a-row>
                     <a-col :span="12">
-                        <a-form-model-item label="名称" prop="name" ref="name">
-                            <a-input placeholder="请输入名称" v-model="addOrUpdateModel.name" />
-                        </a-form-model-item>
+                        <a-form-item label="名称" name="name" ref="name">
+                            <a-input placeholder="请输入名称" v-model:value="addOrUpdateModel.name" />
+                        </a-form-item>
                     </a-col>
                     <a-col :span="12">
-                        <a-form-model-item label="编码" prop="code" ref="code">
-                            <a-input placeholder="请输入编码" v-model="addOrUpdateModel.code" />
-                        </a-form-model-item>
+                        <a-form-item label="编码" name="code" ref="code">
+                            <a-input placeholder="请输入编码" v-model:value="addOrUpdateModel.code" />
+                        </a-form-item>
                     </a-col>
                 </a-row>
                 <a-row>
                     <a-col :span="12">
-                        <a-form-model-item label="URL" prop="url" ref="url">
-                            <a-input v-bind:disabled="urlDisabled" placeholder="请输入URL" v-model="addOrUpdateModel.url" />
-                        </a-form-model-item>
+                        <a-form-item label="URL" name="url" ref="url">
+                            <a-input v-bind:disabled="urlDisabled" placeholder="请输入URL" v-model:value="addOrUpdateModel.url" />
+                        </a-form-item>
                     </a-col>
                     <a-col :span="12">
-                        <a-form-model-item label="排序" prop="sort" ref="sort">
-                            <a-input-number   v-model="addOrUpdateModel.sort" />
-                        </a-form-model-item>
+                        <a-form-item label="排序" name="sort" ref="sort">
+                            <a-input-number   v-model:value="addOrUpdateModel.sort" />
+                        </a-form-item>
                     </a-col>
                 </a-row>
-            </a-form-model>
+            </a-form>
         </a-modal>
     </div>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Options, Vue} from 'vue-property-decorator';
     import axios from "@lion/lion-frontend-core/src/network/axios";
-    import { message } from 'ant-design-vue';
+    import { message,Modal } from 'ant-design-vue';
     import authority from "@lion/lion-frontend-core/src/security/authority";
-    @Component({})
+    @Options({components:{}})
     export default class List extends Vue{
         //列表数据源
-        private data:Array<any>=[];
+        private listData:Array<any>=[];
         //是否列表加载中
         private loading:boolean=false;
         //是否点击阴影层关闭modal（新增/修改窗口）
@@ -248,7 +248,7 @@
         /**
          * 组件挂载后触发事件
          */
-        private async mounted() {
+        public async mounted() {
             await axios.get("/lion-common-console-restful/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.common.enums.Scope"}})
             .then((data) => {
                 this.scope = data.data;
@@ -278,7 +278,7 @@
             this.loading=true;
             axios.get("/lion-upms-console-restful/resources/console/list/tree",{params:this.searchModel})
             .then((data)=>{
-                this.data=data.data;
+                this.listData=data.data;
             })
             .catch(fail => {
             })
@@ -411,7 +411,7 @@
                 message.error("请选择要删除的数据");
                 return;
             }
-            this.$confirm({
+            Modal.confirm({
                 title: '是否要删除该数据?(错误的操作会带来灾难性的后果)',
                 // content: '',
                 okText: 'Yes',

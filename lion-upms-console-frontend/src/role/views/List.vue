@@ -1,24 +1,24 @@
 <template>
     <div>
         <a-card class="card" style="border-bottom-width: 5px;">
-            <a-form-model layout="inline" ref="from" :model="searchModel" >
+            <a-form layout="inline" ref="from" :model="searchModel" >
                 <a-row>
                     <a-col :span="6">
-                        <a-form-model-item label="作用域" prop="scope" ref="scope" >
-                            <a-select  v-model="searchModel.scope" @change="searchScopelChange">
+                        <a-form-item label="作用域" name="scope" ref="scope" >
+                            <a-select  v-model:value="searchModel.scope" @change="searchScopelChange">
                                 <a-select-option :key="value.key" v-for="(value) in scope" :value="value.name">{{value.desc}}</a-select-option>
                             </a-select>
-                        </a-form-model-item>
+                        </a-form-item>
                     </a-col>
                     <a-col :span="6">
-                        <a-form-model-item label="名称" prop="name" ref="name" >
-                            <a-input placeholder="请输入名称" v-model="searchModel.name"/>
-                        </a-form-model-item>
+                        <a-form-item label="名称" name="name" ref="name" >
+                            <a-input placeholder="请输入名称" v-model:value="searchModel.name"/>
+                        </a-form-item>
                     </a-col>
                     <a-col :span="6">
-                        <a-form-model-item label="编码" prop="code" ref="code" >
-                            <a-input placeholder="请输入编码" v-model="searchModel.code"/>
-                        </a-form-model-item>
+                        <a-form-item label="编码" name="code" ref="code" >
+                            <a-input placeholder="请输入编码" v-model:value="searchModel.code"/>
+                        </a-form-item>
                     </a-col>
                     <a-col :span="6">
                     </a-col>
@@ -32,11 +32,11 @@
                         </a-form-item>
                     </a-col>
                 </a-row>
-            </a-form-model>
+            </a-form>
         </a-card>
 
         <a-card v-if="getAuthority('SYSTEM_SETTINGS_ROLE_LIST')" :bordered="false">
-            <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="paginationProps">
+            <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="listData" :loading="loading" :pagination="paginationProps">
                 <span slot="action" slot-scope="text, record">
                     <a-button style="margin-left: 5px;" icon="edit" v-if="getAuthority('SYSTEM_SETTINGS_ROLE_UPDATE')" size="small" @click="edit(record.id)">修改</a-button>
                     <a-button style="margin-left: 5px;" icon="security-scan" v-if="getAuthority('SYSTEM_SETTINGS_ROLE_RESOURCES')" size="small" @click="roleResources(record.id)">权限</a-button>
@@ -59,17 +59,17 @@
 </template>
 
 <script lang="ts">
-    import {Component,  Vue} from 'vue-property-decorator';
+    import {Options,  Vue} from 'vue-property-decorator';
     import axios from "@lion/lion-frontend-core/src/network/axios";
     import addOrUpdate from "@/role/components/addOrUpdate.vue";
     import roleResources from "@/role/components/roleResources.vue";
-    import { message } from 'ant-design-vue';
+    import { message,Modal } from 'ant-design-vue';
     import qs from "qs";
     import RoleDepartment from "@/role/components/roleDepartment.vue";
     import RoleUser from "@/role/components/roleUser.vue";
     import RolePosition from "@/role/components/rolePosition.vue";
     import authority from "@lion/lion-frontend-core/src/security/authority";
-    @Component({components:{RolePosition, RoleUser, RoleDepartment, addOrUpdate,roleResources}})
+    @Options({components:{RolePosition, RoleUser, RoleDepartment, addOrUpdate,roleResources}})
     export default class List extends Vue{
         //查询数据模型
         private searchModel : any ={
@@ -80,7 +80,7 @@
         //列表复选框选中的值
         private selectedRowKeys:Array<number> = [];
         //列表数据源
-        private data:Array<any> = [];
+        private listData:Array<any> = [];
         //列表是否加载中（转圈圈）
         private loading:boolean=false;
         //作用域下拉框数据源
@@ -134,7 +134,7 @@
             this.loading=true;
             axios.get("/lion-upms-console-restful/role/console/list",{params:this.searchModel})
             .then((data)=>{
-                this.data=data.data;
+                this.listData=data.data;
                 this.paginationProps.total=Number((Object(data)).totalElements);
                 this.paginationProps.current=(Object(data)).pageNumber;
                 this.paginationProps.pageSize=(Object(data)).pageSize;
@@ -149,7 +149,7 @@
         /**
          * 组件挂载后触发事件
          */
-        private mounted() {
+        public mounted() {
             axios.get("/lion-common-console-restful/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.common.enums.Scope"}})
             .then((data) => {
                 this.scope = data.data;
@@ -204,7 +204,7 @@
                     id = this.selectedRowKeys;
                 }
             }
-            this.$confirm({
+            Modal.confirm({
                 title: '是否要删除该数据?(错误的操作会带来灾难性的后果)',
                 // content: '',
                 okText: 'Yes',

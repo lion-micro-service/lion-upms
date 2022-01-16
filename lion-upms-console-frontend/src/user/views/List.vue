@@ -23,14 +23,14 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
+    import {Options, Vue, Watch} from 'vue-property-decorator';
     import axios from "@lion/lion-frontend-core/src/network/axios";
-    import { message } from 'ant-design-vue';
+    import { message,Modal } from 'ant-design-vue';
     import qs from 'qs';
     import searchFrom from "@/components/user/searchFrom.vue";
     import list from "@/components/user/list.vue";
     import authority from "@lion/lion-frontend-core/src/security/authority";
-    @Component({components:{searchFrom,list}})
+    @Options({components:{searchFrom,list}})
     export default class List extends Vue{
         //组件是否已经挂载
         private isMounted:boolean=false;
@@ -43,7 +43,7 @@
         /**
          * 组件挂载后触发事件
          */
-        private mounted():void {
+        public mounted():void {
             const list = (this.$refs.list as any);
             list.columns[list.columns.length]={ title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 180,};
             this.search();
@@ -83,7 +83,7 @@
                     return qs.stringify(params, { indices: false })
                 }})
             .then((data)=>{
-                list.data=data.data;
+                list.listData=data.data;
                 list.paginationProps.total=Number((Object(data)).totalElements);
                 list.paginationProps.current=(Object(data)).pageNumber;
                 list.paginationProps.pageSize=(Object(data)).pageSize;
@@ -136,7 +136,7 @@
                     id = list.selectedRowKeys;
                 }
             }
-            this.$confirm({
+            Modal.confirm({
                 title: '是否要删除该数据?',
                 // content: '',
                 okText: 'Yes',

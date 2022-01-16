@@ -1,7 +1,7 @@
 <template>
     <div>
         <a-card class="card" style="border-bottom-width: 5px;" >
-            <a-form-model layout="inline" ref="from" >
+            <a-form layout="inline" ref="from" >
                 <a-row >
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
@@ -9,11 +9,11 @@
                         </a-form-item>
                     </a-col>
                 </a-row>
-            </a-form-model>
+            </a-form>
         </a-card>
 
         <a-card class="card" :bordered="false">
-            <a-table bordered rowKey="id" :columns="columns" :dataSource="data" :loading="loading" :pagination="false">
+            <a-table bordered rowKey="id" :columns="columns" :dataSource="listData" :loading="loading" :pagination="false">
                 <span slot="action" slot-scope="text, record">
                     <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_DEPARTMENT_UPDATE')" icon="edit" size="small" @click="getDetails(record.id)">修改</a-button>
                     <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_DEPARTMENT_ADD')" icon="file-add" size="small" @click="add(record.id)">新增子部门</a-button>
@@ -23,23 +23,23 @@
             </a-table>
         </a-card>
 
-        <a-modal destroyOnClose v-model="modal" width="800px" title="添加/修改部门" :maskClosable="maskClosable"  centered @ok="addOrUpdate" cancelText="关闭" okText="保存">
-            <a-form-model layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
+        <a-modal destroyOnClose v-model:value="modal" width="800px" title="添加/修改部门" :maskClosable="maskClosable"  centered @ok="addOrUpdate" cancelText="关闭" okText="保存">
+            <a-form layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
                 <a-row>
                     <a-col :span="24">
-                        <a-form-model-item label="名称" prop="name" ref="name" >
-                            <a-input  v-model="addOrUpdateModel.name" />
-                        </a-form-model-item>
+                        <a-form-item label="名称" name="name" ref="name" >
+                            <a-input  v-model:value="addOrUpdateModel.name" />
+                        </a-form-item>
                     </a-col>
                 </a-row>
                 <a-row>
                     <a-col :span="24">
-                        <a-form-model-item label="备注" prop="remark" ref="remark">
-                            <a-textarea  placeholder="请输入备注" :rows="4" v-model="addOrUpdateModel.remark"/>
-                        </a-form-model-item>
+                        <a-form-item label="备注" name="remark" ref="remark">
+                            <a-textarea  placeholder="请输入备注" :rows="4" v-model:value="addOrUpdateModel.remark"/>
+                        </a-form-item>
                     </a-col>
                 </a-row>
-            </a-form-model>
+            </a-form>
         </a-modal>
 
         <department-user ref="departmentUser" ></department-user>
@@ -47,18 +47,18 @@
 </template>
 
 <script lang="ts">
-    import {Component,  Vue} from 'vue-property-decorator';
+    import {Options,  Vue} from 'vue-property-decorator';
     import axios from "@lion/lion-frontend-core/src/network/axios";
-    import { message } from 'ant-design-vue';
+    import { message,Modal } from 'ant-design-vue';
     import qs from "qs";
     import departmentUser from "@/department/components/departmentUser.vue";
     import authority from "@lion/lion-frontend-core/src/security/authority";
-    @Component({
+    @Options({
         components: {departmentUser}
     })
     export default class List extends Vue{
         //列表数据
-        private data:Array<any>=[];
+        private listData:Array<any>=[];
         //列表是否加载中（转圈圈图标）
         private loading:boolean=false;
         //是否显示modal（新增窗口）
@@ -109,7 +109,7 @@
         /**
          * 页面挂载后触发的事件
          */
-        private mounted():void {
+        public mounted():void {
             this.search();
         }
 
@@ -120,7 +120,7 @@
             this.loading=true;
             axios.get("/lion-upms-console-restful/department/console/list/tree",{params:{}})
             .then((data)=>{
-                this.data=data.data;
+                this.listData=data.data;
             })
             .catch(fail => {
             })
@@ -183,7 +183,7 @@
                 message.error("请选择要删除的数据");
                 return;
             }
-            this.$confirm({
+            Modal.confirm({
                 title: '是否要删除该数据?(错误的操作会带来灾难性的后果)',
                 // content: '',
                 okText: 'Yes',

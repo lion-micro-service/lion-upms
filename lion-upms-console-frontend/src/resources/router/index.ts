@@ -1,24 +1,17 @@
-import Vue from 'vue';
-import VueRouter, {RouteConfig} from 'vue-router';
-
-Vue.use(VueRouter);
-
-const routes : Array<RouteConfig> = [{
-    path:'/resources',
+import { createRouter,createWebHashHistory}  from 'vue-router'
+const routes : Array<any> =[{
+    path:'/',
     name:'资源',
     redirect:'/resources/list'
-    },{
-        path:'/resources/list',
-        name:'资源列表',
-        component: () => import('@/resources/views/List.vue'),
-        meta: {keepAlive: true }
-    }
+},{
+    path:'/resources/list',
+    name:'资源列表',
+    component: () => import('@/resources/views/List.vue'),
+    meta: {keepAlive: true }
+}
 ];
-
-const route = new VueRouter({
-    mode:'history',
-    base:process.env.BASE_URL,
+const route = createRouter({
+    history: createWebHashHistory(),
     routes
 })
-
 export default route

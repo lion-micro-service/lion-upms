@@ -1,48 +1,48 @@
 <template>
     <a-card class="card" :bordered="false">
-        <a-form-model layout="inline" ref="form" :model="addModel" :rules="rules" >
+        <a-form layout="inline" ref="form" :model="addModel" :rules="rules" >
             <a-row >
                 <a-col :span="8">
-                    <a-form-model-item label="登陆账号" prop="username" ref="username" >
-                        <a-input v-bind:disabled="usernameDisabled" placeholder="请输入登陆账号" v-model="addModel.username"  autocomplete="off"/>
-                    </a-form-model-item>
+                    <a-form-item label="登陆账号" name="username" ref="username" >
+                        <a-input v-bind:disabled="usernameDisabled" placeholder="请输入登陆账号" v-model:value="addModel.username"  autocomplete="off"/>
+                    </a-form-item>
                 </a-col>
                 <a-col :span="8">
-                    <a-form-model-item label="密码" prop="pass" ref="pass" >
-                        <a-input-password v-bind:disabled="passDisabled" placeholder="请输入密码" v-model="addModel.pass" autocomplete="off"/>
-                    </a-form-model-item>
+                    <a-form-item label="密码" name="pass" ref="pass" >
+                        <a-input-password v-bind:disabled="passDisabled" placeholder="请输入密码" v-model:value="addModel.pass" autocomplete="off"/>
+                    </a-form-item>
                 </a-col>
                 <a-col :span="8">
-                    <a-form-model-item label="确认密码" prop="confirmPass" ref="confirmPass" >
-                        <a-input-password v-bind:disabled="confirmPassDisabled" placeholder="请输入确认密码" v-model="addModel.confirmPass" autocomplete="off"/>
-                    </a-form-model-item>
-                </a-col>
-            </a-row>
-            <a-row>
-                <a-col :span="8">
-                    <a-form-model-item label="姓名" prop="name" ref="name" >
-                        <a-input placeholder="请输入姓名" v-model="addModel.name" />
-                    </a-form-model-item>
-                </a-col>
-                <a-col :span="8">
-                    <a-form-model-item label="邮箱" prop="email" ref="email">
-                        <a-input placeholder="请输入邮箱" v-model="addModel.email" />
-                    </a-form-model-item>
-                </a-col>
-                <a-col :span="8">
-                    <a-form-model-item label="年龄" prop="age" ref="age">
-                        <a-input-number  placeholder="请输入年龄" v-model="addModel.age" />
-                    </a-form-model-item>
+                    <a-form-item label="确认密码" name="confirmPass" ref="confirmPass" >
+                        <a-input-password v-bind:disabled="confirmPassDisabled" placeholder="请输入确认密码" v-model:value="addModel.confirmPass" autocomplete="off"/>
+                    </a-form-item>
                 </a-col>
             </a-row>
             <a-row>
                 <a-col :span="8">
-                    <a-form-model-item label="生日" prop="birthday" ref="birthday" >
-                        <a-date-picker placeholder="请输入生日" valueFormat="YYYY-MM-DD" v-model="addModel.birthday" />
-                    </a-form-model-item>
+                    <a-form-item label="姓名" name="name" ref="name" >
+                        <a-input placeholder="请输入姓名" v-model:value="addModel.name" />
+                    </a-form-item>
                 </a-col>
                 <a-col :span="8">
-                    <a-form-model-item label="头像" prop="headPortrait" ref="headPortrait" >
+                    <a-form-item label="邮箱" name="email" ref="email">
+                        <a-input placeholder="请输入邮箱" v-model:value="addModel.email" />
+                    </a-form-item>
+                </a-col>
+                <a-col :span="8">
+                    <a-form-item label="年龄" name="age" ref="age">
+                        <a-input-number  placeholder="请输入年龄" v-model:value="addModel.age" />
+                    </a-form-item>
+                </a-col>
+            </a-row>
+            <a-row>
+                <a-col :span="8">
+                    <a-form-item label="生日" name="birthday" ref="birthday" >
+                        <a-date-picker placeholder="请输入生日" valueFormat="YYYY-MM-DD" v-model:value="addModel.birthday" />
+                    </a-form-item>
+                </a-col>
+                <a-col :span="8">
+                    <a-form-item label="头像" name="headPortrait" ref="headPortrait" >
                         <a-upload :action="uploadAction" accept="image/png, image/jpeg" list-type="picture-card" :file-list="headPortraitList" @change="(e)=>headPortraitChange(e)" :remove="function(file){headPortraitRemove(file)} " @preview="handlePreview">
                             <div v-if="headPortraitList.length < 1">
                                 <a-icon type="plus" />
@@ -52,7 +52,7 @@
                             </div>
 
                         </a-upload>
-                    </a-form-model-item>
+                    </a-form-item>
                 </a-col>
             </a-row>
 
@@ -65,7 +65,7 @@
                     </a-form-item>
                 </a-col>
             </a-row>
-        </a-form-model>
+        </a-form>
 
         <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
             <img alt="example" style="width: 100%; " :src="previewImage" />
@@ -74,13 +74,13 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import {Options, Vue} from 'vue-property-decorator';
     import axios from "@lion/lion-frontend-core/src/network/axios";
     import { message } from 'ant-design-vue'
     import moment from 'moment';
     import 'moment/locale/zh-cn';
     let md5 = require('md5');
-    @Component({})
+    @Options({components:{}})
     export default class AddOrUpdate extends Vue{
         //组件汉化
         private moment:any = moment;
@@ -224,7 +224,7 @@
         /**
          * 组件挂载后触发的事件
          */
-        private mounted():void{
+        public mounted():void{
             const id = this.$route.query.id;
             if (id){
                 this.usernameDisabled=true;

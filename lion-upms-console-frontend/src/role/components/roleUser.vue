@@ -1,5 +1,5 @@
 <template>
-    <a-modal destroyOnClose v-model="modal" width="1000px"  title="角色用户" centered @ok="save" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
+    <a-modal destroyOnClose v-model:value="modal" width="1000px"  title="角色用户" centered @ok="save" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
         <search-from ref="searchFrom">
             <a-row >
                 <a-col :span="24" style="text-align:right;">
@@ -15,13 +15,13 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+    import { Options, Vue} from 'vue-property-decorator';
     import axios from "@lion/lion-frontend-core/src/network/axios";
     import { message } from 'ant-design-vue';
     import SearchFrom from "@/components/user/searchFrom.vue";
     import List from "@/components/user/list.vue";
     import qs from "qs";
-    @Component({
+    @Options({
         components: {List, SearchFrom}
     })
     export default class roleUser extends Vue{
@@ -84,7 +84,7 @@
             }
             await axios.get("/lion-upms-console-restful/user/console/list",{params:this.searchModel})
             .then((data)=> {
-                list.data = data.data;
+                list.listData = data.data;
                 list.paginationProps.total = Number((Object(data)).totalElements);
                 list.paginationProps.current = (Object(data)).pageNumber;
                 list.paginationProps.pageSize = (Object(data)).pageSize;
