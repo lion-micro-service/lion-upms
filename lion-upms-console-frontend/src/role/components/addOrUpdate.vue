@@ -1,6 +1,6 @@
 <template>
-    <a-modal destroyOnClose v-model:value="addOrUpdateModal" width="800px" title="添加/修改角色" centered @ok="addOrUpdate" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
-        <a-form layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
+    <a-modal v-model:visible="addOrUpdateModal" width="800px" title="添加/修改角色" @cancel="cancel" centered @ok="addOrUpdate" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
+        <a-form ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
             <a-row>
                 <a-col :span="12">
                     <a-form-item label="作用域" name="scope" ref="scope" >
@@ -44,7 +44,7 @@
         //是否显示窗口
         private addOrUpdateModal:boolean=false;
         //新增/修改数据模型
-        private addOrUpdateModel:any={}
+        public addOrUpdateModel:any={}
         //作用域
         private scope:Array<any>=[];
         //校验规则
@@ -53,36 +53,43 @@
             name:[{required:true,validator:this.checkNameIsExist,trigger:'blur'}],
         };
 
+      /**
+       * 关闭弹窗时清空数据，以免数据污染
+       * @private
+       */
+        private cancel():void {
+          this.addOrUpdateModel={};
+        }
+
         /**
          * 检查编码是否存在
          * @param rule
          * @param value
          * @param callback
          */
-        private checkCodeIsExist(rule :any, value:string, callback:any):void{
-            if (!value || value.trim() === ''){
-                callback(new Error('请输入编码'));
-                return;
-            }else if (value && value.trim() !== ''){
-                axios.get("/lion-upms-console-restful/role/console/check/code/exist",{params:{"code":this.addOrUpdateModel.code,"id":this.addOrUpdateModel.id}})
-                .then((data)=> {
-                    if (Object(data).status !== 200){
-                        callback(new Error('异常错误！请检查'));
-                        return;
-                    }
-                    if (data.data) {
-                        callback(new Error('编码已存在'));
-                    }else {
-                        callback();
-                    }
-                })
-                .catch(fail => {
-                })
-                .finally(()=>{
-                });
-                return;
-            }
-            callback();
+        private checkCodeIsExist(rule :any, value:string):any{
+          const _this:any =this;
+          if (!value || value.trim() === ''){
+            return Promise.reject('请输入编码');
+          }else if (value && value.trim() !== ''){
+            axios.get("/lion-upms-console-restful/role/console/check/code/exist",{params:{"code":_this.addOrUpdateModel.code,"id":_this.addOrUpdateModel.id}})
+            .then((data)=> {
+              if (Object(data).status !== 200){
+                return Promise.reject('异常错误！请检查');
+              }
+              if (data.data) {
+                return Promise.reject('编码已存在');
+              }else {
+                return Promise.resolve();
+              }
+            })
+            .catch(fail => {
+            })
+            .finally(()=>{
+            });
+            return Promise.resolve();
+          }
+          return Promise.resolve();
         }
 
         /**
@@ -91,30 +98,29 @@
          * @param value
          * @param callback
          */
-        private checkNameIsExist(rule :any, value:string, callback:any):void{
-            if (!value || value.trim() === ''){
-                callback(new Error('请输入名称'));
-                return;
-            }else if (value && value.trim() !== ''){
-                axios.get("/lion-upms-console-restful/role/console/check/name/exist",{params:{"name":this.addOrUpdateModel.name,"id":this.addOrUpdateModel.id}})
-                .then((data)=> {
-                    if (Object(data).status !== 200){
-                        callback(new Error('异常错误！请检查'));
-                        return;
-                    }
-                    if (data.data) {
-                        callback(new Error('名称已存在'));
-                    }else {
-                        callback();
-                    }
-                })
-                .catch(fail => {
-                })
-                .finally(()=>{
-                });
-                return;
-            }
-            callback();
+        private checkNameIsExist(rule :any, value:string):any{
+          const _this:any =this;
+          if (!value || value.trim() === ''){
+            return Promise.reject('请输入名称');
+          }else if (value && value.trim() !== ''){
+            axios.get("/lion-upms-console-restful/role/console/check/name/exist",{params:{"name": this.addOrUpdateModel.name,"id":_this.addOrUpdateModel.id}})
+            .then((data)=> {
+              if (Object(data).status !== 200){
+                return Promise.reject('异常错误！请检查');
+              }
+              if (data.data) {
+                return Promise.reject('名称已存在');
+              }else {
+                return Promise.resolve();
+              }
+            })
+            .catch(fail => {
+            })
+            .finally(()=>{
+            });
+            return Promise.resolve();
+          }
+          return Promise.resolve();
         }
 
         /**
@@ -186,7 +192,7 @@
 </script>
 
 <style scoped>
- #remark >>> .ant-form-item-control-wrapper{
+ #remark >>> .ant-form-item-control{
      width: calc(100% - 80px);
  }
  #remark >>> .ant-form-item{
@@ -198,7 +204,7 @@
  .ant-form-item{
      width: 100%;
  }
- .ant-row >>> .ant-form-item-control-wrapper{
+ .ant-row >>> .ant-form-item-control{
      width: calc(100% - 80px);
  }
 </style>
