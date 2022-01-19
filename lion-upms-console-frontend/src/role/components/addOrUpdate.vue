@@ -49,8 +49,8 @@
         private scope:Array<any>=[];
         //校验规则
         private rules:any={
-            code:[{required:true,validator:(rule :any, value:string) => {this.checkCodeIsExist(rule,value,this)},trigger:'blur'}],
-            name:[{required:true,validator:(rule :any, value:string) => {this.checkNameIsExist(rule,value,this)},trigger:'blur'}],
+            code:[{required:true,validator:(rule :any, value:string) => {return this.checkCodeIsExist(rule,value,this)},trigger:'blur'}],
+            name:[{required:true,validator:(rule :any, value:string) => {return this.checkNameIsExist(rule,value,this)},trigger:'blur'}],
         };
 
       /**
@@ -98,7 +98,6 @@
          * @param callback
          */
         private checkNameIsExist(rule :any, value:string,_this:any):any{
-          debugger;
           if (!value || value.trim() === ''){
             return Promise.reject('请输入名称');
           }else if (value && value.trim() !== ''){
