@@ -1,6 +1,6 @@
 <template>
     <a-modal v-model:visible="addOrUpdateModal" width="800px" title="添加/修改角色" @cancel="cancel" centered @ok="addOrUpdate" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
-        <a-form ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
+        <a-form ref="addOrUpdateForm" name="custom-validation" :model="addOrUpdateModel" :rules="rules" >
             <a-row>
                 <a-col :span="12">
                     <a-form-item label="作用域" name="scope" ref="scope" >
@@ -49,8 +49,8 @@
         private scope:Array<any>=[];
         //校验规则
         private rules:any={
-            code:[{required:true,validator:this.checkCodeIsExist,trigger:'blur'}],
-            name:[{required:true,validator:this.checkNameIsExist,trigger:'blur'}],
+            code:[{required:true,validator:(rule :any, value:string) => {this.checkCodeIsExist(rule,value,this)},trigger:'blur'}],
+            name:[{required:true,validator:(rule :any, value:string) => {this.checkNameIsExist(rule,value,this)},trigger:'blur'}],
         };
 
       /**
@@ -67,8 +67,7 @@
          * @param value
          * @param callback
          */
-        private checkCodeIsExist(rule :any, value:string):any{
-          const _this:any =this;
+        private checkCodeIsExist(rule :any, value:string,_this:any):any{
           if (!value || value.trim() === ''){
             return Promise.reject('请输入编码');
           }else if (value && value.trim() !== ''){
@@ -98,12 +97,12 @@
          * @param value
          * @param callback
          */
-        private checkNameIsExist(rule :any, value:string):any{
-          const _this:any =this;
+        private checkNameIsExist(rule :any, value:string,_this:any):any{
+          debugger;
           if (!value || value.trim() === ''){
             return Promise.reject('请输入名称');
           }else if (value && value.trim() !== ''){
-            axios.get("/lion-upms-console-restful/role/console/check/name/exist",{params:{"name": this.addOrUpdateModel.name,"id":_this.addOrUpdateModel.id}})
+            axios.get("/lion-upms-console-restful/role/console/check/name/exist",{params:{"name": _this.addOrUpdateModel.name,"id":_this.addOrUpdateModel.id}})
             .then((data)=> {
               if (Object(data).status !== 200){
                 return Promise.reject('异常错误！请检查');
