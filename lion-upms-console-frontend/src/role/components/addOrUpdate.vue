@@ -58,7 +58,8 @@
        * @private
        */
         private cancel():void {
-          this.addOrUpdateModel={};
+          (this.$refs.addOrUpdateForm as any).clearValidate();
+          (this.$refs.addOrUpdateForm as any).resetFields();
         }
 
         /**
@@ -125,31 +126,32 @@
          * 提交数据
          */
         private addOrUpdate():void{
-            (this.$refs.addOrUpdateForm as any).validate((validate: boolean) => {
-                if (validate) {
-                    if (this.addOrUpdateModel.id){
-                        axios.put("/lion-upms-console-restful/role/console/update",this.addOrUpdateModel)
-                        .then((data) =>{
-                            if (Object(data).status === 200){
-                                message.success(Object(data).message);
-                                this.success();
-                            }
-                        }).catch((fail)=>{
-                        }).finally(()=>{
-                        })
-                    }else {
-                        axios.post("/lion-upms-console-restful/role/console/add",this.addOrUpdateModel)
-                        .then((data) =>{
-                            if (Object(data).status === 200){
-                                message.success(Object(data).message);
-                                this.success();
-                            }
-                        }).catch((fail)=>{
-                        }).finally(()=>{
-                        })
-                    }
-                }
-            });
+            // (this.$refs.addOrUpdateForm as any).validate((validate: boolean) => {
+            //     if (validate) {
+            //         if (this.addOrUpdateModel.id){
+            //             axios.put("/lion-upms-console-restful/role/console/update",this.addOrUpdateModel)
+            //             .then((data) =>{
+            //                 if (Object(data).status === 200){
+            //                     message.success(Object(data).message);
+            //                     this.success();
+            //                 }
+            //             }).catch((fail)=>{
+            //             }).finally(()=>{
+            //             })
+            //         }else {
+            //             axios.post("/lion-upms-console-restful/role/console/add",this.addOrUpdateModel)
+            //             .then((data) =>{
+            //                 if (Object(data).status === 200){
+            //                     message.success(Object(data).message);
+            //                     this.success();
+            //                 }
+            //             }).catch((fail)=>{
+            //             }).finally(()=>{
+            //             })
+            //         }
+            //     }
+            // });
+          let validate = (this.$refs.addOrUpdateForm as any).validate();
         }
 
         /**

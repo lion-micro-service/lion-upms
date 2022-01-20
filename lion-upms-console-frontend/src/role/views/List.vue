@@ -182,9 +182,11 @@
       public mounted() {
           axios.get("/lion-common-console-restful/enum/console/to/select", {params: {"enumClass": "com.lion.upms.entity.common.enums.Scope"}})
           .then((data) => {
+
               this.scope = data.data;
-              (this.$refs.addOrUpdate as any).scope=data.data;
-              (this.$refs.addOrUpdate as any).addOrUpdateModel.scope="CONSOLE";
+
+              // (this.$refs.addOrUpdate as any).scope=data.data;
+              // (this.$refs.addOrUpdate as any).addOrUpdateModel.scope="CONSOLE";
               this.search();
           })
           .catch(fail => {
@@ -205,9 +207,10 @@
        * 弹出新增窗口
        */
       private add():void{
-          const child = (this.$refs.addOrUpdate as any);
-          child.addOrUpdateModel.scope=this.searchModel.scope;
-          child.addOrUpdateModal=true;
+        const child = (this.$refs.addOrUpdate as any);
+        child.scope=this.scope;
+        child.addOrUpdateModel.scope=this.searchModel.scope;
+        child.addOrUpdateModal=true;
       }
 
       /**
@@ -331,7 +334,7 @@
     .ant-card >>> .ant-card-body{
       padding-bottom: 0px;
     }
-    .ant-card >>> .ant-table{
-      width: calc(100% - 5px);
-    }
+    /*.ant-card >>> .ant-table{*/
+    /*  width: calc(100% - 5px);*/
+    /*}*/
 </style>
