@@ -1,6 +1,6 @@
 <template>
     <a-card class="card" :bordered="false">
-        <a-form layout="inline" ref="form" :model="addModel" :rules="rules" >
+        <a-form ref="addOrUpdateForm" :model="addModel" :rules="rules" >
             <a-row >
                 <a-col :span="8">
                     <a-form-item label="登陆账号" name="username" ref="username" >
@@ -59,9 +59,20 @@
             <a-row >
                 <a-col :span="24" style="text-align:center;">
                     <a-form-item >
-                        <a-button style="margin-left: 5px;" v-bind:disabled="saveButtonDisabled" type="primary" icon="save" @click="save()">保存</a-button>
-                        <a-button style="margin-left: 5px;" v-bind:disabled="resetDisabled" type="dashed" icon="undo" @click="reset()">重置</a-button>
-                        <a-button style="margin-left: 5px;" icon="rollback" @click="back()">返回</a-button>
+                      <a-space :size="size">
+                        <a-button type="primary" v-bind:disabled="saveButtonDisabled" @click="save()">
+                          <template #icon><SaveOutlined /></template>
+                          保存
+                        </a-button>
+                        <a-button type="dashed" v-bind:disabled="resetDisabled" @click="reset()">
+                          <template #icon><UndoOutlined /></template>
+                          重置
+                        </a-button>
+                        <a-button type="danger"  @click="back">
+                          <template #icon><RollbackOutlined /></template>
+                          返回
+                        </a-button>
+                      </a-space>
                     </a-form-item>
                 </a-col>
             </a-row>
@@ -75,13 +86,17 @@
 
 <script lang="ts">
     import {Options, Vue} from 'vue-property-decorator';
+    import { useRoute, useRouter } from 'vue-router'
+    import { RollbackOutlined,SaveOutlined,UndoOutlined} from '@ant-design/icons-vue';
     import axios from "@lion/lion-frontend-core/src/network/axios";
     import { message } from 'ant-design-vue'
     import moment from 'moment';
     import 'moment/locale/zh-cn';
     let md5 = require('md5');
-    @Options({components:{}})
+    @Options({components:{RollbackOutlined,SaveOutlined,UndoOutlined}})
     export default class AddOrUpdate extends Vue{
+      private addOrUpdateForm:any = null;
+      private route:any = useRoute();
         //组件汉化
         private moment:any = moment;
         //保存按钮是否禁用（防多次点击）
@@ -106,10 +121,10 @@
         private previewImage:any="";
         //校验规则
         private rules:any={
-            username:[{required:true,validator:this.checkUsernameIsExist,trigger:'blur'}],
-            pass:[{required:true,validator:this.validatorPass, trigger:'blur'}],
-            confirmPass:[{required:true,validator:this.validatorConfimPass, trigger:'blur'}],
-            email:[{validator:this.checkEmailIsExist, trigger:'blur'}]
+            username:[{required:true,validator:(rule :any, value:string) => {return this.checkUsernameIsExist(rule,value,this)},trigger:'blur'}],
+            pass:[{required:true,validator:(rule :any, value:string,) => {return this.validatorPass(rule,value,this)}, trigger:'blur'}],
+            confirmPass:[{required:true,validator:(rule :any, value:string) => {return this.validatorConfimPass(rule,value,this)}, trigger:'blur'}],
+            email:[{validator:(rule :any, value:string) => {return this.checkEmailIsExist(rule,value,this)}, trigger:'blur'}]
         };
 
         /**
@@ -118,35 +133,32 @@
          * @param value
          * @param callback
          */
-        private checkUsernameIsExist(rule :any, value:string, callback:any):void{
-            const id = this.$route.query.id;
-            if(id){
-                callback();
-                return;
-            }
-            if (!value || value.trim() === ''){
-                callback(new Error('请输入登陆账号'));
-                return;
-            }else if (value && value.trim() !== ''){
-                axios.get("/lion-upms-console-restful/user/console/check/username/exist",{params:{"username":this.addModel.username}})
-                    .then((data)=> {
-                        if (Object(data).status !== 200){
-                            callback(new Error('异常错误！请检查'));
-                            return;
-                        }
-                        if (data.data) {
-                            callback(new Error('该账号已存在'));
-                        }else {
-                            callback();
-                        }
-                    })
-                    .catch(fail => {
-                    })
-                    .finally(()=>{
-                    });
-                return;
-            }
-            callback();
+        private async checkUsernameIsExist(rule :any, value:string, _this:any){
+          let promise:any=null;
+          const id = _this.route.query.id;
+          if(id){
+            return  Promise.resolve();
+          }
+          if (!value || value.trim() === ''){
+            promise = Promise.reject('请输入登陆账号');
+          }else if (value && value.trim() !== ''){
+            await axios.get("/lion-upms-console-restful/user/console/check/username/exist",{params:{"username":_this.addModel.username}})
+              .then((data)=> {
+                  if (Object(data).status !== 200){
+                    promise = Promise.reject('异常错误！请检查');
+                  }
+                  if (data.data) {
+                    promise = Promise.reject('该账号已存在');
+                  }else {
+                    promise = Promise.resolve();
+                  }
+              })
+              .catch(fail => {
+              })
+              .finally(()=>{
+              });
+          }
+          return promise;
         }
 
         /**
@@ -155,28 +167,29 @@
          * @param value
          * @param callback
          */
-        private checkEmailIsExist(rule :any, value:string, callback:any):void{
-            const id = this.$route.query.id;
-            if (value && value.trim() !== ''){
-                axios.get("/lion-upms-console-restful/user/console/check/email/exist",{params:{email:value,id:id}})
-                .then((data)=>{
-                    if (Object(data).status !== 200){
-                        callback(new Error('异常错误！请检查'));
-                        return;
-                    }
-                    if (data.data){
-                        callback(new Error('该邮箱已存在'));
-                    }else {
-                        callback();
-                    }
-                }).catch(error=>{
+        private async checkEmailIsExist(rule :any, value:string, _this:any){
+          let promise:any=null;
+          const id = _this.route.query.id;
+          if (value && value.trim() !== ''){
+            await axios.get("/lion-upms-console-restful/user/console/check/email/exist",{params:{email:value,id:id}})
+              .then((data)=>{
+                  if (Object(data).status !== 200){
+                    promise = Promise.reject('异常错误！请检查');
+                  }
+                  if (data.data){
+                    promise = Promise.reject('该邮箱已存在');
+                  }else {
+                    promise = Promise.resolve();
+                  }
+              }).catch(error=>{
 
-                }).finally(()=>{
+              }).finally(()=>{
 
-                })
-            }else{
-                callback();
-            }
+              })
+          }else{
+            promise = Promise.resolve();
+          }
+          return promise;
         }
 
         /**
@@ -185,20 +198,20 @@
          * @param value
          * @param callback
          */
-        private validatorPass(rule :any, value:string, callback:any):void{
-            const id = this.$route.query.id;
-            if(id){
-                callback();
-                return;
+        private validatorPass(rule :any, value:string, _this:any):any{
+          const id = _this.route.query.id;
+
+          if(id){
+            return Promise.resolve();
+          }
+          if (!value || value.trim() === ''){
+            return Promise.reject("请输入密码");
+          }else{
+            if (_this.addModel.confirmPass && _this.addModel.confirmPass.trim() !== ''){
+              _this.addOrUpdateForm.validateFields("confirmPass");
             }
-            if (!value || value.trim() === ''){
-                callback(new Error('请输入密码'));
-            }else{
-                if (this.addModel.confirmPass && this.addModel.confirmPass.trim() !== ''){
-                    (this.$refs.form as any).validateField("confirmPass");
-                }
-                callback();
-            }
+            return Promise.resolve();
+          }
         }
 
         /**
@@ -207,31 +220,31 @@
          * @param value
          * @param callback
          */
-        private validatorConfimPass(rule :any, value:string, callback:any):void{
-            const id = this.$route.query.id;
-            if(id){
-                callback();
-                return;
-            }
-            if (!value || value.trim() === '' ){
-                callback(new Error("请输入确认密码！"));
-            }else if (this.addModel.pass !== this.addModel.confirmPass){
-                callback(new Error("两次输入的密码不一致！"));
-            }
-            callback();
+        private validatorConfimPass(rule :any, value:string, _this:any):any{
+          const id = _this.route.query.id;
+          if(id){
+            return Promise.resolve();
+          }
+          if (!value || value.trim() === '' ){
+            return Promise.reject("请输入确认密码！")
+          }else if (this.addModel.pass !== _this.addModel.confirmPass){
+            return Promise.reject("两次输入的密码不一致！")
+          }
+          return Promise.resolve();
         }
 
         /**
          * 组件挂载后触发的事件
          */
         public mounted():void{
-            const id = this.$route.query.id;
+            const id = this.route.query.id;
+            this.addOrUpdateForm = this.$refs.addOrUpdateForm;
             if (id){
                 this.usernameDisabled=true;
                 this.passDisabled = true;
                 this.confirmPassDisabled = true;
                 this.resetDisabled = true;
-                this.getUserInfo(String(this.$route.query.id));
+                this.getUserInfo(String(this.route.query.id));
             }
         }
 
@@ -264,35 +277,33 @@
          * 保存
          */
         private save():void{
-            (this.$refs.form as any).validate((validate: boolean) => {
-                if (validate) {
-                    this.saveButtonDisabled=true;
-                    const id = this.$route.query.id;
-                    if(id){
-                        this.addModel.id=id;
-                        axios.put("/lion-upms-console-restful/user/console/update",this.addModel)
-                        .then((data) =>{
-                            if (Object(data).status === 200){
-                                message.success(Object(data).message);
-                            }
-                        }).catch((fail)=>{
-                        }).finally(()=>{
-                            this.saveButtonDisabled=false;
-                        })
-                    }else{
-                        this.addModel.password = md5(this.addModel.pass);
-                        axios.post("/lion-upms-console-restful/user/console/add",this.addModel)
-                        .then((data) =>{
-                            if (Object(data).status === 200){
-                                message.success(Object(data).message);
-                            }
-                        }).catch((fail)=>{
-                        }).finally(()=>{
-                            this.saveButtonDisabled=false;
-                        })
+          (this.$refs.addOrUpdateForm as any).validate().then(()=>{
+            this.saveButtonDisabled=true;
+            const id = this.route.query.id;
+            if(id){
+              this.addModel.id=id;
+              axios.put("/lion-upms-console-restful/user/console/update",this.addModel)
+                  .then((data) =>{
+                    if (Object(data).status === 200){
+                      message.success(Object(data).message);
                     }
-                }
-            });
+                  }).catch((fail)=>{
+              }).finally(()=>{
+                this.saveButtonDisabled=false;
+              })
+            }else{
+              this.addModel.password = md5(this.addModel.pass);
+              axios.post("/lion-upms-console-restful/user/console/add",this.addModel)
+                  .then((data) =>{
+                    if (Object(data).status === 200){
+                      message.success(Object(data).message);
+                    }
+                  }).catch((fail)=>{
+              }).finally(()=>{
+                this.saveButtonDisabled=false;
+              })
+            }
+          }).catch(fail=>{}).finally(()=>{})
         }
 
         /**
@@ -354,7 +365,7 @@
          * 重置所有输入框
          */
         private reset():void{
-            (this.$refs.form as any).resetFields();
+            (this.$refs.addOrUpdateForm as any).resetFields();
             this.addModel = {};
         }
     }
@@ -367,7 +378,7 @@
     .ant-form-item{
         width: 100%;
     }
-    .ant-row >>> .ant-form-item-control-wrapper{
+    .ant-row >>> .ant-form-item-control{
         width: calc(100% - 80px);
     }
 

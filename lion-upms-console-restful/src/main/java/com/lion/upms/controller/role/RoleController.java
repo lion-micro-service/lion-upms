@@ -98,18 +98,21 @@ public class RoleController extends BaseControllerImpl implements BaseController
 
     @ApiOperation(value = "检查名称是否存在",notes = "检查名称是否存在")
     @GetMapping("/check/name/exist")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<Boolean> checkNameIsExist(@NotBlank(message = "名称不能为空") String name,@ApiParam(value = "新增时不需要传,修改需要传") Long id){
         return ResultData.instance().setData(roleService.checkNameIsExist(name, id));
     }
 
     @ApiOperation(value = "检查编码是否存在",notes = "检查编码是否存在")
     @GetMapping("/check/code/exist")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<Boolean> checkCodeIsExist(@NotBlank(message = "名称不能为空") String code,@ApiParam(value = "新增时不需要传,修改需要传") Long id){
         return ResultData.instance().setData(roleService.checkCodeIsExist(code, id));
     }
 
     @ApiOperation(value = "根据id获取详情",notes = "根据id获取详情")
     @GetMapping("/details")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<Role> details(@NotNull(message = "id不能为空") Long id){
         return ResultData.instance().setData(roleService.findById(id));
     }
@@ -132,6 +135,7 @@ public class RoleController extends BaseControllerImpl implements BaseController
 
     @ApiOperation(value = "获取资源树形结构（角色配置专用）",notes = "获取资源树形结构（角色配置专用）")
     @GetMapping("/resources/tree")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<List<RoleResourcesTreeVo>> roleResourcesTree(@RequestParam(name = "scope",defaultValue = "CONSOLE") Scope scope){
         return ResultData.instance().setData(roleService.roleResources(scope));
     }

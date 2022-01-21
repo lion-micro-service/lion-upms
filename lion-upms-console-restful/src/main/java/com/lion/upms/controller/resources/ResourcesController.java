@@ -40,6 +40,7 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
 
     @GetMapping("/menu")
     @ApiOperation(value = "菜单栏",notes = "菜单栏")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<List<ResourcesTreeVo>> frontMenu(){
         Long userId = CurrentUserUtil.getCurrentUserId();
         List<Long> resourcesId = resourcesService.findAllResourcesId(userId);
@@ -47,7 +48,7 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
     }
 
     @GetMapping("/list/tree")
-    @PreAuthorize("hasAnyAuthority('SYSTEM_SETTINGS_RESOURCES_LIST,SYSTEM_SETTINGS_ROLE_RESOURCES')")
+    @PreAuthorize("hasAnyAuthority('SYSTEM_SETTINGS_RESOURCES_LIST','SYSTEM_SETTINGS_ROLE_RESOURCES')")
     @ApiOperation(value = "资源树形列表",notes = "资源树形列表")
     public IResultData<List<ResourcesTreeVo>> listTree(@RequestParam(value = "scope",defaultValue = "CONSOLE") Scope scope){
         return ResultData.instance().setData(resourcesService.listTree(scope));
@@ -55,18 +56,21 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
 
     @GetMapping("/check/code/exist")
     @ApiOperation(value = "判断编码是否存在",notes = "判断编码是否存在")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<Boolean> checkCodeIsExist(@NotBlank(message = "编码不能为空") String code,@ApiParam(value = "修改需要传id，新增则不需要传") Long id){
         return ResultData.instance().setData(resourcesService.checkCodeIsExist(code.trim().toUpperCase(), id));
     }
 
     @ApiOperation(value = "判断名称是否存在",notes = "判断名称是否存在")
     @GetMapping("/check/name/exist")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<Boolean> checkNameIsExist(@NotBlank(message = "名称不能为空") String name,@ApiParam(value = "修改需要传id，新增则不需要传") Long id, @NotNull(message = "父节点id不能为空")Long parentId){
         return ResultData.instance().setData(resourcesService.checkNameIsExist(name, id,parentId));
     }
 
     @GetMapping("/check/url/exist")
     @ApiOperation(value = "判断url是否存在",notes = "判断url是否存在")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<Boolean> checkUrlIsExist(@NotBlank(message = "url不能为空") String url,@ApiParam(value = "修改需要传id，新增则不需要传")  Long id){
         return ResultData.instance().setData(resourcesService.checkUrlIsExist(url, id));
     }
@@ -93,6 +97,7 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
 
     @ApiOperation(value = "根据id获取详情",notes = "根据id获取详情")
     @GetMapping("/details")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<Resources> details(@NotNull(message = "id不能为空") Long id){
         Resources resources = this.resourcesService.findById(id);
         return ResultData.instance().setData(resources);

@@ -1,5 +1,5 @@
 <template>
-    <a-modal destroyOnClose style="max-height: 500px;" v-model:value="modal" width="800px"  title="角色职位" centered @ok="save" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
+    <a-modal destroyOnClose style="max-height: 500px;" v-model:visible="modal" width="800px"  title="角色职位" centered @ok="save" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
 
     </a-modal>
 </template>

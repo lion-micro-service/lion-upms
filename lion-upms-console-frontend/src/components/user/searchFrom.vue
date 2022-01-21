@@ -1,5 +1,5 @@
 <template>
-    <a-form layout="inline" ref="from" :model="searchModel" >
+    <a-form ref="from" :model="searchModel" >
         <a-row>
             <a-col :span="6">
                 <a-form-item label="登陆账号" name="username" ref="username" >
@@ -121,7 +121,7 @@
     .ant-form-item{
         width: 100%;
     }
-    .ant-row >>> .ant-form-item-control-wrapper{
+    .ant-row >>> .ant-form-item-control{
         width: calc(100% - 80px);
     }
 </style>

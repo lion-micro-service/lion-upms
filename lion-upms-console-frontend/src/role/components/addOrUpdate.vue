@@ -49,8 +49,8 @@
         private scope:Array<any>=[];
         //校验规则
         private rules:any={
-            code:[{required:true,validator:(rule :any, value:string) => {return this.checkCodeIsExist(rule,value,this)},trigger:'blur'}],
-            name:[{required:true,validator:(rule :any, value:string) => {return this.checkNameIsExist(rule,value,this)},trigger:'blur'}],
+            code:[{required:true,validator:(rule :any, value:string) => {return this.checkCodeIsExist(rule,value,this)},trigger:'blur',whitespace:true}],
+            name:[{required:true,validator:(rule :any, value:string) => {return this.checkNameIsExist(rule,value,this)},trigger:'blur',whitespace:true}],
         };
 
       /**
@@ -68,28 +68,29 @@
          * @param value
          * @param callback
          */
-        private checkCodeIsExist(rule :any, value:string,_this:any):any{
+        private async checkCodeIsExist(rule :any, value:string,_this:any){
+          let promise:any = null;
           if (!value || value.trim() === ''){
-            return Promise.reject('请输入编码');
+            promise = Promise.reject('请输入编码');
           }else if (value && value.trim() !== ''){
-            axios.get("/lion-upms-console-restful/role/console/check/code/exist",{params:{"code":_this.addOrUpdateModel.code,"id":_this.addOrUpdateModel.id}})
+            await axios.get("/lion-upms-console-restful/role/console/check/code/exist",{params:{"code":_this.addOrUpdateModel.code,"id":_this.addOrUpdateModel.id}})
             .then((data)=> {
               if (Object(data).status !== 200){
-                return Promise.reject('异常错误！请检查');
+                promise = Promise.reject('异常错误！请检查');
               }
               if (data.data) {
-                return Promise.reject('编码已存在');
+                promise = Promise.reject('编码已存在');
               }else {
-                return Promise.resolve();
+                promise = Promise.resolve();
               }
             })
             .catch(fail => {
+              promise = Promise.reject('异常错误！请检查');
             })
             .finally(()=>{
             });
-            return Promise.resolve();
           }
-          return Promise.resolve();
+          return promise;
         }
 
         /**
@@ -98,60 +99,58 @@
          * @param value
          * @param callback
          */
-        private checkNameIsExist(rule :any, value:string,_this:any):any{
+        private async checkNameIsExist(rule :any, value:string,_this:any){
+          let promise:any = null;
           if (!value || value.trim() === ''){
-            return Promise.reject('请输入名称');
+            promise = Promise.reject('请输入名称');
           }else if (value && value.trim() !== ''){
-            axios.get("/lion-upms-console-restful/role/console/check/name/exist",{params:{"name": _this.addOrUpdateModel.name,"id":_this.addOrUpdateModel.id}})
+            await axios.get("/lion-upms-console-restful/role/console/check/name/exist",{params:{"name": _this.addOrUpdateModel.name,"id":_this.addOrUpdateModel.id}})
             .then((data)=> {
               if (Object(data).status !== 200){
-                return Promise.reject('异常错误！请检查');
+                promise = Promise.reject('异常错误！请检查');
               }
               if (data.data) {
-                return Promise.reject('名称已存在');
+                promise = Promise.reject('名称已存在');
               }else {
-                return Promise.resolve();
+                promise = Promise.resolve();
               }
             })
             .catch(fail => {
+              promise = Promise.reject('异常错误！请检查');
             })
             .finally(()=>{
             });
-            return Promise.resolve();
           }
-          return Promise.resolve();
+          return promise;
         }
 
         /**
          * 提交数据
          */
         private addOrUpdate():void{
-            // (this.$refs.addOrUpdateForm as any).validate((validate: boolean) => {
-            //     if (validate) {
-            //         if (this.addOrUpdateModel.id){
-            //             axios.put("/lion-upms-console-restful/role/console/update",this.addOrUpdateModel)
-            //             .then((data) =>{
-            //                 if (Object(data).status === 200){
-            //                     message.success(Object(data).message);
-            //                     this.success();
-            //                 }
-            //             }).catch((fail)=>{
-            //             }).finally(()=>{
-            //             })
-            //         }else {
-            //             axios.post("/lion-upms-console-restful/role/console/add",this.addOrUpdateModel)
-            //             .then((data) =>{
-            //                 if (Object(data).status === 200){
-            //                     message.success(Object(data).message);
-            //                     this.success();
-            //                 }
-            //             }).catch((fail)=>{
-            //             }).finally(()=>{
-            //             })
-            //         }
-            //     }
-            // });
-          let validate = (this.$refs.addOrUpdateForm as any).validate();
+          (this.$refs.addOrUpdateForm as any).validate().then(()=>{
+            if (this.addOrUpdateModel.id){
+              axios.put("/lion-upms-console-restful/role/console/update",this.addOrUpdateModel)
+                  .then((data) =>{
+                    if (Object(data).status === 200){
+                      message.success(Object(data).message);
+                      this.success();
+                    }
+                  }).catch((fail)=>{
+              }).finally(()=>{
+              })
+            }else {
+              axios.post("/lion-upms-console-restful/role/console/add",this.addOrUpdateModel)
+                  .then((data) =>{
+                    if (Object(data).status === 200){
+                      message.success(Object(data).message);
+                      this.success();
+                    }
+                  }).catch((fail)=>{
+              }).finally(()=>{
+              })
+            }
+          }).catch(fail=>{}).finally(()=>{})
         }
 
         /**
@@ -182,9 +181,7 @@
          */
         private success():void{
             this.addOrUpdateModal = false;
-            const _scope=this.addOrUpdateModel.scope;
-            this.addOrUpdateModel={};
-            this.addOrUpdateModel.scope=_scope;
+            this.cancel();
             (this.$parent as any).search();
         }
 

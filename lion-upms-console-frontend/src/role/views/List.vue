@@ -124,15 +124,10 @@
       ];
       //列表分页参数定义
       private paginationProps:any={
-          showSizeChanger: false,
-          showQuickJumper: true,
-          hideOnSinglePage:false,
-          pageSizeOptions:['10', '20', '30', '40','50','60','70','80','90','100'],
-          total:0,
-          current:1,
-          pageSize:10,
-          showSizeChange: (pageNumber:number, pageSize: number)=>this.paginationSearch(pageNumber,pageSize),
-          onChange: (pageNumber:number, pageSize: number)=>this.paginationSearch(pageNumber,pageSize),
+        current: 1,
+        pageSize: 10,
+        showSizeChange: (pageNumber:number, pageSize: number)=>this.paginationSearch(pageNumber,pageSize),
+        onChange: (pageNumber:number, pageSize: number)=>this.paginationSearch(pageNumber,pageSize),
       };
 
       /**
@@ -334,7 +329,4 @@
     .ant-card >>> .ant-card-body{
       padding-bottom: 0px;
     }
-    /*.ant-card >>> .ant-table{*/
-    /*  width: calc(100% - 5px);*/
-    /*}*/
 </style>

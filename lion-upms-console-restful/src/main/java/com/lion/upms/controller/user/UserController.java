@@ -54,7 +54,7 @@ public class UserController extends BaseControllerImpl implements BaseController
 
 
     @GetMapping("/list")
-    @PreAuthorize("hasAnyAuthority('SYSTEM_SETTINGS_USER_LIST,SYSTEM_SETTINGS_ROLE_USER,SYSTEM_SETTINGS_DEPARTMENT_USER')")
+    @PreAuthorize("hasAnyAuthority('SYSTEM_SETTINGS_USER_LIST','SYSTEM_SETTINGS_ROLE_USER','SYSTEM_SETTINGS_DEPARTMENT_USER')")
     @ApiOperation(value = "用户列表",notes = "用户列表")
     public IPageResultData<List<UserListVo>> list(LionPage lionPage, UserSearchDto userSearchDto) {
         return (IPageResultData) userService.list(lionPage, userSearchDto);
@@ -62,6 +62,7 @@ public class UserController extends BaseControllerImpl implements BaseController
 
     @GetMapping("/current/user/details")
     @ApiOperation(value = "获取当前登陆用户详情",notes = "获取当前登陆用户详情")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<UserVo> currentUserDetails(){
         Long id = CurrentUserUtil.getCurrentUserId();
         return ResultData.instance().setData(convertVo(userService.findById(id)));
@@ -69,6 +70,7 @@ public class UserController extends BaseControllerImpl implements BaseController
 
     @ApiOperation(value = "修改当前登陆用户密码",notes = "修改当前登陆用户密码")
     @PutMapping("/current/user/passwod/update")
+    @PreAuthorize("isAuthenticated()")
     public IResultData currentUserPasswordUpdate(@ApiParam(value ="新密码" ,name = "password",required = true,type = "string") @RequestParam  @NotBlank(message = "密码不能为空")String password){
         Long id = CurrentUserUtil.getCurrentUserId();
         User user = userService.findById(id);
@@ -79,6 +81,7 @@ public class UserController extends BaseControllerImpl implements BaseController
 
     @ApiOperation(value = "修改当前登陆用户头像",notes = "修改当前登陆用户头像")
     @PutMapping("/current/user/head/portrait/update")
+    @PreAuthorize("isAuthenticated()")
     public IResultData currentUserHeadPortraitUpdate(Long headPortrait){
         Long id = CurrentUserUtil.getCurrentUserId();
         if (Objects.nonNull(id)){
@@ -89,6 +92,7 @@ public class UserController extends BaseControllerImpl implements BaseController
 
     @GetMapping("/details")
     @ApiOperation(value = "获取用户详情",notes = "获取用户详情")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<UserVo> details(@NotNull(message = "id不能为空")Long id){
         User user = userService.findById(id);
         return ResultData.instance().setData(convertVo(user));
@@ -96,12 +100,14 @@ public class UserController extends BaseControllerImpl implements BaseController
 
     @GetMapping("/check/username/exist")
     @ApiOperation(value = "判断登陆张号是否存在",notes = "判断登陆张号是否存在")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<Boolean> checkUsernameIsExist(@NotBlank(message = "登陆账号不能为空!") String username){
         return ResultData.instance().setData(Objects.nonNull( userService.findUser(username)));
     }
 
     @GetMapping("/check/email/exist")
     @ApiOperation(value = "判断邮箱是否存在",notes = "判断邮箱是否存在")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<Boolean> checkEmailIsExist(@NotBlank(message = "邮箱不能为空！") String email,@ApiParam(value = "修改需要传id，新增则不需要传") Long id){
         return ResultData.instance().setData(userService.checkEmailIsExist(email, id));
     }

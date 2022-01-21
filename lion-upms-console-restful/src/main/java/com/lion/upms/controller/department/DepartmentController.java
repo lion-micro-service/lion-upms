@@ -51,6 +51,7 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
 
     @GetMapping("/check/name/exist")
     @ApiOperation(value = "根据父节点ID检查同节点的名称是否存在",notes = "根据父节点ID检查同节点的名称是否存在")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<Boolean> checkNameIsExist(@NotNull(message = "部门父节点id不能为空")Long parentId, @NotBlank(message = "名称不能为空")String name,@ApiParam(value = "修改需要传id，新增则不需要传") Long id){
         return ResultData.instance().setData(departmentService.checkNameIsExist(parentId, name,id));
     }
@@ -73,6 +74,7 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
 
     @ApiOperation(value = "获取部门详情",notes = "获取部门详情")
     @GetMapping("/details")
+    @PreAuthorize("isAuthenticated()")
     public IResultData<Department> details(@NotNull(message = "id不能为空")Long id){
         Department department = this.departmentService.findById(id);
         return ResultData.instance().setData(department);

@@ -1,10 +1,13 @@
 <template>
-    <a-modal destroyOnClose v-model:value="modal" width="1000px"  title="角色用户" centered @ok="save" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
+    <a-modal destroyOnClose v-model:visible="modal" width="1000px"  title="角色用户" centered @ok="save" :maskClosable="maskClosable" cancelText="关闭" okText="保存">
         <search-from ref="searchFrom">
             <a-row >
                 <a-col :span="24" style="text-align:right;">
                     <a-form-item>
-                        <a-button type="primary" icon="search" @click="()=>{this.searchModel.pageNumber =1;search()}">查询</a-button>
+                      <a-button type="primary"  @click="()=>{this.searchModel.pageNumber =1;search()}">
+                        <template #icon><SearchOutlined /></template>
+                        查询
+                      </a-button>
                     </a-form-item>
                 </a-col>
             </a-row>
@@ -16,13 +19,14 @@
 
 <script lang="ts">
     import { Options, Vue} from 'vue-property-decorator';
+    import { SearchOutlined } from '@ant-design/icons-vue';
     import axios from "@lion/lion-frontend-core/src/network/axios";
     import { message } from 'ant-design-vue';
     import SearchFrom from "@/components/user/searchFrom.vue";
     import List from "@/components/user/list.vue";
     import qs from "qs";
     @Options({
-        components: {List, SearchFrom}
+        components: {List, SearchFrom,SearchOutlined}
     })
     export default class roleUser extends Vue{
         //是否显示窗口

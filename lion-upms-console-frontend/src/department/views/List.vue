@@ -1,11 +1,14 @@
 <template>
     <div>
         <a-card class="card" style="border-bottom-width: 5px;" >
-            <a-form layout="inline" ref="from" >
+            <a-form ref="from" >
                 <a-row >
                     <a-col :span="24" style="text-align:right;">
                         <a-form-item>
-                            <a-button type="primary" v-if="getAuthority('SYSTEM_SETTINGS_DEPARTMENT_ADD')" icon="file-add" @click="add(0)" >新增</a-button>
+                          <a-button type="primary" v-if="getAuthority('SYSTEM_SETTINGS_RESOURCES_LIST')" @click="add(0)">
+                            <template #icon><PlusOutlined /></template>
+                            新增
+                          </a-button>
                         </a-form-item>
                     </a-col>
                 </a-row>
@@ -14,17 +17,33 @@
 
         <a-card class="card" :bordered="false">
             <a-table bordered rowKey="id" :columns="columns" :dataSource="listData" :loading="loading" :pagination="false">
-                <span slot="action" slot-scope="text, record">
-                    <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_DEPARTMENT_UPDATE')" icon="edit" size="small" @click="getDetails(record.id)">修改</a-button>
-                    <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_DEPARTMENT_ADD')" icon="file-add" size="small" @click="add(record.id)">新增子部门</a-button>
-                    <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_DEPARTMENT_USER')" icon="user" size="small" @click="departmentUser(record.id)">用户</a-button>
-                    <a-button style="margin-left: 5px;" v-if="getAuthority('SYSTEM_SETTINGS_DEPARTMENT_DELETE')" type="danger" icon="delete" size="small" @click='del(record.id)'>删除</a-button>
-                </span>
+              <template #bodyCell="{ column ,record}">
+                <template v-if="column.key === 'operation'">
+                  <a-space :size="size">
+                    <a-button size="small" v-if="getAuthority('SYSTEM_SETTINGS_DEPARTMENT_UPDATE')" @click="getDetails(record.id)">
+                      <template #icon><EditOutlined /></template>
+                      修改
+                    </a-button>
+                    <a-button size="small" v-if="getAuthority('SYSTEM_SETTINGS_DEPARTMENT_ADD')" @click="add(record.id)">
+                      <template #icon><PlusOutlined /></template>
+                      新增子部门
+                    </a-button>
+                    <a-button size="small" v-if="getAuthority('SYSTEM_SETTINGS_DEPARTMENT_USER')" @click="departmentUser(record.id)">
+                      <template #icon><UserOutlined /></template>
+                      用户
+                    </a-button>
+                    <a-button size="small" type="danger" v-if="getAuthority('SYSTEM_SETTINGS_DEPARTMENT_DELETE')" @click="del(record.id)">
+                      <template #icon><DeleteOutlined /></template>
+                      删除
+                    </a-button>
+                  </a-space>
+                </template>
+              </template>
             </a-table>
         </a-card>
 
-        <a-modal destroyOnClose v-model:value="modal" width="800px" title="添加/修改部门" :maskClosable="maskClosable"  centered @ok="addOrUpdate" cancelText="关闭" okText="保存">
-            <a-form layout="inline" ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
+        <a-modal destroyOnClose v-model:visible="modal" width="800px" title="添加/修改部门" :maskClosable="maskClosable"  centered @ok="addOrUpdate" cancelText="关闭" okText="保存">
+            <a-form ref="addOrUpdateForm" :model="addOrUpdateModel" :rules="rules" >
                 <a-row>
                     <a-col :span="24">
                         <a-form-item label="名称" name="name" ref="name" >
@@ -48,13 +67,14 @@
 
 <script lang="ts">
     import {Options,  Vue} from 'vue-property-decorator';
+    import { SearchOutlined,PlusOutlined,DeleteOutlined,EditOutlined,SecurityScanOutlined,UserOutlined } from '@ant-design/icons-vue';
     import axios from "@lion/lion-frontend-core/src/network/axios";
     import { message,Modal } from 'ant-design-vue';
     import qs from "qs";
     import departmentUser from "@/department/components/departmentUser.vue";
     import authority from "@lion/lion-frontend-core/src/security/authority";
     @Options({
-        components: {departmentUser}
+        components: {departmentUser,SearchOutlined,PlusOutlined,DeleteOutlined,EditOutlined,SecurityScanOutlined,UserOutlined }
     })
     export default class List extends Vue{
         //列表数据
@@ -71,39 +91,37 @@
         };
         //校验规则
         private rules:any={
-            name:[{required:true,validator:this.checkNameIsExist,trigger:'blur'}],
+            name:[{required:true,validator:(rule :any, value:string) =>{return this.checkNameIsExist(rule,value,this)},trigger:'blur'}],
         };
         //检查名称是否存在
-        private checkNameIsExist(rule :any, value:string, callback:any):void{
-            if (!value || value.trim() === ''){
-                callback(new Error('请输入名称'));
-                return;
-            }else if (value && value.trim() !== ''){
-                axios.get("/lion-upms-console-restful/department/console/check/name/exist",{params:{"name":this.addOrUpdateModel.name,"id":this.addOrUpdateModel.id,"parentId":this.addOrUpdateModel.parentId}})
-                .then((data)=> {
-                    if (Object(data).status !== 200){
-                        callback(new Error('异常错误！请检查'));
-                        return;
-                    }
-                    if (data.data) {
-                        callback(new Error('名称在同节点已存在'));
-                    }else {
-                        callback();
-                    }
-                })
-                .catch(fail => {
-                })
-                .finally(()=>{
-                });
-                return;
-            }
-            callback();
+        private async checkNameIsExist(rule :any, value:string, _this:any){
+          let promise:any = null;
+          if (!value || value.trim() === ''){
+            return Promise.reject("请输入名称");
+          }else if (value && value.trim() !== ''){
+            await axios.get("/lion-upms-console-restful/department/console/check/name/exist",{params:{"name":_this.addOrUpdateModel.name,"id":_this.addOrUpdateModel.id,"parentId":_this.addOrUpdateModel.parentId}})
+            .then((data)=> {
+              if (Object(data).status !== 200){
+                promise = Promise.reject("异常错误！请检查")
+              }
+              if (data.data) {
+                promise = Promise.reject("名称在同节点已存在")
+              }else {
+                promise = Promise.resolve();
+              }
+            })
+            .catch(fail => {
+            })
+            .finally(()=>{
+            });
+          }
+          return promise;
         }
         //表格列定义
         private columns :Array<any> = [
             { title: '名称', dataIndex: 'name', key: 'name' },
             { title: '备注', dataIndex: 'remark', key: 'remark',width: '300px'},
-            { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 380,}
+            { title: '操作', key: 'operation',width: 380,}
         ];
 
         /**
@@ -273,7 +291,10 @@
     .ant-form-item{
         width: 100%;
     }
-    .ant-row >>> .ant-form-item-control-wrapper{
+    .ant-row >>> .ant-form-item-control{
         width: calc(100% - 50px);
+    }
+    .ant-card >>> .ant-card-body{
+      padding-bottom: 0px;
     }
 </style>
