@@ -48,28 +48,28 @@
 
         <a-card v-if="getAuthority('SYSTEM_SETTINGS_ROLE_LIST')" :bordered="false">
             <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" rowKey="id" :columns="columns" :dataSource="listData" :loading="loading" :pagination="paginationProps">
-                <template #bodyCell="{ column ,record}">
-                  <template v-if="column.key === 'operation'">
-                    <a-space :size="size">
-                      <a-button size="small" v-if="getAuthority('SYSTEM_SETTINGS_ROLE_UPDATE')" @click="edit(record.id)">
-                        <template #icon><EditOutlined /></template>
-                        修改
-                      </a-button>
-                      <a-button size="small" v-if="getAuthority('SYSTEM_SETTINGS_ROLE_RESOURCES')" @click="roleResources(record.id)">
-                        <template #icon><SecurityScanOutlined /></template>
-                        权限
-                      </a-button>
-                      <a-button size="small" v-if="getAuthority('SYSTEM_SETTINGS_ROLE_USER')" @click="roleUser(record.id)">
-                        <template #icon><UserOutlined /></template>
-                        用户
-                      </a-button>
-                      <a-button size="small" type="danger" v-if="!record.isDefault && getAuthority('SYSTEM_SETTINGS_ROLE_UPDATE')" @click="del(record.id)">
-                        <template #icon><DeleteOutlined /></template>
-                        删除
-                      </a-button>
-                    </a-space>
-                  </template>
+              <template #bodyCell="{ column ,record}">
+                <template v-if="column.key === 'operation'">
+                  <a-space :size="size">
+                    <a-button size="small" v-if="getAuthority('SYSTEM_SETTINGS_ROLE_UPDATE')" @click="edit(record.id)">
+                      <template #icon><EditOutlined /></template>
+                      修改
+                    </a-button>
+                    <a-button size="small" v-if="getAuthority('SYSTEM_SETTINGS_ROLE_RESOURCES')" @click="roleResources(record.id)">
+                      <template #icon><SecurityScanOutlined /></template>
+                      权限
+                    </a-button>
+                    <a-button size="small" v-if="getAuthority('SYSTEM_SETTINGS_ROLE_USER')" @click="roleUser(record.id)">
+                      <template #icon><UserOutlined /></template>
+                      用户
+                    </a-button>
+                    <a-button size="small" type="danger" v-if="!record.isDefault && getAuthority('SYSTEM_SETTINGS_ROLE_UPDATE')" @click="del(record.id)">
+                      <template #icon><DeleteOutlined /></template>
+                      删除
+                    </a-button>
+                  </a-space>
                 </template>
+              </template>
             </a-table>
         </a-card>
 

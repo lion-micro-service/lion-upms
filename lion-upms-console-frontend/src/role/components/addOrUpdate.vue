@@ -57,10 +57,10 @@
        * 关闭弹窗时清空数据，以免数据污染
        * @private
        */
-        private cancel():void {
-          (this.$refs.addOrUpdateForm as any).clearValidate();
-          (this.$refs.addOrUpdateForm as any).resetFields();
-        }
+      private cancel():void {
+        (this.$refs.addOrUpdateForm as any).clearValidate();
+        (this.$refs.addOrUpdateForm as any).resetFields();
+      }
 
         /**
          * 检查编码是否存在
