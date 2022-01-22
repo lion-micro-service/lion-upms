@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Optional;
 
 /**
  * @description: 用户Service
@@ -32,14 +33,14 @@ public interface UserService extends BaseService<User> {
      * @param username 登陆用户名
      * @return
      */
-    User findUser(@NotBlank(message = "用户登陆账号不能为空") String username);
+    Optional<User> findUser(@NotBlank(message = "用户登陆账号不能为空") String username);
 
     /**
      * 根据email查找用户
      * @param email
      * @return
      */
-    User findUserByEmail(@NotBlank(message = "邮箱不能为空")String email);
+    Optional<User> findUserByEmail(@NotBlank(message = "邮箱不能为空")String email);
 
     /**
      * 检查邮箱是否已存在

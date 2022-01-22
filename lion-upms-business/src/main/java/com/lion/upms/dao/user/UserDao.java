@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author mr.liu
@@ -24,14 +25,14 @@ public interface UserDao extends BaseDao<User> ,UserDaoEx {
      * @param username
      * @return
      */
-    User findFirstByUsername(String username);
+    Optional<User> findFirstByUsername(String username);
 
     /**
      * 根据email查找用户
      * @param email
      * @return
      */
-    User findFirstByEmail(String email);
+    Optional<User> findFirstByEmail(String email);
 
     /**
      * 根据id删除(不能删除admin和superadmin)

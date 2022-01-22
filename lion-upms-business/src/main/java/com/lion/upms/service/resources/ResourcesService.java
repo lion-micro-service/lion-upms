@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author mr.liu
@@ -42,21 +43,21 @@ public interface ResourcesService extends BaseService<Resources> {
      * @param code
      * @return
      */
-    public Resources findByCode(String code);
+    public Optional<Resources> findByCode(String code);
 
     /**
      * 根据名称查询资源
      * @param name
      * @return
      */
-    public Resources findByName(String name);
+    public Optional<Resources> findByName(String name);
 
     /**
      * 根据url查询资源
      * @param url
      * @return
      */
-    public Resources findByUrl(String url);
+    public Optional<Resources> findByUrl(String url);
 
     /**
      * 检查code是否存在

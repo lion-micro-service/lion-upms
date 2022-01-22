@@ -117,22 +117,22 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public User findUser(String username) {
+    public Optional<User> findUser(String username) {
         return userDao.findFirstByUsername(username);
     }
 
     @Override
-    public User findUserByEmail(String email) {
+    public Optional<User> findUserByEmail(String email) {
         return userDao.findFirstByEmail(email);
     }
 
     @Override
     public boolean checkEmailIsExist(String email, Long id) {
-        User user = findUserByEmail(email);
-        if (Objects.isNull(user)){
+        Optional<User> optional = findUserByEmail(email);
+        if (!optional.isPresent()){
             return false;
         }else {
-            if (Objects.equals(user.getId(),id)){
+            if (Objects.equals(optional.get().getId(),id)){
                 return false;
             }else {
                 return true;
@@ -165,9 +165,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
      */
     private void checkUserExist(User entity){
         if (Objects.nonNull(entity.getUsername()) && StringUtils.hasText(entity.getUsername())){
-            User user = findUser(entity.getUsername());
-            if (Objects.nonNull(user) && Objects.nonNull(entity.getId())){
-                if (!Objects.equals(user.getId(),entity.getId())){
+            Optional<User> optional = findUser(entity.getUsername());
+            if (optional.isPresent() && Objects.nonNull(entity.getId())){
+                if (!Objects.equals(optional.get().getId(),entity.getId())){
                     new BusinessException("该用户已存在");
                 }
             }

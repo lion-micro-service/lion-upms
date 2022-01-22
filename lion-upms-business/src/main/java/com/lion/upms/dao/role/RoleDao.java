@@ -5,6 +5,7 @@ import com.lion.upms.entity.role.Role;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author mr.liu
@@ -19,14 +20,14 @@ public interface RoleDao extends BaseDao<Role> ,RoleDaoEx {
      * @param name
      * @return
      */
-    public Role findFirstByName(String name);
+    public Optional<Role> findFirstByName(String name);
 
     /**
      * 根据编码查询角色
      * @param code
      * @return
      */
-    public Role findFirstByCode(String code);
+    public Optional<Role> findFirstByCode(String code);
 
     /**
      * 根据用户id查询角色

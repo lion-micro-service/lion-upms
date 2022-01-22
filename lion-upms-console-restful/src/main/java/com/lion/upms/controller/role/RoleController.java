@@ -35,6 +35,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author mr.liu
@@ -114,7 +115,12 @@ public class RoleController extends BaseControllerImpl implements BaseController
     @GetMapping("/details")
     @PreAuthorize("isAuthenticated()")
     public IResultData<Role> details(@NotNull(message = "id不能为空") Long id){
-        return ResultData.instance().setData(roleService.findById(id));
+        Optional<Role> optional = roleService.findById(id);
+        if (!optional.isPresent()) {
+            return ResultData.instance();
+        }
+        Role role = optional.get();
+        return ResultData.instance().setData(role);
     }
 
     @ApiOperation(value = "删除角色",notes = "删除角色")
@@ -122,12 +128,16 @@ public class RoleController extends BaseControllerImpl implements BaseController
     @PreAuthorize("hasAuthority('SYSTEM_SETTINGS_ROLE_DELETE')")
     public IResultData delete(@NotNull(message = "id不能为空") @RequestParam(value = "id",required = false) @ApiParam(value = "数组(id=1&id=2)") List<Long> id){
         id.forEach(i->{
-            Role role = this.roleService.findById(i);
-            if (Objects.nonNull(role) && !role.getIsDefault()) {
-                roleService.deleteById(i);
-                roleUserService.deleteByRoleId(i);
-                roleResourcesService.deleteByRoleId(i);
+            Optional<Role> optional = roleService.findById(i);
+            if (optional.isPresent()) {
+                Role role = optional.get();
+                if (!role.getIsDefault()) {
+                    roleService.deleteById(i);
+                    roleUserService.deleteByRoleId(i);
+                    roleResourcesService.deleteByRoleId(i);
+                }
             }
+
         });
         ResultData resultData = ResultData.instance();
         return resultData;

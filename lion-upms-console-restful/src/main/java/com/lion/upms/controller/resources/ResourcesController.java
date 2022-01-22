@@ -5,6 +5,7 @@ import com.lion.core.ResultData;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.Validator;
+import com.lion.upms.entity.department.Department;
 import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.common.enums.Scope;
 import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author mr.liu
@@ -99,7 +101,11 @@ public class ResourcesController extends BaseControllerImpl implements BaseContr
     @GetMapping("/details")
     @PreAuthorize("isAuthenticated()")
     public IResultData<Resources> details(@NotNull(message = "id不能为空") Long id){
-        Resources resources = this.resourcesService.findById(id);
+        Optional<Resources> optional = resourcesService.findById(id);
+        if (!optional.isPresent()) {
+            return ResultData.instance();
+        }
+        Resources resources = optional.get();
         return ResultData.instance().setData(resources);
     }
 

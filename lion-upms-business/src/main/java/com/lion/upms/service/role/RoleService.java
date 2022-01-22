@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author mr.liu
@@ -24,14 +25,14 @@ public interface RoleService extends BaseService<Role> {
      * @param name
      * @return
      */
-    public Role findByName(String name);
+    public Optional<Role> findByName(String name);
 
     /**
      * 根据编码查询角色
      * @param code
      * @return
      */
-    public Role findByCode(String code);
+    public Optional<Role> findByCode(String code);
 
     /**
      * 根据用户id查询用户的角色

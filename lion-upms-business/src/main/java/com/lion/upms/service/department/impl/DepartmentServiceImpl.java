@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author mr.liu
@@ -42,17 +43,17 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
     }
 
     @Override
-    public Department findDepartment(Long parentId, String name) {
+    public Optional<Department> findDepartment(Long parentId, String name) {
         return departmentDao.findFirstByParentIdAndName(parentId, name);
     }
 
     @Override
     public Boolean checkNameIsExist(Long parentId, String name,Long id) {
-        Department department = findDepartment(parentId, name);
-        if (Objects.isNull(department)){
+        Optional<Department> optional = findDepartment(parentId, name);
+        if (!optional.isPresent()){
             return false;
         }
-        if (Objects.nonNull(id) && department.getId().equals(id)){
+        if (Objects.nonNull(id) && optional.get().getId().equals(id)){
             return false;
         }
         return true;
@@ -60,7 +61,11 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
 
     @Override
     public void delete(Long id) {
-        Department department = this.findById(id);
+        Optional<Department> optional = this.findById(id);
+        if (!optional.isPresent()) {
+            return ;
+        }
+        Department department = optional.get();
         List<Department> list = new ArrayList<Department>();
         list.add(department);
         findAllChilder(department.getId(),list);
@@ -79,7 +84,11 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
 
     @Override
     public DepartmentTreeVo findTreeParentDepartment(Long parentId) {
-        Department department = this.findById(parentId);
+        Optional<Department> optional = this.findById(parentId);
+        if (!optional.isPresent()) {
+            return null;
+        }
+        Department department = optional.get();
         return findTreeParentDepartment(findTreeParentDepartment(department));
     }
 
@@ -168,7 +177,11 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
      * @return
      */
     private DepartmentTreeVo findTreeParentDepartment(Long parentId,DepartmentTreeVo departmentTreeVo) {
-        Department department = this.findById(parentId);
+        Optional<Department> optional = this.findById(parentId);
+        if (!optional.isPresent()) {
+            return null;
+        }
+        Department department = optional.get();
         return findTreeParentDepartment(findTreeParentDepartment(department));
     }
 
@@ -192,7 +205,11 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
      * @param list
      */
     private void findAllParentDepartment(Long parentId,List<Department> list){
-        Department department = this.findById(parentId);
+        Optional<Department> optional = this.findById(parentId);
+        if (!optional.isPresent()) {
+            return ;
+        }
+        Department department = optional.get();
         if (Objects.nonNull(department)) {
             list.add(department);
             findAllParentDepartment(department.getParentId(), list);

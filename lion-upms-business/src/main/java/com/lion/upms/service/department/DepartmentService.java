@@ -6,6 +6,7 @@ import com.lion.upms.entity.department.vo.DepartmentTreeVo;
 import javassist.runtime.Inner;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author mr.liu
@@ -27,7 +28,7 @@ public interface DepartmentService extends BaseService<Department> {
      * @param name
      * @return
      */
-    public Department findDepartment(Long parentId,String name);
+    public Optional<Department> findDepartment(Long parentId, String name);
 
     /**
      * 根据父节点ID检查同节点的名称是否存在

@@ -22,6 +22,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author mr.liu
@@ -39,12 +40,12 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
     private ResourcesService resourcesService;
 
     @Override
-    public Role findByName(String name) {
+    public Optional<Role> findByName(String name) {
         return roleDao.findFirstByName(name);
     }
 
     @Override
-    public Role findByCode(String code) {
+    public Optional<Role> findByCode(String code) {
         return roleDao.findFirstByCode(code);
     }
 
@@ -68,11 +69,11 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
 
     @Override
     public boolean checkNameIsExist(String name, Long id) {
-        Role role = roleDao.findFirstByName(name);
-        if (Objects.isNull(role)){
+        Optional<Role> optional = roleDao.findFirstByName(name);
+        if (!optional.isPresent()){
             return false;
         }
-        if (Objects.nonNull(id) && role.getId().equals(id)){
+        if (Objects.nonNull(id) && optional.get().getId().equals(id)){
             return false;
         }
         return true;
@@ -80,11 +81,11 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
 
     @Override
     public boolean checkCodeIsExist(String code, Long id) {
-        Role role = roleDao.findFirstByCode(code);
-        if (Objects.isNull(role)){
+        Optional<Role> optional = roleDao.findFirstByCode(code);
+        if (!optional.isPresent()){
             return false;
         }
-        if (Objects.nonNull(id) && role.getId().equals(id)){
+        if (Objects.nonNull(id) && optional.get().getId().equals(id)){
             return false;
         }
         return true;

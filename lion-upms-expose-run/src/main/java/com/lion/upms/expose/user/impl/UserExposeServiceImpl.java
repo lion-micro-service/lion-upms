@@ -6,6 +6,8 @@ import com.lion.upms.service.user.UserService;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
+
 /**
  * @description: 用户远程RPC接口暴露实现
  * @author: Mr.Liu
@@ -23,7 +25,7 @@ public class UserExposeServiceImpl extends com.lion.core.service.impl.BaseServic
     }
 
     @Override
-    public User findUser(String username) {
+    public Optional<User> findUser(String username) {
         return userService.findUser(username);
     }
 }

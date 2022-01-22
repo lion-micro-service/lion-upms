@@ -4,6 +4,7 @@ import com.lion.core.persistence.curd.BaseDao;
 import com.lion.upms.entity.department.Department;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author mr.liu
@@ -27,5 +28,5 @@ public interface DepartmentDao extends BaseDao<Department> ,DepartmentDaoEx {
      * @param name
      * @return
      */
-    public Department findFirstByParentIdAndName(Long parentId,String name);
+    public Optional<Department> findFirstByParentIdAndName(Long parentId, String name);
 }

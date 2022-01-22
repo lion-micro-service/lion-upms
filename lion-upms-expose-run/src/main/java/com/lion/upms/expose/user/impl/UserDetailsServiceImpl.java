@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @description: 用户接口暴露实现
@@ -34,10 +35,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user =  userService.findUser(username);
-        if (Objects.isNull(user)){
+        Optional<User> optional =  userService.findUser(username);
+        if (!optional.isPresent()){
             return null;
         }
+        User user = optional.get();
         LionUserDetails userDetails = new LionUserDetails(user.getUsername(),user.getPassword(),getUserGrantedAuthority(user.getId()));
         return userDetails;
     }

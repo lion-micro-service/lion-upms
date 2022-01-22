@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author mr.liu
@@ -59,7 +60,7 @@ public interface ResourcesDao extends BaseDao<Resources> ,ResourcesDaoEx {
      * @param code
      * @return
      */
-    public Resources findFirstByCode(String code);
+    public Optional<Resources> findFirstByCode(String code);
 
     /**
      * 根据名称和父节点ID查询资源
@@ -67,14 +68,14 @@ public interface ResourcesDao extends BaseDao<Resources> ,ResourcesDaoEx {
      * @param parentId
      * @return
      */
-    public Resources findFirstByNameAndParentId(String name,Long parentId);
+    public Optional<Resources> findFirstByNameAndParentId(String name,Long parentId);
 
     /**
      * 根据名称查询资源
      * @param name
      * @return
      */
-    public Resources findFirstByName(String name);
+    public Optional<Resources> findFirstByName(String name);
 
 
     /**
@@ -82,7 +83,7 @@ public interface ResourcesDao extends BaseDao<Resources> ,ResourcesDaoEx {
      * @param url
      * @return
      */
-    public Resources findFirstByUrl(String url);
+    public Optional<Resources> findFirstByUrl(String url);
 
     /**
      * 根据id查询父节点

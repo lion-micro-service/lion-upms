@@ -9,6 +9,7 @@ import com.lion.core.common.enums.ResultDataState;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.Validator;
+import com.lion.upms.entity.role.Role;
 import com.lion.upms.entity.user.User;
 import com.lion.upms.entity.user.dto.UserAddDto;
 import com.lion.upms.entity.user.dto.UserSearchDto;
@@ -30,6 +31,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author mr.liu
@@ -65,7 +67,12 @@ public class UserController extends BaseControllerImpl implements BaseController
     @PreAuthorize("isAuthenticated()")
     public IResultData<UserVo> currentUserDetails(){
         Long id = CurrentUserUtil.getCurrentUserId();
-        return ResultData.instance().setData(convertVo(userService.findById(id)));
+        Optional<User> optional = userService.findById(id);
+        if (!optional.isPresent()) {
+            return ResultData.instance();
+        }
+        User user = optional.get();
+        return ResultData.instance().setData(convertVo(user));
     }
 
     @ApiOperation(value = "修改当前登陆用户密码",notes = "修改当前登陆用户密码")
@@ -73,7 +80,11 @@ public class UserController extends BaseControllerImpl implements BaseController
     @PreAuthorize("isAuthenticated()")
     public IResultData currentUserPasswordUpdate(@ApiParam(value ="新密码" ,name = "password",required = true,type = "string") @RequestParam  @NotBlank(message = "密码不能为空")String password){
         Long id = CurrentUserUtil.getCurrentUserId();
-        User user = userService.findById(id);
+        Optional<User> optional = userService.findById(id);
+        if (!optional.isPresent()) {
+            return ResultData.instance();
+        }
+        User user = optional.get();
         user.setPassword(passwordEncoder.encode(password));
         userService.update(user);
         return ResultData.instance();
@@ -94,7 +105,11 @@ public class UserController extends BaseControllerImpl implements BaseController
     @ApiOperation(value = "获取用户详情",notes = "获取用户详情")
     @PreAuthorize("isAuthenticated()")
     public IResultData<UserVo> details(@NotNull(message = "id不能为空")Long id){
-        User user = userService.findById(id);
+        Optional<User> optional = userService.findById(id);
+        if (!optional.isPresent()) {
+            return ResultData.instance();
+        }
+        User user = optional.get();
         return ResultData.instance().setData(convertVo(user));
     }
 

@@ -9,6 +9,7 @@ import com.lion.upms.entity.department.Department;
 import com.lion.upms.entity.department.DepartmentUser;
 import com.lion.upms.entity.department.dto.AddDepartmentUserDto;
 import com.lion.upms.entity.department.vo.DepartmentTreeVo;
+import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.service.department.DepartmentService;
 import com.lion.upms.service.department.DepartmentUserService;
 import io.swagger.annotations.*;
@@ -23,6 +24,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author mr.liu
@@ -76,7 +78,11 @@ public class DepartmentController extends BaseControllerImpl implements BaseCont
     @GetMapping("/details")
     @PreAuthorize("isAuthenticated()")
     public IResultData<Department> details(@NotNull(message = "id不能为空")Long id){
-        Department department = this.departmentService.findById(id);
+        Optional<Department> optional = departmentService.findById(id);
+        if (!optional.isPresent()) {
+            return ResultData.instance();
+        }
+        Department department = optional.get();
         return ResultData.instance().setData(department);
     }
 

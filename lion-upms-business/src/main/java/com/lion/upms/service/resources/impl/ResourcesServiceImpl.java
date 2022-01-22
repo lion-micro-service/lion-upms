@@ -6,6 +6,7 @@ import com.lion.core.service.impl.BaseServiceImpl;
 import com.lion.exception.BusinessException;
 import com.lion.upms.dao.resources.ResourcesDao;
 import com.lion.upms.dao.role.RoleResourcesDao;
+import com.lion.upms.entity.department.Department;
 import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.common.enums.Scope;
 import com.lion.upms.entity.resources.enums.Type;
@@ -20,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author mr.liu
@@ -63,17 +61,17 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
     }
 
     @Override
-    public Resources findByCode(String code) {
+    public Optional<Resources> findByCode(String code) {
         return resourcesDao.findFirstByCode(code);
     }
 
     @Override
-    public Resources findByName(String name) {
+    public Optional<Resources> findByName(String name) {
         return resourcesDao.findFirstByName(name);
     }
 
     @Override
-    public Resources findByUrl(String url) {
+    public Optional<Resources> findByUrl(String url) {
         return resourcesDao.findFirstByUrl(url);
     }
 
@@ -82,11 +80,11 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
         if (!StringUtils.hasText(code)){
             return false;
         }
-        Resources resources = resourcesDao.findFirstByCode(code);
-        if (Objects.isNull(resources)){
+        Optional<Resources> optional = resourcesDao.findFirstByCode(code);
+        if (!optional.isPresent()){
             return false;
         }
-        if (Objects.nonNull(id) && resources.getId().equals(id)){
+        if (Objects.nonNull(id) && optional.get().getId().equals(id)){
             return false;
         }
         return true;
@@ -97,11 +95,11 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
         if (!StringUtils.hasText(name)){
             return false;
         }
-        Resources resources = resourcesDao.findFirstByNameAndParentId(name,parentId);
-        if (Objects.isNull(resources)){
+        Optional<Resources> optional = resourcesDao.findFirstByNameAndParentId(name,parentId);
+        if (!optional.isPresent()){
             return false;
         }
-        if (Objects.nonNull(id) && resources.getId().equals(id)){
+        if (Objects.nonNull(id) && optional.get().getId().equals(id)){
             return false;
         }
         return true;
@@ -112,11 +110,11 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
         if (!StringUtils.hasText(url)){
             return false;
         }
-        Resources resources = resourcesDao.findFirstByUrl(url);
-        if (Objects.isNull(resources)){
+        Optional<Resources> optional = resourcesDao.findFirstByUrl(url);
+        if (!optional.isPresent()){
             return false;
         }
-        if (Objects.nonNull(id) && resources.getId().equals(id)){
+        if (Objects.nonNull(id) && optional.get().getId().equals(id)){
             return false;
         }
         return true;
@@ -153,12 +151,13 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
     @Override
     @Transactional
     public Boolean delete(Long id) {
-        Resources resources = this.findById(id);
+        Optional<Resources> optional = this.findById(id);
+        if (!optional.isPresent()) {
+            return false;
+        }
+        Resources resources = optional.get();
         if (Objects.nonNull(resources) && resources.getIsDefault()){
             new BusinessException("该资源不能删除（默认资源）");
-        }
-        if (Objects.isNull(resources)){
-            return false;
         }
         ResourcesTreeVo resourcesTreeVo = new ResourcesTreeVo();
         BeanUtils.copyProperties(resources, resourcesTreeVo);
