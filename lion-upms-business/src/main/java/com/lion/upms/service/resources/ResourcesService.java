@@ -43,14 +43,14 @@ public interface ResourcesService extends BaseService<Resources> {
      * @param code
      * @return
      */
-    public Optional<Resources> findByCode(String code);
+    public java.util.Optional<Resources> findByCode(String code);
 
     /**
      * 根据名称查询资源
      * @param name
      * @return
      */
-    public Optional<Resources> findByName(String name);
+    public java.util.Optional<Resources> findByName(String name);
 
     /**
      * 根据url查询资源

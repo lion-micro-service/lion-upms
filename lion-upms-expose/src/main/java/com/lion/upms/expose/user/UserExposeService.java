@@ -2,7 +2,7 @@ package com.lion.upms.expose.user;
 
 import com.lion.upms.entity.user.User;
 
-import java.util.Optional;
+import com.lion.core.Optional;
 
 /**
  * @description: 用户远程RPC暴露接口

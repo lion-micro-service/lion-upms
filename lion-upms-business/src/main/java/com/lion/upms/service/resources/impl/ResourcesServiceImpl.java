@@ -1,19 +1,17 @@
 package com.lion.upms.service.resources.impl;
 
 import com.lion.core.LionPage;
+import com.lion.core.Optional;
 import com.lion.core.common.enums.State;
 import com.lion.core.service.impl.BaseServiceImpl;
 import com.lion.exception.BusinessException;
 import com.lion.upms.dao.resources.ResourcesDao;
 import com.lion.upms.dao.role.RoleResourcesDao;
-import com.lion.upms.entity.department.Department;
-import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.common.enums.Scope;
+import com.lion.upms.entity.resources.Resources;
 import com.lion.upms.entity.resources.enums.Type;
 import com.lion.upms.entity.resources.vo.ResourcesTreeVo;
 import com.lion.upms.service.resources.ResourcesService;
-import com.lion.upms.service.role.RoleResourcesService;
-import com.lion.utils.CurrentUserUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -61,17 +59,17 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
     }
 
     @Override
-    public Optional<Resources> findByCode(String code) {
+    public java.util.Optional<Resources> findByCode(String code) {
         return resourcesDao.findFirstByCode(code);
     }
 
     @Override
-    public Optional<Resources> findByName(String name) {
+    public java.util.Optional<Resources> findByName(String name) {
         return resourcesDao.findFirstByName(name);
     }
 
     @Override
-    public Optional<Resources> findByUrl(String url) {
+    public java.util.Optional<Resources> findByUrl(String url) {
         return resourcesDao.findFirstByUrl(url);
     }
 
@@ -80,7 +78,7 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
         if (!StringUtils.hasText(code)){
             return false;
         }
-        Optional<Resources> optional = resourcesDao.findFirstByCode(code);
+        java.util.Optional<Resources> optional = resourcesDao.findFirstByCode(code);
         if (!optional.isPresent()){
             return false;
         }
@@ -95,7 +93,7 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
         if (!StringUtils.hasText(name)){
             return false;
         }
-        Optional<Resources> optional = resourcesDao.findFirstByNameAndParentId(name,parentId);
+        java.util.Optional<Resources> optional = resourcesDao.findFirstByNameAndParentId(name,parentId);
         if (!optional.isPresent()){
             return false;
         }
@@ -110,7 +108,7 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
         if (!StringUtils.hasText(url)){
             return false;
         }
-        Optional<Resources> optional = resourcesDao.findFirstByUrl(url);
+        java.util.Optional<Resources> optional = resourcesDao.findFirstByUrl(url);
         if (!optional.isPresent()){
             return false;
         }
@@ -151,7 +149,7 @@ public class ResourcesServiceImpl extends BaseServiceImpl<Resources> implements 
     @Override
     @Transactional
     public Boolean delete(Long id) {
-        Optional<Resources> optional = this.findById(id);
+        com.lion.core.Optional<Resources> optional = this.findById(id);
         if (!optional.isPresent()) {
             return false;
         }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import com.lion.core.Optional;
 
 /**
  * @author mr.liu
@@ -43,13 +43,13 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
     }
 
     @Override
-    public Optional<Department> findDepartment(Long parentId, String name) {
+    public java.util.Optional<Department> findDepartment(Long parentId, String name) {
         return departmentDao.findFirstByParentIdAndName(parentId, name);
     }
 
     @Override
     public Boolean checkNameIsExist(Long parentId, String name,Long id) {
-        Optional<Department> optional = findDepartment(parentId, name);
+        java.util.Optional<Department> optional = findDepartment(parentId, name);
         if (!optional.isPresent()){
             return false;
         }
@@ -61,7 +61,7 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department> implement
 
     @Override
     public void delete(Long id) {
-        Optional<Department> optional = this.findById(id);
+        com.lion.core.Optional<Department> optional = this.findById(id);
         if (!optional.isPresent()) {
             return ;
         }

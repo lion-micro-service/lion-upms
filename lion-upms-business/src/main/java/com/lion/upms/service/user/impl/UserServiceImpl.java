@@ -2,6 +2,7 @@ package com.lion.upms.service.user.impl;
 
 import com.lion.common.expose.parameter.ParameterExposeService;
 import com.lion.core.LionPage;
+import com.lion.core.Optional;
 import com.lion.core.PageResultData;
 import com.lion.core.ResultData;
 import com.lion.core.service.impl.BaseServiceImpl;
@@ -117,18 +118,18 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public Optional<User> findUser(String username) {
+    public com.lion.core.Optional<User> findUser(String username) {
         return userDao.findFirstByUsername(username);
     }
 
     @Override
-    public Optional<User> findUserByEmail(String email) {
+    public com.lion.core.Optional<User> findUserByEmail(String email) {
         return userDao.findFirstByEmail(email);
     }
 
     @Override
     public boolean checkEmailIsExist(String email, Long id) {
-        Optional<User> optional = findUserByEmail(email);
+        com.lion.core.Optional<User> optional = findUserByEmail(email);
         if (!optional.isPresent()){
             return false;
         }else {
