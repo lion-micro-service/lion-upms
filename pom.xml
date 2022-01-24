@@ -17,6 +17,7 @@
 		<java.version>17</java.version>
 		<starter.version>1.0.0-SNAPSHOT</starter.version>
 	</properties>
+
 	<modules>
 		<module>lion-upms-business</module>
 		<module>lion-upms-expose</module>
