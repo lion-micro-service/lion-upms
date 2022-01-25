@@ -8,7 +8,6 @@ import com.lion.upms.service.resources.ResourcesService;
 import com.lion.upms.service.user.UserService;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,8 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import com.lion.core.Optional;
+import java.util.Optional;
 
 /**
  * @description: 用户接口暴露实现

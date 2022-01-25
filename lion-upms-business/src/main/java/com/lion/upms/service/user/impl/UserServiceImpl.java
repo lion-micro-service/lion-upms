@@ -2,9 +2,6 @@ package com.lion.upms.service.user.impl;
 
 import com.lion.common.expose.parameter.ParameterExposeService;
 import com.lion.core.LionPage;
-import com.lion.core.Optional;
-import com.lion.core.PageResultData;
-import com.lion.core.ResultData;
 import com.lion.core.service.impl.BaseServiceImpl;
 import com.lion.exception.BusinessException;
 import com.lion.upms.dao.user.UserDao;
@@ -17,28 +14,16 @@ import com.lion.upms.service.department.DepartmentUserService;
 import com.lion.upms.service.role.RoleService;
 import com.lion.upms.service.role.RoleUserService;
 import com.lion.upms.service.user.UserService;
-import com.lion.utils.ValidatorExceptionUtil;
-import io.seata.core.model.ResourceManager;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 
 import javax.annotation.Resource;
-import javax.persistence.Id;
-import javax.validation.ConstraintViolation;
-import javax.validation.Valid;
-import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.*;
 
@@ -118,18 +103,18 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
     }
 
     @Override
-    public com.lion.core.Optional<User> findUser(String username) {
+    public Optional<User> findUser(String username) {
         return userDao.findFirstByUsername(username);
     }
 
     @Override
-    public com.lion.core.Optional<User> findUserByEmail(String email) {
+    public Optional<User> findUserByEmail(String email) {
         return userDao.findFirstByEmail(email);
     }
 
     @Override
     public boolean checkEmailIsExist(String email, Long id) {
-        com.lion.core.Optional<User> optional = findUserByEmail(email);
+        Optional<User> optional = findUserByEmail(email);
         if (!optional.isPresent()){
             return false;
         }else {

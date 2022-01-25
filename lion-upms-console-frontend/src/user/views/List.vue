@@ -45,6 +45,7 @@
     import {ref} from "vue";
     @Options({components:{searchFrom,list,SearchOutlined,PlusOutlined,DeleteOutlined,EditOutlined,SecurityScanOutlined,UserOutlined}})
     export default class List extends Vue{
+
       private size:any = ref(5);
       //组件是否已经挂载
       private isMounted:boolean=false;
