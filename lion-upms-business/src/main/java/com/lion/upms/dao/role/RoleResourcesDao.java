@@ -2,6 +2,8 @@ package com.lion.upms.dao.role;
 
 import com.lion.core.persistence.curd.BaseDao;
 import com.lion.upms.entity.role.RoleResources;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

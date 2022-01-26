@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @description:
@@ -23,7 +24,8 @@ public class CurrentUserExposeImpl implements ICurrentUser<User> {
 
     @Override
     public Map<String, Object> findUserToMap(String username) {
-        return BeanToMapUtil.transBeanToMap(userService.findUser(username)) ;
+        Optional optional = userService.findUser(username);
+        return BeanToMapUtil.transBeanToMap(optional.isPresent()?optional.get():null) ;
     }
 
 

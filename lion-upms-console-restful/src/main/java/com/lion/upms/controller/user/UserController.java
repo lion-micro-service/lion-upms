@@ -68,7 +68,7 @@ public class UserController extends BaseControllerImpl implements BaseController
     public IResultData<UserVo> currentUserDetails(){
         Long id = CurrentUserUtil.getCurrentUserId();
         Optional<User> optional = userService.findById(id);
-        if (!optional.isPresent()) {
+        if (optional.isEmpty()) {
             return ResultData.instance();
         }
         User user = optional.get();
