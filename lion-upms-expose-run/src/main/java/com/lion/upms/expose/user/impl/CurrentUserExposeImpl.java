@@ -1,9 +1,11 @@
 package com.lion.upms.expose.user.impl;
 
+import com.lion.common.expose.file.FileExposeService;
 import com.lion.core.ICurrentUser;
 import com.lion.upms.entity.user.User;
 import com.lion.upms.service.user.UserService;
 import com.lion.utils.BeanToMapUtil;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,7 +26,7 @@ public class CurrentUserExposeImpl implements ICurrentUser<User> {
 
     @Override
     public Map<String, Object> findUserToMap(String username) {
-        Optional optional = userService.findUser(username);
+        Optional<User> optional = userService.findUser(username);
         return BeanToMapUtil.transBeanToMap(optional.isPresent()?optional.get():null) ;
     }
 

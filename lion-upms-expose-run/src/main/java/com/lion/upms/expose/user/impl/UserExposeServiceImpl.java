@@ -1,9 +1,11 @@
 package com.lion.upms.expose.user.impl;
 
+import com.lion.common.expose.file.FileExposeService;
 import com.lion.core.Optional;
 import com.lion.upms.expose.user.UserExposeService;
 import com.lion.upms.entity.user.User;
 import com.lion.upms.service.user.UserService;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,6 +28,9 @@ public class UserExposeServiceImpl extends com.lion.core.service.impl.BaseServic
     @Override
     public Optional<User> findUser(String username) {
         java.util.Optional<User> optional = userService.findUser(username);
-        return Optional.of(optional.isPresent()?optional.get():null);
+        if (optional.isPresent()) {
+            return Optional.of(optional.get());
+        }
+        return Optional.empty();
     }
 }
