@@ -92,9 +92,11 @@
     import { message } from 'ant-design-vue'
     import moment from 'moment';
     import 'moment/locale/zh-cn';
+    import {ref} from "vue";
     let md5 = require('md5');
     @Options({components:{RollbackOutlined,SaveOutlined,UndoOutlined}})
     export default class AddOrUpdate extends Vue{
+      private size:any = ref(5);
       private addOrUpdateForm:any = null;
       private route:any = useRoute();
         //组件汉化
