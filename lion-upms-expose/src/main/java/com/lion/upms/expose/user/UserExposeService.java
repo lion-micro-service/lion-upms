@@ -2,6 +2,10 @@ package com.lion.upms.expose.user;
 
 import com.lion.core.Optional;
 import com.lion.upms.entity.user.User;
+import org.w3c.dom.stylesheets.LinkStyle;
+
+import java.util.List;
+
 /**
  * @description: 用户远程RPC暴露接口
  * @author: Mr.Liu
@@ -22,4 +26,12 @@ public interface UserExposeService extends com.lion.core.service.BaseService<Use
      * @return
      */
     public Optional<User> findUser(String username);
+
+    /**
+     * 根据id查询
+     * @param in
+     * @param notIn
+     * @return
+     */
+    public List<User> find(List<Long> in,List<Long> notIn);
 }

@@ -9,4 +9,5 @@ import com.lion.upms.entity.resources.Resources;
  * @date 2020/8/17上午11:09
  */
 public interface ResourcesExposeService extends com.lion.core.service.BaseService<Resources> {
+
 }

@@ -75,4 +75,21 @@ public class UserDaoImpl implements UserDaoEx {
         return (Page<UserListVo>) page;
     }
 
+    @Override
+    public List<User> find(List<Long> in, List<Long> notIn) {
+        StringBuilder sb = new StringBuilder();
+        Map<String, Object> searchParameter = new HashMap<String, Object>();
+        sb.append(" select u  from User u ");
+        sb.append(" where 1=1 ");
+        if (Objects.nonNull(in) && in.size()>0){
+            sb.append(" and u.id in :in ");
+            searchParameter.put("in",in);
+        }
+        if (Objects.nonNull(notIn) && notIn.size()>0){
+            sb.append(" and u.id not in :notIn ");
+            searchParameter.put("notIn",notIn);
+        }
+        return (List<User>) baseDao.findAll(sb.toString(),searchParameter);
+    }
+
 }
