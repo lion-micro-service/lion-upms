@@ -28,6 +28,13 @@ public interface UserExposeService extends com.lion.core.service.BaseService<Use
     public Optional<User> findUser(String username);
 
     /**
+     * 根据用户姓名查询
+     * @param name
+     * @return
+     */
+    public List<User> findByName(String name);
+
+    /**
      * 根据id查询
      * @param in
      * @param notIn

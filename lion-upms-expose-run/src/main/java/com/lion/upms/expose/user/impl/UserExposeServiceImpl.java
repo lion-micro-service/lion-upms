@@ -41,6 +41,11 @@ public class UserExposeServiceImpl extends com.lion.core.service.impl.BaseServic
     }
 
     @Override
+    public List<User> findByName(String name) {
+        return userDao.findByNameLike("%"+name+"%");
+    }
+
+    @Override
     public List<User> find(List<Long> in, List<Long> notIn) {
         return userDao.find(in,notIn);
     }

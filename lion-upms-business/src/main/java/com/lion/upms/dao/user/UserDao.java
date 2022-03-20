@@ -35,6 +35,13 @@ public interface UserDao extends BaseDao<User> ,UserDaoEx {
     Optional<User> findFirstByEmail(String email);
 
     /**
+     * 根据用户姓名查询
+     * @param name
+     * @return
+     */
+    List<User> findByNameLike(String name);
+
+    /**
      * 根据id删除(不能删除admin和superadmin)
      * @param id
      * @param usernames
