@@ -117,7 +117,7 @@ public class UserController extends BaseControllerImpl implements BaseController
     @ApiOperation(value = "判断登陆张号是否存在",notes = "判断登陆张号是否存在")
     @PreAuthorize("isAuthenticated()")
     public IResultData<Boolean> checkUsernameIsExist(@NotBlank(message = "登陆账号不能为空!") String username){
-        return ResultData.instance().setData(Objects.nonNull( userService.findUser(username)));
+        return ResultData.instance().setData(userService.findUser(username).isPresent());
     }
 
     @GetMapping("/check/email/exist")
