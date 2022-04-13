@@ -36,6 +36,11 @@
                 </a-col>
             </a-row>
             <a-row>
+              <a-col :span="8">
+                <a-form-item label="电话" name="phoneNumber" ref="phoneNumber" >
+                  <a-input-number  placeholder="请输入电话" v-model:value="addModel.phoneNumber" />
+                </a-form-item>
+              </a-col>
                 <a-col :span="8">
                     <a-form-item label="生日" name="birthday" ref="birthday" >
                         <a-date-picker placeholder="请输入生日" valueFormat="YYYY-MM-DD" v-model:value="addModel.birthday" />

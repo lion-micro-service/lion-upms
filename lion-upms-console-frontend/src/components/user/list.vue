@@ -49,6 +49,7 @@
         { title: '姓名', dataIndex: ['user','name'], key: 'name' },
         { title: '邮箱', dataIndex: ['user','email'], key: 'email'},
         { title: '年龄', dataIndex: ['user','age'], key: 'age' },
+        { title: '电话', dataIndex: ['user','phoneNumber'], key: 'phoneNumber' },
         { title: '生日', dataIndex: ['user','birthday'], key: 'birthday' },
         { title: '部门', key: 'department'},
         { title: '角色', key: 'role'},

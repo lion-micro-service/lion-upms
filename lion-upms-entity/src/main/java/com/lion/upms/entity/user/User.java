@@ -64,6 +64,11 @@ public class User extends BaseEntity {
     @Length(min = 0, max = 30, message = "邮箱地址不能超过{max}个字符", groups = {Validator.Insert.class, Validator.Update.class})
     private String email;
 
+    @Schema(description = "电话")
+    @Column(name = "phone_number")
+    @Length(min = 0, max = 30, message = "电话不能超过{max}个字符", groups = {Validator.Insert.class, Validator.Update.class})
+    private String phoneNumber;
+
     @Schema(description = "年龄")
     @Column(name = "age")
     @Min(value = 1 ,message = "年龄不能小于{value}岁", groups = {Validator.Insert.class, Validator.Update.class})
