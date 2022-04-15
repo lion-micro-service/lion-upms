@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author mr.liu
@@ -31,4 +32,6 @@ public interface UserDaoEx {
      * @return
      */
     public List<User> find(List<Long> in, List<Long> notIn);
+
+    public Optional<User> find(String username);
 }

@@ -104,7 +104,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public Optional<User> findUser(String username) {
-        return userDao.findFirstByUsername(username);
+        return userDao.find(username);
     }
 
     @Override

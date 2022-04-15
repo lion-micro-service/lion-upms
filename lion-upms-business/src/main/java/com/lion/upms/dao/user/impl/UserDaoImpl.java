@@ -1,21 +1,23 @@
 package com.lion.upms.dao.user.impl;
 
 import com.lion.core.persistence.curd.BaseDao;
+import com.lion.exception.BusinessException;
 import com.lion.upms.dao.role.RoleDao;
 import com.lion.upms.dao.user.UserDaoEx;
 import com.lion.upms.entity.role.Role;
 import com.lion.upms.entity.user.User;
 import com.lion.upms.entity.user.dto.UserSearchDto;
 import com.lion.upms.entity.user.vo.UserListVo;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.*;
 
 /**
  * @author mr.liu
@@ -29,7 +31,7 @@ public class UserDaoImpl implements UserDaoEx {
     private BaseDao<User> baseDao;
 
     @Autowired
-    private RoleDao roleDao;
+    private DataSource dataSource;
 
     @Override
     public Page<UserListVo> list(Pageable pageable, UserSearchDto userSearchDto) {
@@ -90,6 +92,18 @@ public class UserDaoImpl implements UserDaoEx {
             searchParameter.put("notIn",notIn);
         }
         return (List<User>) baseDao.findAll(sb.toString(),searchParameter);
+    }
+
+    @Override
+    public Optional<User> find(String username) {
+        QueryRunner queryRunner = new QueryRunner(dataSource);
+        try {
+            User user = queryRunner.query("select * from t_user where username = ? limit 0,1 ",new BeanHandler<User>(User.class),new String[]{username});
+            return Optional.ofNullable(user);
+        } catch (SQLException e) {
+            BusinessException.throwException("查询用户失败");
+        }
+        return Optional.empty();
     }
 
 }

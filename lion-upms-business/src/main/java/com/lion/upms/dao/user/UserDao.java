@@ -25,6 +25,7 @@ public interface UserDao extends BaseDao<User> ,UserDaoEx {
      * @param username
      * @return
      */
+    @Query(nativeQuery = true, value = "select * from t_user where username=:username limit 0,1")
     Optional<User> findFirstByUsername(String username);
 
     /**

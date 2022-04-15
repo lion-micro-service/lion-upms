@@ -27,7 +27,13 @@ public class CurrentUserExposeImpl implements ICurrentUser<User> {
     @Override
     public Map<String, Object> findUserToMap(String username) {
         Optional<User> optional = userService.findUser(username);
-        return BeanToMapUtil.transBeanToMap(optional.isPresent()?optional.get():null) ;
+        if (optional.isPresent()) {
+            User user = optional.get();
+            Map<String, Object> map = BeanToMapUtil.transBeanToMap(user);
+            map.put("tenantId",user.getTenantId());
+            return map;
+        }
+        return null;
     }
 
 

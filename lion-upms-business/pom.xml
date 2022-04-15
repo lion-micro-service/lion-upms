@@ -33,6 +33,9 @@
 			<artifactId>lion-common-expose</artifactId>
 			<version>${lion-common-expose}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>commons-dbutils</groupId>
+			<artifactId>commons-dbutils</artifactId>
+		</dependency>
     </dependencies>
 </project>
