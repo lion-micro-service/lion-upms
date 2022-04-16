@@ -30,7 +30,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.lion</groupId>
-			<artifactId>lion-expose-run-starter</artifactId>
+			<artifactId>lion-expose-impl-starter</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.lion</groupId>

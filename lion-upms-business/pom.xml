@@ -16,7 +16,7 @@
 		<maven.compiler.source>${jdk.version}</maven.compiler.source>
 		<maven.compiler.target>${jdk.version}</maven.compiler.target>
 		<java.version>${jdk.version}</java.version>
-		<lion-common-expose>1.1.0-SNAPSHOT</lion-common-expose>
+		<lion-common-interface-expose>1.1.0-SNAPSHOT</lion-common-interface-expose>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -30,8 +30,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.lion</groupId>
-			<artifactId>lion-common-expose</artifactId>
-			<version>${lion-common-expose}</version>
+			<artifactId>lion-common-interface-expose</artifactId>
+			<version>${lion-common-interface-expose}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-dbutils</groupId>

@@ -24,7 +24,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.lion</groupId>
-			<artifactId>lion-expose-starter</artifactId>
+			<artifactId>lion-interface-expose-starter</artifactId>
 		</dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>

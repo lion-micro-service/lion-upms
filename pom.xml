@@ -39,17 +39,17 @@
 			</dependency>
 			<dependency>
 				<groupId>com.lion</groupId>
-				<artifactId>lion-expose-run-starter</artifactId>
+				<artifactId>lion-expose-impl-starter</artifactId>
 				<version>${starter.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.lion</groupId>
-				<artifactId>lion-expose-starter</artifactId>
+				<artifactId>lion-interface-expose-starter</artifactId>
 				<version>${starter.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.lion</groupId>
-				<artifactId>lion-restful-starter</artifactId>
+				<artifactId>lion-serve-starter</artifactId>
 				<version>${starter.version}</version>
 			</dependency>
 		</dependencies>

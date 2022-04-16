@@ -2,14 +2,12 @@ package com.lion.upms.controller.user;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import com.lion.common.entity.file.File;
 import com.lion.common.expose.file.FileExposeService;
 import com.lion.core.*;
 import com.lion.core.common.enums.ResultDataState;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
 import com.lion.core.persistence.Validator;
-import com.lion.upms.entity.role.Role;
 import com.lion.upms.entity.user.User;
 import com.lion.upms.entity.user.dto.UserAddDto;
 import com.lion.upms.entity.user.dto.UserSearchDto;
@@ -18,7 +16,9 @@ import com.lion.upms.entity.user.vo.UserListVo;
 import com.lion.upms.entity.user.vo.UserVo;
 import com.lion.upms.service.user.UserService;
 import com.lion.utils.CurrentUserUtil;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
-import com.lion.core.Optional;
 
 /**
  * @author mr.liu

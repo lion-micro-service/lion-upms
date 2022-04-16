@@ -23,7 +23,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.lion</groupId>
-			<artifactId>lion-restful-starter</artifactId>
+			<artifactId>lion-serve-starter</artifactId>
 		</dependency>
 	</dependencies>
 
