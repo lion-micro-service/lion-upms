@@ -80,6 +80,9 @@ public class User extends BaseEntity {
     @Column(name = "head_portrait")
     private Long headPortrait;
 
+    @Schema(description = "创建人电话")
+    private String phoneNumber;
+
     @Schema(hidden = true,description = "账号是否未过期")
     @Column(name = "is_account_non_expired", nullable = false)
     private Boolean isAccountNonExpired = false;
