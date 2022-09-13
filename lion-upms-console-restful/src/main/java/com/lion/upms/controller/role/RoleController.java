@@ -4,7 +4,6 @@ import com.lion.constant.SearchConstant;
 import com.lion.core.*;
 import com.lion.core.controller.BaseController;
 import com.lion.core.controller.impl.BaseControllerImpl;
-import com.lion.core.persistence.JpqlParameter;
 import com.lion.core.persistence.Validator;
 import com.lion.upms.entity.common.enums.Scope;
 import com.lion.upms.entity.resources.Resources;
@@ -34,7 +33,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
 import com.lion.core.Optional;
 
 /**
