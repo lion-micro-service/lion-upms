@@ -28,6 +28,12 @@ public enum Type implements IEnum {
         this.desc = desc;
     }
 
+
+    @Override
+    public String code() {
+        return "oauth2Type";
+    }
+
     @Override
     public Integer getKey() {
         return key;

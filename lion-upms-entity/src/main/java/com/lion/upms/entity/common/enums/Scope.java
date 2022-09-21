@@ -28,6 +28,11 @@ public enum Scope implements IEnum {
     }
 
     @Override
+    public String code() {
+        return "commonScope";
+    }
+
+    @Override
     public Integer getKey() {
         return key;
     }

@@ -30,7 +30,6 @@ public class CurrentUserExposeImpl implements ICurrentUser<User> {
         if (optional.isPresent()) {
             User user = optional.get();
             Map<String, Object> map = BeanToMapUtil.transBeanToMap(user);
-            map.put("tenantId",user.getTenantId());
             return map;
         }
         return null;
