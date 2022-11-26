@@ -263,10 +263,10 @@
             axios.get("/lion-upms-console-restful/user/console/details",{params:{id:id}})
                 .then((data)=>{
                     this.addModel = data.data;
-                    if (this.addModel.headPortraitVo){
+                    if (this.addModel.headPortraitUrl){
                         this.headPortraitList=[{
-                            uid:this.addModel.headPortraitVo.id,
-                            name:this.addModel.headPortraitVo.originalFileName,
+                            uid:"1",
+                            name:" ",
                             status:"done",
                             url:process.env.VUE_APP_BASEURL+process.env.VUE_APP_BASEAPI+this.addModel.headPortraitUrl
                         }];
@@ -284,6 +284,7 @@
          * 保存
          */
         private save():void{
+          let _this  = this;
           (this.$refs.addOrUpdateForm as any).validate().then(()=>{
             this.saveButtonDisabled=true;
             const id = this.route.query.id;
@@ -304,6 +305,7 @@
                   .then((data) =>{
                     if (Object(data).status === 200){
                       message.success(Object(data).message);
+                      _this.reset();
                     }
                   }).catch((fail)=>{
               }).finally(()=>{

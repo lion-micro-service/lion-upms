@@ -51,7 +51,7 @@
         { title: '年龄', dataIndex: ['user','age'], key: 'age' },
         { title: '电话', dataIndex: ['user','phoneNumber'], key: 'phoneNumber' },
         { title: '生日', dataIndex: ['user','birthday'], key: 'birthday' },
-        { title: '部门', key: 'department'},
+        // { title: '部门', key: 'department'},
         { title: '角色', key: 'role'},
         // { title: '操作', key: 'action', scopedSlots: { customRender: 'action' },width: 180,}
     ];
@@ -82,8 +82,8 @@
      * @param pageSize
      */
     private paginationSearch(pageNumber:number, pageSize: number):void{
-        this.setPageInfo(pageNumber,pageSize);
-        this.search();
+      this.$emit('set-page-info',pageNumber,pageSize);
+      this.$emit('search');
     }
 
     /**
@@ -162,7 +162,7 @@
      * @param pageSize
      */
     @Emit("set-page-info")
-    private setPageInfo(pageNumber:number, pageSize: number):void{}
+    public setPageInfo(pageNumber:number, pageSize: number):void{}
   }
 </script>
 

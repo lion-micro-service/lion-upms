@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve --mode dev",
     "build-test": "vue-cli-service build --mode test",
     "build-pro": "vue-cli-service build --mode pro",
-    "lion-serve": "vue-cli-service lion-serve --mode test"
+    "lion-serve": "vue-cli-service lion-serve --gateway_host=192.168.8.166 --gateway_port=80 --mode test"
   },
   "dependencies": {
     "@lion/lion-frontend-core": "1.1.0"
@@ -34,7 +34,7 @@
     "webpack": "4.46.0"
   },
   "publishConfig": {
-    "registry": "http://npm.nexus.com/repository/hosted-repository-npm/"
+    "registry": "http://192.168.8.213:32129/repository/hosted-repository-npm/"
   },
   "vuePlugins": {
     "service": [

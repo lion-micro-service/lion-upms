@@ -29,16 +29,13 @@
                 </a-form-item>
             </a-col>
             <a-col :span="6">
-                <a-form-item label="部门" name="departmentId" ref="departmentId" >
-                    <a-tree-select v-model:value="searchModel.departmentId" :tree-data="department" tree-checkable :show-checked-strategy="SHOW_PARENT" search-placeholder="请选择部门"/>
-                </a-form-item>
-            </a-col>
-            <a-col :span="6">
                 <a-form-item label="角色" name="roleId" ref="roleId" >
                     <a-select allowClear v-model:value="searchModel.roleId" >
                         <a-select-option :key="value.id" v-for="(value) in role" :value="value.id">{{value.name}}</a-select-option>
                     </a-select>
                 </a-form-item>
+            </a-col>
+            <a-col :span="6">
             </a-col>
         </a-row>
         <slot></slot>

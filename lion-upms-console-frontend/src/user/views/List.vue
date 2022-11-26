@@ -70,7 +70,7 @@
        * @param pageNumber
        * @param pageSize
        */
-      private setPageInfo(pageNumber:number,pageSize:number):void{
+      public setPageInfo(pageNumber:number,pageSize:number):void{
           this.searchModel.pageNumber=pageNumber;
           this.searchModel.pageSize=pageSize;
       }
@@ -79,9 +79,9 @@
        * 查询
        */
       private search():void{
-          if (!this.getAuthority('SYSTEM_SETTINGS_USER_LIST')){
-              return;
-          }
+          // if (!this.getAuthority('SYSTEM_SETTINGS_USER_LIST')){
+          //     return;
+          // }
           const list = (this.$refs.list as any);
           list.selectedRowKeys=[];
           const searchFrom = (this.$refs.searchFrom as any);

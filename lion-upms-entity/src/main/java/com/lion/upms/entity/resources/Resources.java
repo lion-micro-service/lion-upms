@@ -30,7 +30,7 @@ import javax.validation.constraints.Pattern;
 
 @DynamicInsert
 @Data
-@Schema(description = "用户更新")
+@Schema(description = "")
 public class Resources extends BaseEntity {
 
     private static final long serialVersionUID = 4121945476090393825L;
